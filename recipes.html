@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Library — Meal Mate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #3a7d44;
+      --green-light: #e8f5ea;
+      --cream: #faf8f3;
+      --terracotta: #c8724a;
+      --sage: #8faa82;
+      --warm-white: #fffdf7;
+      --text: #1c2b1e;
+      --muted: #6b7f6d;
+      --border: #d4e0d5;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-wordmark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--green);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+      margin-left: 1rem;
+      flex: 1;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+      padding-bottom: 2px;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a.active {
+      color: var(--green);
+      border-bottom: 2px solid var(--green);
+    }
+
+    .nav-cta {
+      margin-left: auto;
+      background: var(--green);
+      color: #fff !important;
+      border-radius: 99px;
+      padding: 0.45rem 1.25rem !important;
+      font-weight: 600 !important;
+      border-bottom: none !important;
+      transition: background 0.2s, transform 0.15s !important;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .nav-cta:hover {
+      background: #2e6636 !important;
+      color: #fff !important;
+      transform: translateY(-1px);
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+    }
+
+    .page-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      line-height: 1.1;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.65;
+    }
+
+    /* ─── FILTER CHIPS ─── */
+    .filter-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 2.5rem;
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.45rem 1.1rem;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .chip:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    .chip.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    /* ─── RECIPE CARDS CONTAINER ─── */
+    .recipes-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ─── RECIPE CARD ─── */
+    .recipe-card {
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 2px 20px rgba(28, 43, 30, 0.06), 0 1px 4px rgba(28, 43, 30, 0.04);
+      transition: box-shadow 0.2s;
+    }
+
+    .recipe-card:hover {
+      box-shadow: 0 6px 32px rgba(28, 43, 30, 0.1), 0 2px 8px rgba(28, 43, 30, 0.06);
+    }
+
+    .recipe-card.hidden {
+      display: none;
+    }
+
+    .card-cream { background: var(--warm-white); }
+    .card-sage  { background: #e8f4e8; }
+    .card-terra { background: #fdf0eb; }
+
+    /* Top 2-col layout */
+    .card-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* LEFT: title col */
+    .card-title-col {}
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .card-description {
+      font-size: 0.975rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag-pill {
+      display: inline-block;
+      padding: 0.3rem 0.85rem;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .tag-pill.vegetarian    { background: #ddf0dd; color: #2e6636; }
+    .tag-pill.quick         { background: #fff0e6; color: #a0522d; }
+    .tag-pill.protein       { background: #e6f0ff; color: #2b4fa0; }
+    .tag-pill.budget        { background: #fff8dc; color: #8b6914; }
+
+    /* RIGHT: ingredients col */
+    .card-ingredients-col {}
+
+    .ingredients-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .ingredients-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem 0.85rem;
+    }
+
+    .ingredient-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3rem;
+    }
+
+    .ingredient-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .ingredient-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .ingredient-amount {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* DIVIDER */
+    .card-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    /* Bottom 2-col layout */
+    .card-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* LEFT: photo placeholder */
+    .card-photo {
+      border-radius: 14px;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card-photo-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .photo-cream { background: #e8d8c0; color: #6b4e2a; }
+    .photo-sage  { background: #b8d4b0; color: #2d5a27; }
+    .photo-terra { background: #e8b898; color: #7a3a1a; }
+
+    /* RIGHT: instructions */
+    .instructions-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .instructions-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .instructions-list li {
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .step-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--text);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+    }
+
+    .footer-logo-wordmark {
+      font-family: 'DM Serif Display', serif;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 2px;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .footer-nav a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    .footer-nav a:hover {
+      color: #fff;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .footer-social a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.875rem;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .footer-social a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.5rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .card-top,
+      .card-bottom {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .card-photo {
+        height: 200px;
+      }
+
+      .ingredients-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-inner {
+        gap: 1rem;
+        padding: 0;
+      }
+
+      .nav-links {
+        gap: 1rem;
+        margin-left: 0.5rem;
+      }
+
+      .recipe-card {
+        padding: 1.5rem;
+      }
+
+      .ingredients-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+
+      .footer-nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links li:not(:first-child) {
+        display: none;
+      }
+
+      .ingredients-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+        </svg>
+        <span class="nav-logo-wordmark">meal mate</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="recipes.html" class="active">Recipes</a></li>
+        <li><a href="shopping.html">Shopping List</a></li>
+        <li><a href="habits.html">Habits</a></li>
+      </ul>
+      <a href="onboarding.html" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- ─── PAGE HEADER ─── -->
+  <header class="page-header">
+    <h1>Recipe Library</h1>
+    <p>Simple, student-friendly recipes designed to minimize waste and maximize flavor.</p>
+  </header>
+
+  <!-- ─── FILTER CHIPS ─── -->
+  <section class="filter-section">
+    <div class="filter-chips" role="group" aria-label="Filter recipes">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="Vegetarian">Vegetarian</button>
+      <button class="chip" data-filter="Quick & Easy">Quick &amp; Easy</button>
+      <button class="chip" data-filter="High Protein">High Protein</button>
+      <button class="chip" data-filter="Budget-Friendly">Budget-Friendly</button>
+    </div>
+  </section>
+
+  <!-- ─── RECIPE CARDS ─── -->
+  <main class="recipes-container">
+
+    <!-- RECIPE 1: Tomato Miso Pasta w/ Shrimp -->
+    <article class="recipe-card card-cream" data-tags="Quick & Easy,High Protein">
+      <div class="card-top">
+
+        <div class="card-title-col">
+          <h2 class="card-title">Tomato Miso Pasta w/ Shrimp</h2>
+          <p class="card-description">One of those recipes you'll be repeating for a long, long time. Find quality cherry tomatoes and you absolutely cannot go wrong. So simple and so good.</p>
+          <div class="card-tags">
+            <span class="tag-pill quick">Quick &amp; Easy</span>
+            <span class="tag-pill protein">High Protein</span>
+          </div>
+        </div>
+
+        <div class="card-ingredients-col">
+          <h3 class="ingredients-heading">Ingredients:</h3>
+          <div class="ingredients-grid">
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#ffe4e4;">🍅</div>
+              <span class="ingredient-name">Cherry tomatoes</span>
+              <span class="ingredient-amount">2 pints vine-on</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4f4ff;">🦐</div>
+              <span class="ingredient-name">Shrimp</span>
+              <span class="ingredient-amount">3/4 lb, peeled</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff0e4;">🍝</div>
+              <span class="ingredient-name">Thin spaghetti</span>
+              <span class="ingredient-amount">2 servings</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <span class="ingredient-name">Garlic</span>
+              <span class="ingredient-amount">3 cloves, chopped</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff4e4;">🧅</div>
+              <span class="ingredient-name">Shallots</span>
+              <span class="ingredient-amount">2 small, sliced</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e8e4d4;">🫙</div>
+              <span class="ingredient-name">Miso</span>
+              <span class="ingredient-amount">1 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4ffe8;">🫒</div>
+              <span class="ingredient-name">Olive oil</span>
+              <span class="ingredient-amount">1/4 cup</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
+              <span class="ingredient-name">Lemon juice</span>
+              <span class="ingredient-amount">1/4 lemon</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#ffe8e4;">🌶️</div>
+              <span class="ingredient-name">Red pepper flake</span>
+              <span class="ingredient-amount">1 tsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
+              <span class="ingredient-name">Butter</span>
+              <span class="ingredient-amount">1 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
+              <span class="ingredient-name">Parsley</span>
+              <span class="ingredient-amount">finely chopped</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <hr class="card-divider" />
+
+      <div class="card-bottom">
+
+        <div class="card-photo photo-cream">
+          <span style="font-size:2.5rem;">🍝</span>
+          <span class="card-photo-label">Finished dish</span>
+        </div>
+
+        <div class="card-instructions-col">
+          <h3 class="instructions-heading">Instructions:</h3>
+          <ol class="instructions-list">
+            <li><span class="step-num">1</span><span class="step-text">Add olive oil to a pan over medium heat, then add cherry tomatoes and season generously with salt.</span></li>
+            <li><span class="step-num">2</span><span class="step-text">Let tomatoes cook for about 30 seconds, then add sliced shallots and chopped garlic.</span></li>
+            <li><span class="step-num">3</span><span class="step-text">Meanwhile, bring a pot of salted water to a boil and cook pasta according to package directions. Reserve pasta water before draining.</span></li>
+            <li><span class="step-num">4</span><span class="step-text">Cook tomatoes down on medium-low heat until they burst and break down and the shallots are soft, about 10–12 minutes.</span></li>
+            <li><span class="step-num">5</span><span class="step-text">Add shrimp to the pan and stir to coat in the tomato sauce.</span></li>
+            <li><span class="step-num">6</span><span class="step-text">Stir in miso, lemon juice, chili flake, salt, and pepper. Taste and adjust seasoning.</span></li>
+            <li><span class="step-num">7</span><span class="step-text">Cook for a few more minutes until shrimp are pink and cooked through, then add butter and a splash of pasta water if needed to loosen the sauce.</span></li>
+            <li><span class="step-num">8</span><span class="step-text">Toss in the cooked pasta noodles and fresh parsley, mixing until everything is well coated. Serve immediately.</span></li>
+          </ol>
+        </div>
+
+      </div>
+    </article>
+
+
+    <!-- RECIPE 2: Miso Mushroom Pasta -->
+    <article class="recipe-card card-sage" data-tags="Vegetarian,Budget-Friendly">
+      <div class="card-top">
+
+        <div class="card-title-col">
+          <h2 class="card-title">Miso Mushroom Pasta</h2>
+          <p class="card-description">So addicting and fully vegetarian, this pasta uses miso and a touch of cream for a rich flavor that compliments a medley of mushrooms. Serves 2.</p>
+          <div class="card-tags">
+            <span class="tag-pill vegetarian">Vegetarian</span>
+            <span class="tag-pill budget">Budget-Friendly</span>
+          </div>
+        </div>
+
+        <div class="card-ingredients-col">
+          <h3 class="ingredients-heading">Ingredients:</h3>
+          <div class="ingredients-grid">
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#f0e8e0;">🍄</div>
+              <span class="ingredient-name">Oyster mushrooms</span>
+              <span class="ingredient-amount">3 oz</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#ece4dc;">🍄</div>
+              <span class="ingredient-name">Shimeji mushrooms</span>
+              <span class="ingredient-amount">3 oz</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff0e4;">🍝</div>
+              <span class="ingredient-name">Gemelli pasta</span>
+              <span class="ingredient-amount">2 servings</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <span class="ingredient-name">Garlic</span>
+              <span class="ingredient-amount">2 cloves</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff4e4;">🧅</div>
+              <span class="ingredient-name">Shallot</span>
+              <span class="ingredient-amount">1 small</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e8e4d4;">🫙</div>
+              <span class="ingredient-name">Miso</span>
+              <span class="ingredient-amount">1 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff8f0;">🥛</div>
+              <span class="ingredient-name">Heavy cream</span>
+              <span class="ingredient-amount">1/4 cup</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#f0e8f4;">🍷</div>
+              <span class="ingredient-name">White wine</span>
+              <span class="ingredient-amount">1/3 cup</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff8e4;">🧀</div>
+              <span class="ingredient-name">Parmesan</span>
+              <span class="ingredient-amount">1/4 cup grated</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
+              <span class="ingredient-name">Butter</span>
+              <span class="ingredient-amount">2 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
+              <span class="ingredient-name">Lemon</span>
+              <span class="ingredient-amount">juice of 1/4</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
+              <span class="ingredient-name">Parsley</span>
+              <span class="ingredient-amount">for garnish</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <hr class="card-divider" />
+
+      <div class="card-bottom">
+
+        <div class="card-photo photo-sage">
+          <span style="font-size:2.5rem;">🍄</span>
+          <span class="card-photo-label">Finished dish</span>
+        </div>
+
+        <div class="card-instructions-col">
+          <h3 class="instructions-heading">Instructions:</h3>
+          <ol class="instructions-list">
+            <li><span class="step-num">1</span><span class="step-text">Pull mushrooms into large chunks and trim stems. Mince garlic and finely dice shallots.</span></li>
+            <li><span class="step-num">2</span><span class="step-text">Boil pasta in generously salted water until al dente. Reserve at least 1/2 cup pasta water before draining.</span></li>
+            <li><span class="step-num">3</span><span class="step-text">Melt butter in a large skillet over medium-high heat. Add shallots and garlic, sautéing until softened and fragrant, about 2 minutes.</span></li>
+            <li><span class="step-num">4</span><span class="step-text">Add mushrooms to the pan, spreading in a single layer. Let sit undisturbed for 2–3 minutes to brown evenly, then stir.</span></li>
+            <li><span class="step-num">5</span><span class="step-text">Deglaze with white wine, scraping up any browned bits from the bottom. Stir in miso until fully dissolved.</span></li>
+            <li><span class="step-num">6</span><span class="step-text">Add cream, lemon juice, parmesan, and parsley. Season with salt and pepper to taste.</span></li>
+            <li><span class="step-num">7</span><span class="step-text">Add cooked pasta with 1/4 cup pasta water, then mix vigorously until the sauce clings to every noodle. Plate with extra parmesan and fresh parsley.</span></li>
+          </ol>
+        </div>
+
+      </div>
+    </article>
+
+
+    <!-- RECIPE 3: Garlic Butter Rice Bowl -->
+    <article class="recipe-card card-terra" data-tags="Budget-Friendly,Quick & Easy,Vegetarian">
+      <div class="card-top">
+
+        <div class="card-title-col">
+          <h2 class="card-title">Garlic Butter Rice Bowl</h2>
+          <p class="card-description">The ultimate budget meal that never gets old. Perfectly seasoned garlic butter rice topped with a crispy fried egg and whatever veggies you have on hand.</p>
+          <div class="card-tags">
+            <span class="tag-pill budget">Budget-Friendly</span>
+            <span class="tag-pill quick">Quick &amp; Easy</span>
+            <span class="tag-pill vegetarian">Vegetarian</span>
+          </div>
+        </div>
+
+        <div class="card-ingredients-col">
+          <h3 class="ingredients-heading">Ingredients:</h3>
+          <div class="ingredients-grid">
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff8e4;">🍚</div>
+              <span class="ingredient-name">Rice</span>
+              <span class="ingredient-amount">1 cup, any variety</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <span class="ingredient-name">Garlic</span>
+              <span class="ingredient-amount">4 cloves, minced</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
+              <span class="ingredient-name">Butter</span>
+              <span class="ingredient-amount">2 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff8f0;">🥚</div>
+              <span class="ingredient-name">Eggs</span>
+              <span class="ingredient-amount">2 large</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4f4e4;">🥦</div>
+              <span class="ingredient-name">Broccoli</span>
+              <span class="ingredient-amount">1 head, florets</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff0e4;">🥕</div>
+              <span class="ingredient-name">Carrots</span>
+              <span class="ingredient-amount">2, julienned</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e8e8e4;">🧂</div>
+              <span class="ingredient-name">Soy sauce</span>
+              <span class="ingredient-amount">2 Tbsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
+              <span class="ingredient-name">Green onions</span>
+              <span class="ingredient-amount">for garnish</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fff0e0;">🌶️</div>
+              <span class="ingredient-name">Sesame oil</span>
+              <span class="ingredient-amount">1 tsp</span>
+            </div>
+
+            <div class="ingredient-item">
+              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
+              <span class="ingredient-name">Lime</span>
+              <span class="ingredient-amount">1, wedged</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <hr class="card-divider" />
+
+      <div class="card-bottom">
+
+        <div class="card-photo photo-terra">
+          <span style="font-size:2.5rem;">🍳</span>
+          <span class="card-photo-label">Finished dish</span>
+        </div>
+
+        <div class="card-instructions-col">
+          <h3 class="instructions-heading">Instructions:</h3>
+          <ol class="instructions-list">
+            <li><span class="step-num">1</span><span class="step-text">Cook rice according to package directions. Fluff with a fork when done and set aside.</span></li>
+            <li><span class="step-num">2</span><span class="step-text">In a large skillet over medium heat, melt butter. Add minced garlic and fry, stirring often, until golden and fragrant, about 2–3 minutes.</span></li>
+            <li><span class="step-num">3</span><span class="step-text">Add broccoli florets and julienned carrots. Sauté until tender-crisp, about 4–5 minutes. Season with a pinch of salt.</span></li>
+            <li><span class="step-num">4</span><span class="step-text">Push veggies to the side of the pan. Crack eggs into the empty space and fry to your preferred doneness — runny yolks are encouraged.</span></li>
+            <li><span class="step-num">5</span><span class="step-text">Add cooked rice to the pan and toss everything together with the garlic butter, making sure the rice gets evenly coated.</span></li>
+            <li><span class="step-num">6</span><span class="step-text">Season with soy sauce and sesame oil, toss once more, then serve topped with sliced green onions and a lime wedge on the side.</span></li>
+          </ol>
+        </div>
+
+      </div>
+    </article>
+
+  </main>
+
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+
+        <div>
+          <a href="#" class="footer-logo">
+            <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+              <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+              <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+              <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+              <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+            </svg>
+            <span class="footer-logo-wordmark">meal mate</span>
+          </a>
+          <p class="footer-tagline">eat smart. waste less.</p>
+        </div>
+
+        <ul class="footer-nav">
+          <li><a href="recipes.html">Recipes</a></li>
+          <li><a href="shopping.html">Shopping List</a></li>
+          <li><a href="habits.html">Habits</a></li>
+          <li><a href="onboarding.html">Get Started</a></li>
+        </ul>
+
+        <div class="footer-social">
+          <a href="#">TikTok</a>
+          <a href="#">Instagram</a>
+          <a href="#">YouTube</a>
+        </div>
+
+      </div>
+      <div class="footer-bottom">
+        &copy; 2025 Meal Mate. Built for college kitchens everywhere.
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ─── FILTER JS ─── -->
+  <script>
+    const chips = document.querySelectorAll('.chip');
+    const cards = document.querySelectorAll('.recipe-card');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        // Update active chip
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        const filter = chip.dataset.filter;
+
+        cards.forEach(card => {
+          if (filter === 'all') {
+            card.classList.remove('hidden');
+            return;
+          }
+
+          const tags = card.dataset.tags.split(',').map(t => t.trim());
+          if (tags.includes(filter)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
