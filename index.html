@@ -6,7 +6,7 @@
   <title>Meal Mate — Eat Smart. Waste Less. Feel Good.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after {
@@ -16,23 +16,15 @@
     }
 
     :root {
-      --ivory:       #F0EBE3;
-      --orange:      #C75F2F;
-      --orange-dark: #a84d22;
-      --butter:      #FCE9B2;
-      --peach:       #FAE1CC;
-      --sage:        #AACDA1;
-      --sage-dark:   #8ab380;
-      --text:        #3D342E;
-      --muted:       #7a6a5f;
-      --border:      #e0d5cc;
-      --white:       #FFFDF9;
-      --radius-sm:   12px;
-      --radius-md:   20px;
-      --radius-lg:   28px;
-      --radius-pill: 99px;
-      --shadow-sm:   0 2px 12px rgba(61,52,46,0.08);
-      --shadow-md:   0 6px 28px rgba(61,52,46,0.12);
+      --green: #3a7d44;
+      --green-light: #e8f5ea;
+      --cream: #faf8f3;
+      --terracotta: #c8724a;
+      --sage: #8faa82;
+      --warm-white: #fffdf7;
+      --text: #1c2b1e;
+      --muted: #6b7f6d;
+      --border: #d4e0d5;
     }
 
     html {
@@ -42,14 +34,8 @@
     body {
       font-family: 'DM Sans', sans-serif;
       color: var(--text);
-      background: var(--ivory);
+      background: var(--cream);
       -webkit-font-smoothing: antialiased;
-    }
-
-    .emphasis {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 500;
     }
 
     /* ─── NAV ──────────────────────────────────────────── */
@@ -57,7 +43,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--white);
+      background: #fff;
       border-bottom: 1px solid var(--border);
       padding: 0 40px;
       height: 68px;
@@ -74,11 +60,10 @@
     }
 
     .nav-logo-wordmark {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--orange);
-      letter-spacing: -0.02em;
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--green);
+      letter-spacing: -0.3px;
     }
 
     .nav-links {
@@ -97,31 +82,24 @@
     }
 
     .nav-links a:hover {
-      color: var(--orange);
-    }
-
-    .nav-links a.active {
-      color: var(--orange);
-      border-bottom: 2px solid var(--orange);
-      padding-bottom: 2px;
+      color: var(--green);
     }
 
     .nav-cta {
       display: inline-flex;
       align-items: center;
-      background: var(--orange) !important;
-      color: var(--ivory) !important;
+      background: var(--green);
+      color: #fff !important;
       padding: 10px 22px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       font-size: 14px !important;
       font-weight: 600 !important;
       transition: background 0.2s, transform 0.15s !important;
-      border-bottom: none !important;
     }
 
     .nav-cta:hover {
-      background: var(--orange-dark) !important;
-      color: var(--ivory) !important;
+      background: #2e6636 !important;
+      color: #fff !important;
       transform: translateY(-1px);
     }
 
@@ -163,7 +141,7 @@
       top: 68px;
       left: 0;
       right: 0;
-      background: var(--white);
+      background: #fff;
       border-bottom: 1px solid var(--border);
       padding: 24px 32px 32px;
       flex-direction: column;
@@ -187,107 +165,86 @@
       margin-top: 8px;
     }
 
-    /* ─── BUTTONS ──────────────────────────────────────── */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--orange);
-      color: var(--ivory);
-      padding: 12px 28px;
-      border-radius: var(--radius-pill);
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-primary:hover {
-      background: var(--orange-dark);
-      transform: translateY(-2px);
-    }
-
-    .btn-outline,
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      color: var(--orange);
-      padding: 12px 28px;
-      border-radius: var(--radius-pill);
-      font-size: 16px;
-      font-weight: 500;
-      text-decoration: none;
-      border: 2px solid var(--orange);
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s, transform 0.15s;
-    }
-
-    .btn-outline:hover,
-    .btn-secondary:hover {
-      background: var(--orange);
-      color: var(--ivory);
-      transform: translateY(-2px);
-    }
-
     /* ─── HERO ─────────────────────────────────────────── */
     .hero {
-      background: var(--ivory);
-      padding: 100px 24px 80px;
-      text-align: center;
+      background: var(--cream);
+      padding: 100px 40px 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-blob {
+      position: absolute;
+      top: -120px;
+      right: -180px;
+      width: 640px;
+      height: 640px;
+      background: var(--sage);
+      opacity: 0.18;
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      pointer-events: none;
+    }
+
+    .hero-blob-2 {
+      position: absolute;
+      bottom: -200px;
+      left: -100px;
+      width: 460px;
+      height: 460px;
+      background: var(--green);
+      opacity: 0.07;
+      border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%;
+      pointer-events: none;
     }
 
     .hero-inner {
       max-width: 760px;
-      margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .hero-eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--peach);
-      color: var(--orange);
+      background: var(--green-light);
+      color: var(--green);
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       padding: 6px 14px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       margin-bottom: 28px;
     }
 
     .hero-eyebrow-dot {
       width: 6px;
       height: 6px;
-      background: var(--orange);
+      background: var(--green);
       border-radius: 50%;
     }
 
     .hero h1 {
-      font-family: 'DM Sans', sans-serif;
-      font-size: clamp(3rem, 7vw, 5.5rem);
-      line-height: 1.05;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(52px, 7vw, 88px);
+      line-height: 1.0;
+      letter-spacing: -1.5px;
       color: var(--text);
       margin-bottom: 28px;
     }
 
-    .hero h1 .emphasis {
-      font-size: 1.1em;
-      display: block;
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
     }
 
     .hero-sub {
-      font-size: 1.1rem;
+      font-size: 18px;
       line-height: 1.65;
       color: var(--muted);
-      max-width: 480px;
-      margin: 0 auto 2.5rem;
+      max-width: 560px;
+      margin-bottom: 44px;
       font-weight: 400;
     }
 
@@ -296,18 +253,54 @@
       gap: 16px;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
     }
 
-    .hero-actions .btn-primary {
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green);
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 99px;
       font-size: 16px;
-      padding: 14px 32px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 14px rgba(58, 125, 68, 0.28);
+    }
+
+    .btn-primary:hover {
+      background: #2e6636;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(58, 125, 68, 0.36);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: var(--text);
+      padding: 14px 28px;
+      border-radius: 99px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-2px);
     }
 
     /* ─── FEATURED RECIPES ────────────────────────────── */
     .recipes-section {
-      background: var(--white);
-      padding: 60px 0;
+      background: var(--warm-white);
+      padding: 80px 0 60px;
     }
 
     .section-header {
@@ -319,17 +312,16 @@
     }
 
     .section-title {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'DM Serif Display', serif;
       font-size: clamp(32px, 4vw, 46px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.5px;
       color: var(--text);
     }
 
     .see-all {
       font-size: 15px;
       font-weight: 600;
-      color: var(--orange);
+      color: var(--green);
       text-decoration: none;
       display: flex;
       align-items: center;
@@ -360,35 +352,32 @@
     }
 
     .recipe-card {
-      width: 260px;
-      height: 360px;
-      border-radius: var(--radius-lg);
+      width: 280px;
+      height: 380px;
+      border-radius: 20px;
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
       cursor: pointer;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
       text-decoration: none;
     }
 
     .recipe-card:hover {
-      transform: scale(1.02);
-      box-shadow: var(--shadow-md);
+      transform: scale(1.03) translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.18);
     }
 
-    .recipe-card-img {
+    .recipe-card-bg {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
 
     .recipe-card-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(61,52,46,0.75) 0%, transparent 60%);
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
     }
 
     .recipe-card-content {
@@ -399,25 +388,46 @@
       padding: 24px 22px;
     }
 
-    .recipe-card-tag {
-      display: inline-block;
+    .recipe-card-label {
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text);
-      background: var(--butter);
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      margin-bottom: 10px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 8px;
     }
 
     .recipe-card-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.2;
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      line-height: 1.15;
       color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .recipe-card-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .recipe-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 14px;
+      border-radius: 99px;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s;
+    }
+
+    .recipe-card:hover .recipe-card-link {
+      background: rgba(255,255,255,0.3);
     }
 
     .recipes-footer {
@@ -428,7 +438,7 @@
 
     /* ─── HOW IT WORKS ────────────────────────────────── */
     .how-section {
-      background: var(--peach);
+      background: var(--green-light);
       padding: 96px 40px;
     }
 
@@ -447,28 +457,26 @@
     }
 
     .how-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 32px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 32px;
       position: relative;
-      box-shadow: var(--shadow-sm);
     }
 
     .how-card-number {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--orange);
-      opacity: 0.15;
+      font-family: 'DM Serif Display', serif;
+      font-size: 64px;
+      color: var(--green-light);
       line-height: 1;
       position: absolute;
       top: 20px;
       right: 24px;
+      font-weight: 400;
       user-select: none;
     }
 
     .how-card-icon {
-      font-size: 2rem;
+      font-size: 36px;
       margin-bottom: 20px;
       display: block;
     }
@@ -478,22 +486,32 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--orange);
+      color: var(--green);
       margin-bottom: 10px;
     }
 
     .how-card-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
       color: var(--text);
       margin-bottom: 14px;
+      letter-spacing: -0.3px;
     }
 
     .how-card-desc {
       font-size: 15px;
       color: var(--muted);
       line-height: 1.65;
+    }
+
+    .how-connector {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: var(--sage);
+      z-index: 2;
     }
 
     /* ─── STATS BANNER ────────────────────────────────── */
@@ -516,27 +534,26 @@
     }
 
     .stat-divider {
-      border-left: 1px solid rgba(240,235,227,0.12);
+      border-left: 1px solid rgba(255,255,255,0.12);
     }
 
     .stat-number {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'DM Serif Display', serif;
       font-size: clamp(52px, 6vw, 80px);
-      font-weight: 700;
-      color: var(--butter);
+      color: #fff;
       letter-spacing: -2px;
       line-height: 1;
       margin-bottom: 16px;
     }
 
     .stat-number em {
-      color: var(--butter);
+      color: var(--sage);
       font-style: normal;
     }
 
     .stat-label {
       font-size: 15px;
-      color: rgba(240,235,227,0.55);
+      color: rgba(255,255,255,0.55);
       line-height: 1.55;
       max-width: 200px;
       margin: 0 auto;
@@ -545,7 +562,7 @@
 
     /* ─── CTA SECTION ─────────────────────────────────── */
     .cta-section {
-      background: var(--sage);
+      background: var(--cream);
       padding: 100px 40px;
       text-align: center;
     }
@@ -554,30 +571,28 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,255,255,0.4);
-      color: var(--text);
+      background: var(--green-light);
+      color: var(--green);
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 6px 14px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       margin-bottom: 28px;
     }
 
     .cta-section h2 {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'DM Serif Display', serif;
       font-size: clamp(38px, 5vw, 60px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -1px;
       color: var(--text);
       margin-bottom: 18px;
     }
 
     .cta-section p {
       font-size: 17px;
-      color: var(--text);
-      opacity: 0.75;
+      color: var(--muted);
       margin-bottom: 44px;
       max-width: 420px;
       margin-left: auto;
@@ -592,7 +607,7 @@
 
     /* ─── FOOTER ──────────────────────────────────────── */
     footer {
-      background: var(--white);
+      background: var(--cream);
       border-top: 1px solid var(--border);
       padding: 60px 40px 32px;
     }
@@ -619,11 +634,9 @@
     }
 
     .footer-logo-wordmark {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--orange);
-      letter-spacing: -0.02em;
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--green);
     }
 
     .footer-tagline {
@@ -651,13 +664,13 @@
     .footer-nav a {
       text-decoration: none;
       font-size: 15px;
-      color: var(--muted);
+      color: var(--text);
       font-weight: 500;
       transition: color 0.2s;
     }
 
     .footer-nav a:hover {
-      color: var(--orange);
+      color: var(--green);
     }
 
     .footer-social {
@@ -686,7 +699,7 @@
     }
 
     .footer-social a:hover {
-      color: var(--orange);
+      color: var(--green);
     }
 
     .footer-bottom {
@@ -717,7 +730,15 @@
       }
 
       .hero {
-        padding: 72px 24px 64px;
+        padding: 72px 24px 88px;
+      }
+
+      .hero h1 {
+        font-size: clamp(44px, 10vw, 68px);
+      }
+
+      .hero-sub {
+        font-size: 16px;
       }
 
       .section-header {
@@ -743,7 +764,7 @@
       }
 
       .how-card-number {
-        font-size: 2.5rem;
+        font-size: 48px;
       }
 
       .stats-section {
@@ -761,7 +782,7 @@
 
       .stat-divider {
         border-left: none;
-        border-top: 1px solid rgba(240,235,227,0.12);
+        border-top: 1px solid rgba(255,255,255,0.12);
       }
 
       .cta-section {
@@ -798,7 +819,7 @@
     @media (max-width: 600px) {
       .hero-actions {
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
       }
 
       .recipe-card {
@@ -814,11 +835,16 @@
   <nav>
     <a href="index.html" class="nav-logo">
       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
-        <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
-        <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
-        <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
-        <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
+        <!-- Bowl body -->
+        <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+        <!-- Bowl rim -->
+        <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+        <!-- Stem -->
+        <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+        <!-- Left leaf -->
+        <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+        <!-- Right leaf -->
+        <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
       </svg>
       <span class="nav-logo-wordmark">meal mate</span>
     </a>
@@ -848,6 +874,9 @@
 
   <!-- ─── HERO ─────────────────────────────────────────── -->
   <section class="hero">
+    <div class="hero-blob" aria-hidden="true"></div>
+    <div class="hero-blob-2" aria-hidden="true"></div>
+
     <div class="hero-inner">
       <div class="hero-eyebrow">
         <span class="hero-eyebrow-dot"></span>
@@ -855,8 +884,9 @@
       </div>
 
       <h1>
-        <span class="emphasis">eat smart.</span>
-        waste less.<br />feel good.
+        eat <em>smart.</em><br />
+        waste less.<br />
+        feel good.
       </h1>
 
       <p class="hero-sub">
@@ -874,7 +904,7 @@
   <!-- ─── FEATURED RECIPES ────────────────────────────── -->
   <section class="recipes-section">
     <div class="section-header">
-      <h2 class="section-title">Featured <span class="emphasis">Recipes</span></h2>
+      <h2 class="section-title">Featured Recipes</h2>
       <a href="recipes.html" class="see-all">See all recipes &rarr;</a>
     </div>
 
@@ -883,51 +913,61 @@
 
         <!-- Card 1: Tomato Miso Pasta -->
         <a href="recipes.html" class="recipe-card">
-          <img class="recipe-card-img" src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=500&q=80" alt="Tomato Miso Pasta" loading="lazy" />
+          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #8faa82 0%, #6d8f67 100%);"></div>
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
-            <span class="recipe-card-tag">20 min &middot; Vegetarian</span>
+            <div class="recipe-card-label">20 min &middot; Vegetarian</div>
             <div class="recipe-card-title">Tomato Miso Pasta</div>
+            <div class="recipe-card-desc">Umami-rich tomato sauce with a miso twist. Budget-friendly and endlessly satisfying.</div>
+            <span class="recipe-card-link">View Recipe &rarr;</span>
           </div>
         </a>
 
         <!-- Card 2: Miso Mushroom Pasta -->
         <a href="recipes.html" class="recipe-card">
-          <img class="recipe-card-img" src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&q=80" alt="Miso Mushroom Pasta" loading="lazy" />
+          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #c8724a 0%, #a85a38 100%);"></div>
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
-            <span class="recipe-card-tag">25 min &middot; Vegan</span>
+            <div class="recipe-card-label">25 min &middot; Vegan</div>
             <div class="recipe-card-title">Miso Mushroom Pasta</div>
+            <div class="recipe-card-desc">Earthy mushrooms meet silky miso butter in this savory weeknight pasta.</div>
+            <span class="recipe-card-link">View Recipe &rarr;</span>
           </div>
         </a>
 
         <!-- Card 3: Garlic Rice Bowl -->
         <a href="recipes.html" class="recipe-card">
-          <img class="recipe-card-img" src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500&q=80" alt="Garlic Rice Bowl" loading="lazy" />
+          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #3a7d44 0%, #2a5e32 100%);"></div>
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
-            <span class="recipe-card-tag">15 min &middot; Gluten-Free</span>
+            <div class="recipe-card-label">15 min &middot; Gluten-Free</div>
             <div class="recipe-card-title">Garlic Rice Bowl</div>
+            <div class="recipe-card-desc">Toasted garlic rice with a perfectly fried egg and quick pickled veggies.</div>
+            <span class="recipe-card-link">View Recipe &rarr;</span>
           </div>
         </a>
 
         <!-- Card 4: Lemon Chickpea Soup -->
         <a href="recipes.html" class="recipe-card">
-          <img class="recipe-card-img" src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&q=80" alt="Lemon Chickpea Soup" loading="lazy" />
+          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #d4a853 0%, #b88b38 100%);"></div>
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
-            <span class="recipe-card-tag">30 min &middot; Vegan</span>
+            <div class="recipe-card-label">30 min &middot; Vegan</div>
             <div class="recipe-card-title">Lemon Chickpea Soup</div>
+            <div class="recipe-card-desc">Bright, hearty, and protein-packed. Makes enough for the whole week.</div>
+            <span class="recipe-card-link">View Recipe &rarr;</span>
           </div>
         </a>
 
         <!-- Card 5: Sheet Pan Veggies -->
         <a href="recipes.html" class="recipe-card">
-          <img class="recipe-card-img" src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80" alt="Sheet Pan Veggies" loading="lazy" />
+          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #c49a8a 0%, #a57c6c 100%);"></div>
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
-            <span class="recipe-card-tag">35 min &middot; Vegan</span>
+            <div class="recipe-card-label">35 min &middot; Vegan</div>
             <div class="recipe-card-title">Sheet Pan Veggies</div>
+            <div class="recipe-card-desc">One pan, minimal cleanup. Roasted seasonal vegetables with herby tahini.</div>
+            <span class="recipe-card-link">View Recipe &rarr;</span>
           </div>
         </a>
 
@@ -942,7 +982,7 @@
 
   <!-- ─── HOW IT WORKS ────────────────────────────────── -->
   <section class="how-section">
-    <h2 class="section-title">How it <span class="emphasis">works</span></h2>
+    <h2 class="section-title">How it works</h2>
 
     <div class="how-grid">
 
@@ -1002,7 +1042,7 @@
     <div class="cta-pill">
       <span>&#10003;</span> Free to use
     </div>
-    <h2>Ready to <span class="emphasis">eat smarter?</span></h2>
+    <h2>Ready to eat smarter?</h2>
     <p>Join thousands of college students building better food habits.</p>
     <a href="onboarding.html" class="btn-primary">Create your profile &rarr;</a>
   </section>
@@ -1015,11 +1055,11 @@
       <div class="footer-brand">
         <a href="index.html" class="footer-logo">
           <svg width="30" height="30" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
-            <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
-            <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
-            <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
-            <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
+            <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+            <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+            <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+            <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+            <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
           </svg>
           <span class="footer-logo-wordmark">meal mate</span>
         </a>
@@ -1079,6 +1119,38 @@
     });
 
     const nav = document.querySelector('nav');
+
+    // ── User greeting (added by team) ──
+    (function() {
+      try {
+        var user = JSON.parse(localStorage.getItem('mm_current_user'));
+        if (!user || !user.name) return;
+
+        // Nav CTA
+        var cta = document.querySelector('.nav-links .nav-cta');
+        if (cta) { cta.textContent = 'Hi, ' + user.name + ' 👋'; cta.href = 'onboarding.html'; }
+
+        // Mobile menu CTA
+        var mobileCta = document.querySelector('.mobile-menu .nav-cta');
+        if (mobileCta) { mobileCta.textContent = 'Hi, ' + user.name + ' 👋'; mobileCta.href = 'onboarding.html'; }
+
+        // Hero eyebrow
+        var eyebrow = document.querySelector('.hero-eyebrow');
+        if (eyebrow) eyebrow.innerHTML = '<span class="hero-eyebrow-dot"></span>Welcome back, ' + user.name + '!';
+
+        // Hero CTA
+        var heroCta = document.querySelector('.hero-actions .btn-primary');
+        if (heroCta) { heroCta.textContent = 'My Shopping List →'; heroCta.href = 'shopping.html'; }
+
+        // Bottom CTA section
+        var ctaH2 = document.querySelector('.cta-section h2');
+        var ctaP  = document.querySelector('.cta-section p');
+        var ctaBtn = document.querySelector('.cta-section .btn-primary');
+        if (ctaH2) ctaH2.textContent = 'Good to see you, ' + user.name + '!';
+        if (ctaP)  ctaP.textContent  = 'Your shopping list and habit tracker are ready. Pick up where you left off.';
+        if (ctaBtn) { ctaBtn.textContent = 'View my habits →'; ctaBtn.href = 'habits.html'; }
+      } catch(e) {}
+    })();
   </script>
 
 </body>

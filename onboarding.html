@@ -7,222 +7,70 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green: #3a7d44;
-      --green-light: #e8f5ea;
-      --green-mid: #c5e3c8;
-      --cream: #faf8f3;
-      --text: #1c2b1e;
-      --muted: #6b7f6d;
-      --border: #d4e0d5;
-      --chip-bg: #fff;
-      --chip-sel: #3a7d44;
-      --chip-sel-text: #fff;
-      --card-bg: #ffffff;
-      --radius: 14px;
+      --green: #3a7d44; --green-light: #e8f5ea; --green-mid: #c5e3c8;
+      --cream: #faf8f3; --text: #1c2b1e; --muted: #6b7f6d; --border: #d4e0d5;
+      --chip-bg: #fff; --chip-sel: #3a7d44; --chip-sel-text: #fff;
+      --card-bg: #ffffff; --radius: 14px; --error: #c0392b;
     }
-
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 2rem 1rem 4rem;
+      font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text);
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start; padding: 2rem 1rem 4rem;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 2rem;
-    }
-    .brand-icon {
-      width: 38px; height: 38px;
-      background: var(--green);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .brand-name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      color: var(--green);
-      letter-spacing: -0.3px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem 2rem 1.5rem;
-      width: 100%;
-      max-width: 520px;
-      box-shadow: 0 2px 20px rgba(58,125,68,0.06);
-    }
-
-    .progress-wrap {
-      margin-bottom: 1.75rem;
-    }
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    .progress-track {
-      height: 5px;
-      background: var(--green-mid);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--green);
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
+    .brand-icon { width: 38px; height: 38px; background: var(--green); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .brand-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--green); letter-spacing: -0.3px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 2rem 1.5rem; width: 100%; max-width: 520px; box-shadow: 0 2px 20px rgba(58,125,68,0.06); }
+    .progress-wrap { margin-bottom: 1.75rem; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .progress-track { height: 5px; background: var(--green-mid); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s ease; }
     .step { display: none; }
     .step.active { display: block; }
-
-    .step-tag {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--green);
-      background: var(--green-light);
-      padding: 3px 10px;
-      border-radius: 99px;
-      display: inline-block;
-      margin-bottom: 0.75rem;
-    }
-
-    .step-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      line-height: 1.3;
-      color: var(--text);
-      margin-bottom: 1.25rem;
-    }
-
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 0.5rem;
-    }
-
-    .chip {
-      padding: 7px 16px;
-      border-radius: 99px;
-      border: 1.5px solid var(--border);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      cursor: pointer;
-      background: var(--chip-bg);
-      color: var(--text);
-      transition: all 0.15s ease;
-      user-select: none;
-    }
+    .step-tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); background: var(--green-light); padding: 3px 10px; border-radius: 99px; display: inline-block; margin-bottom: 0.75rem; }
+    .step-title { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.3; color: var(--text); margin-bottom: 1.25rem; }
+    /* Account step inputs */
+    .input-group { margin-bottom: 1rem; }
+    .input-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+    .text-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: #fff; outline: none; transition: border-color 0.2s; }
+    .text-input:focus { border-color: var(--green); }
+    .text-input.error { border-color: var(--error); }
+    .input-hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+    .input-error { font-size: 12px; color: var(--error); margin-top: 5px; display: none; }
+    .input-error.visible { display: block; }
+    /* Returning user */
+    .returning-row { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); text-align: center; }
+    .returning-row a { color: var(--green); font-weight: 600; cursor: pointer; text-decoration: none; }
+    .returning-row a:hover { text-decoration: underline; }
+    #returning-panel { display: none; margin-top: 1.25rem; padding: 1.25rem; background: var(--green-light); border-radius: 10px; }
+    #returning-panel p { font-size: 13px; color: var(--muted); margin-bottom: 0.75rem; }
+    #returning-search { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; }
+    #returning-search:focus { border-color: var(--green); }
+    #returning-result { margin-top: 0.75rem; font-size: 13px; color: var(--text); }
+    /* Chips */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0.5rem; }
+    .chip { padding: 7px 16px; border-radius: 99px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; background: var(--chip-bg); color: var(--text); transition: all 0.15s ease; user-select: none; }
     .chip:hover { border-color: var(--green); }
-    .chip.selected {
-      background: var(--chip-sel);
-      color: var(--chip-sel-text);
-      border-color: var(--chip-sel);
-    }
-
-    .budget-num {
-      font-family: 'DM Serif Display', serif;
-      font-size: 38px;
-      color: var(--green);
-      margin-bottom: 0.5rem;
-    }
-    input[type=range] {
-      width: 100%;
-      accent-color: var(--green);
-      margin-bottom: 4px;
-    }
-    .range-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .sub-label {
-      font-size: 13px;
-      color: var(--muted);
-      margin: 1rem 0 0.5rem;
-    }
-
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--border);
-    }
-    .btn {
-      padding: 10px 22px;
-      border-radius: 99px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      background: transparent;
-      color: var(--muted);
-      transition: all 0.15s;
-    }
+    .chip.selected { background: var(--chip-sel); color: var(--chip-sel-text); border-color: var(--chip-sel); }
+    /* Budget */
+    .budget-num { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--green); margin-bottom: 0.5rem; }
+    input[type=range] { width: 100%; accent-color: var(--green); margin-bottom: 4px; }
+    .range-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 1rem; }
+    .sub-label { font-size: 13px; color: var(--muted); margin: 1rem 0 0.5rem; }
+    /* Nav buttons */
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+    .btn { padding: 10px 22px; border-radius: 99px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--muted); transition: all 0.15s; }
     .btn:hover { border-color: var(--green); color: var(--green); }
-    .btn.primary {
-      background: var(--green);
-      color: #fff;
-      border-color: var(--green);
-    }
+    .btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
     .btn.primary:hover { background: #2e6636; }
-
-    .finish-screen {
-      display: none;
-      text-align: center;
-      padding: 1rem 0;
-    }
-    .finish-icon {
-      font-size: 48px;
-      margin-bottom: 1rem;
-    }
-    .finish-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 26px;
-      color: var(--green);
-      margin-bottom: 0.5rem;
-    }
-    .finish-sub {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .finish-btn {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 12px 32px;
-      background: var(--green);
-      color: #fff;
-      border-radius: 99px;
-      font-size: 15px;
-      font-weight: 500;
-      text-decoration: none;
-      font-family: 'DM Sans', sans-serif;
-    }
+    /* Finish */
+    .finish-screen { display: none; text-align: center; padding: 1rem 0; }
+    .finish-icon { font-size: 48px; margin-bottom: 1rem; }
+    .finish-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--green); margin-bottom: 0.5rem; }
+    .finish-sub { font-size: 15px; color: var(--muted); line-height: 1.6; }
+    .finish-btn { display: inline-block; margin-top: 1.5rem; padding: 12px 32px; background: var(--green); color: #fff; border-radius: 99px; font-size: 15px; font-weight: 500; text-decoration: none; font-family: 'DM Sans', sans-serif; }
+    .welcome-name { color: var(--green); font-style: italic; }
   </style>
 </head>
 <body>
@@ -234,19 +82,49 @@
 
   <div class="card">
 
-    <!-- Progress -->
     <div class="progress-wrap">
       <div class="progress-meta">
-        <span id="prog-label">Step 1 of 7</span>
-        <span id="prog-pct">14%</span>
+        <span id="prog-label">Step 1 of 8</span>
+        <span id="prog-pct">12%</span>
       </div>
       <div class="progress-track">
-        <div class="progress-fill" id="progress-fill" style="width: 14%;"></div>
+        <div class="progress-fill" id="progress-fill" style="width:12%;"></div>
       </div>
     </div>
 
-    <!-- Step 1: Budget -->
+    <!-- STEP 1: Account -->
     <div class="step active" id="step-1">
+      <span class="step-tag">👤 Your Account</span>
+      <h2 class="step-title">Let's create your profile</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem;">Meal Mate will remember your preferences, recipes, and shopping lists every time you come back.</p>
+
+      <div class="input-group">
+        <label class="input-label" for="input-name">Your name</label>
+        <input class="text-input" type="text" id="input-name" placeholder="e.g. Jordan" autocomplete="off" />
+        <div class="input-error" id="error-name">Please enter your name.</div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="input-username">Choose a username</label>
+        <input class="text-input" type="text" id="input-username" placeholder="e.g. jordan_eats" autocomplete="off" />
+        <div class="input-hint">Lowercase letters, numbers, and underscores only.</div>
+        <div class="input-error" id="error-username">Please pick a valid username (letters, numbers, _ only).</div>
+        <div class="input-error" id="error-username-taken">That username is taken. Please choose another.</div>
+      </div>
+
+      <div class="returning-row">
+        Already have an account? <a onclick="toggleReturning()">Sign back in →</a>
+        &nbsp;·&nbsp; <a id="signout-link" onclick="signOut()" style="display:none;">Sign out</a>
+      </div>
+      <div id="returning-panel">
+        <p>Enter your username to restore your profile:</p>
+        <input id="returning-search" type="text" placeholder="Your username" oninput="lookupUser(this.value)" />
+        <div id="returning-result"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Budget -->
+    <div class="step" id="step-2">
       <span class="step-tag">💰 Finances</span>
       <h2 class="step-title">What's your weekly grocery budget?</h2>
       <div class="budget-num" id="budget-display">$50</div>
@@ -255,11 +133,11 @@
       <div class="range-row"><span>$10</span><span>$200+</span></div>
     </div>
 
-    <!-- Step 2: Dietary restrictions -->
-    <div class="step" id="step-2">
+    <!-- STEP 3: Diet -->
+    <div class="step" id="step-3">
       <span class="step-tag">🥦 Diet</span>
       <h2 class="step-title">Any dietary restrictions?</h2>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Select all that apply.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Select all that apply.</p>
       <div class="chip-group">
         <span class="chip" onclick="toggle(this)">None</span>
         <span class="chip" onclick="toggle(this)">Vegetarian</span>
@@ -273,11 +151,11 @@
       </div>
     </div>
 
-    <!-- Step 3: Allergies -->
-    <div class="step" id="step-3">
+    <!-- STEP 4: Allergies -->
+    <div class="step" id="step-4">
       <span class="step-tag">⚠️ Allergies</span>
       <h2 class="step-title">Any food allergies we should know about?</h2>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Select all that apply.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Select all that apply.</p>
       <div class="chip-group">
         <span class="chip" onclick="toggle(this)">None</span>
         <span class="chip" onclick="toggle(this)">Peanuts</span>
@@ -291,11 +169,11 @@
       </div>
     </div>
 
-    <!-- Step 4: Kitchen tools -->
-    <div class="step" id="step-4">
+    <!-- STEP 5: Equipment -->
+    <div class="step" id="step-5">
       <span class="step-tag">🍳 Kitchen</span>
       <h2 class="step-title">What cooking equipment do you have?</h2>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Select all that apply.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Select all that apply.</p>
       <div class="chip-group">
         <span class="chip" onclick="toggle(this)">Stovetop</span>
         <span class="chip" onclick="toggle(this)">Oven</span>
@@ -309,28 +187,22 @@
       </div>
     </div>
 
-    <!-- Step 5: Skill level -->
-    <div class="step" id="step-5">
+    <!-- STEP 6: Skill -->
+    <div class="step" id="step-6">
       <span class="step-tag">👨‍🍳 Skill level</span>
       <h2 class="step-title">How comfortable are you in the kitchen?</h2>
-      <div class="chip-group" style="flex-direction: column; gap: 10px;">
-        <span class="chip" style="border-radius: 10px; padding: 12px 16px;" onclick="solo(this)">
-          🙂 <strong>Beginner</strong> — I mostly reheat or make simple meals
-        </span>
-        <span class="chip" style="border-radius: 10px; padding: 12px 16px;" onclick="solo(this)">
-          😊 <strong>Intermediate</strong> — I can follow a recipe
-        </span>
-        <span class="chip" style="border-radius: 10px; padding: 12px 16px;" onclick="solo(this)">
-          😎 <strong>Confident</strong> — I cook regularly without much help
-        </span>
+      <div class="chip-group" style="flex-direction:column;gap:10px;">
+        <span class="chip" style="border-radius:10px;padding:12px 16px;" onclick="solo(this)">🙂 <strong>Beginner</strong> — I mostly reheat or make simple meals</span>
+        <span class="chip" style="border-radius:10px;padding:12px 16px;" onclick="solo(this)">😊 <strong>Intermediate</strong> — I can follow a recipe</span>
+        <span class="chip" style="border-radius:10px;padding:12px 16px;" onclick="solo(this)">😎 <strong>Confident</strong> — I cook regularly without much help</span>
       </div>
     </div>
 
-    <!-- Step 6: Habit goals -->
-    <div class="step" id="step-6">
+    <!-- STEP 7: Goals -->
+    <div class="step" id="step-7">
       <span class="step-tag">🎯 Goals</span>
       <h2 class="step-title">What healthy habits do you want to build?</h2>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Select all that apply.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Select all that apply.</p>
       <div class="chip-group">
         <span class="chip" onclick="toggle(this)">Meal prep on Sundays</span>
         <span class="chip" onclick="toggle(this)">Eat breakfast daily</span>
@@ -343,18 +215,17 @@
       </div>
     </div>
 
-    <!-- Step 7: Reminders -->
-    <div class="step" id="step-7">
+    <!-- STEP 8: Reminders -->
+    <div class="step" id="step-8">
       <span class="step-tag">🔔 Reminders</span>
       <h2 class="step-title">When should we send habit reminders?</h2>
-      <p style="font-size:13px; color:var(--muted); margin-bottom:1rem;">Select all that apply.</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Select all that apply.</p>
       <div class="chip-group">
         <span class="chip" onclick="toggle(this)">Morning (7–9 AM)</span>
         <span class="chip" onclick="toggle(this)">Midday (12–1 PM)</span>
         <span class="chip" onclick="toggle(this)">Evening (6–8 PM)</span>
         <span class="chip" onclick="toggle(this)">Before grocery day</span>
       </div>
-
       <p class="sub-label">What's your usual grocery day?</p>
       <div class="chip-group">
         <span class="chip" onclick="solo(this)">Mon</span>
@@ -367,17 +238,17 @@
       </div>
     </div>
 
-    <!-- Finish screen -->
+    <!-- Finish -->
     <div class="finish-screen" id="finish-screen">
       <div class="finish-icon">🥗</div>
-      <h2 class="finish-title">You're all set!</h2>
-      <p class="finish-sub">Meal Mate will use your profile to build your personalized shopping list, recipes, and habit reminders.</p>
+      <h2 class="finish-title">You're all set, <span class="welcome-name" id="finish-name"></span>!</h2>
+      <p class="finish-sub">Your profile is saved. Your preferences, recipes, and shopping lists will be here every time you return.</p>
       <a href="index.html" class="finish-btn">Go to my dashboard →</a>
     </div>
 
     <!-- Navigation -->
     <div class="nav" id="nav-bar">
-      <button class="btn" id="back-btn" onclick="go(-1)" style="visibility: hidden;">← Back</button>
+      <button class="btn" id="back-btn" onclick="go(-1)" style="visibility:hidden;">← Back</button>
       <button class="btn primary" id="next-btn" onclick="go(1)">Next →</button>
     </div>
 
@@ -385,8 +256,33 @@
 
   <script>
     let current = 1;
-    const total = 7;
+    const total = 8;
 
+    // ── Storage helpers ──
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('mm_current_user')); } catch(e) { return null; }
+    }
+    function getAllUsers() {
+      try { return JSON.parse(localStorage.getItem('mm_users')) || {}; } catch(e) { return {}; }
+    }
+    function saveUser(profile) {
+      const users = getAllUsers();
+      users[profile.username] = profile;
+      localStorage.setItem('mm_users', JSON.stringify(users));
+      localStorage.setItem('mm_current_user', JSON.stringify(profile));
+    }
+
+    // ── On load: pre-fill if already logged in ──
+    window.addEventListener('DOMContentLoaded', function() {
+      const saved = getCurrentUser();
+      if (saved) {
+        document.getElementById('input-name').value = saved.name || '';
+        document.getElementById('input-username').value = saved.username || '';
+        document.getElementById('signout-link').style.display = 'inline';
+      }
+    });
+
+    // ── Progress bar ──
     function updateProgress() {
       const pct = Math.round((current / total) * 100);
       document.getElementById('progress-fill').style.width = pct + '%';
@@ -396,30 +292,139 @@
       document.getElementById('next-btn').textContent = current === total ? 'Finish ✓' : 'Next →';
     }
 
+    // ── Validate account step ──
+    function validateStep1() {
+      var name = document.getElementById('input-name').value.trim();
+      var username = document.getElementById('input-username').value.trim().toLowerCase();
+      var usernameValid = /^[a-z0-9_]+$/.test(username);
+      var ok = true;
+
+      ['error-name','error-username','error-username-taken'].forEach(function(id) {
+        document.getElementById(id).classList.remove('visible');
+      });
+      ['input-name','input-username'].forEach(function(id) {
+        document.getElementById(id).classList.remove('error');
+      });
+
+      if (!name) {
+        document.getElementById('error-name').classList.add('visible');
+        document.getElementById('input-name').classList.add('error');
+        ok = false;
+      }
+      if (!username || !usernameValid) {
+        document.getElementById('error-username').classList.add('visible');
+        document.getElementById('input-username').classList.add('error');
+        ok = false;
+      } else {
+        var users = getAllUsers();
+        var existing = users[username];
+        var cur = getCurrentUser();
+        if (existing && (!cur || cur.username !== username)) {
+          document.getElementById('error-username-taken').classList.add('visible');
+          document.getElementById('input-username').classList.add('error');
+          ok = false;
+        }
+      }
+      return ok;
+    }
+
+    // ── Step navigation ──
     function go(dir) {
+      // Validate account step before moving forward
+      if (dir === 1 && current === 1) {
+        if (!validateStep1()) return;
+        var name = document.getElementById('input-name').value.trim();
+        var username = document.getElementById('input-username').value.trim().toLowerCase();
+        var users = getAllUsers();
+        var existing = users[username] || {};
+        saveUser(Object.assign({}, existing, {
+          name: name,
+          username: username,
+          createdAt: existing.createdAt || new Date().toISOString()
+        }));
+      }
+
+      // Finish step
       if (dir === 1 && current === total) {
-        // Show finish screen
+        savePreferences();
         document.getElementById('step-' + current).classList.remove('active');
         document.getElementById('finish-screen').style.display = 'block';
         document.getElementById('nav-bar').style.display = 'none';
         document.getElementById('progress-fill').style.width = '100%';
         document.getElementById('prog-label').textContent = 'Complete!';
         document.getElementById('prog-pct').textContent = '100%';
+        var user = getCurrentUser();
+        document.getElementById('finish-name').textContent = user ? user.name : '';
         return;
       }
+
       document.getElementById('step-' + current).classList.remove('active');
       current = Math.max(1, Math.min(total, current + dir));
       document.getElementById('step-' + current).classList.add('active');
       updateProgress();
     }
 
-    function toggle(el) {
-      el.classList.toggle('selected');
+    // ── Save all preferences at the end ──
+    function savePreferences() {
+      var user = getCurrentUser() || {};
+      user.budget = parseInt(document.getElementById('budget-range').value);
+      user.dietRestrictions = getSelectedChips('step-3');
+      user.allergies = getSelectedChips('step-4');
+      user.equipment = getSelectedChips('step-5');
+      var skillChips = document.querySelectorAll('#step-6 .chip.selected');
+      user.skillLevel = skillChips.length ? skillChips[0].textContent.trim() : '';
+      user.habitGoals = getSelectedChips('step-7');
+      user.reminders = getSelectedChips('step-8');
+      saveUser(user);
     }
 
+    function getSelectedChips(stepId) {
+      return Array.from(document.querySelectorAll('#' + stepId + ' .chip.selected')).map(function(c) {
+        return c.textContent.trim();
+      });
+    }
+
+    function toggle(el) { el.classList.toggle('selected'); }
     function solo(el) {
-      el.closest('.chip-group').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      el.closest('.chip-group').querySelectorAll('.chip').forEach(function(c) {
+        c.classList.remove('selected');
+      });
       el.classList.add('selected');
+    }
+
+    // ── Returning user ──
+    function toggleReturning() {
+      var panel = document.getElementById('returning-panel');
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function lookupUser(val) {
+      var username = val.trim().toLowerCase();
+      var result = document.getElementById('returning-result');
+      if (!username) { result.textContent = ''; return; }
+      var users = getAllUsers();
+      var found = users[username];
+      if (found) {
+        result.innerHTML = '✅ Found <strong>' + found.name + '</strong>! <a href="#" onclick="signIn(\'' + username + '\'); return false;" style="color:var(--green);font-weight:600;">Sign in →</a>';
+      } else {
+        result.textContent = 'No account found for @' + username;
+      }
+    }
+
+    function signIn(username) {
+      var users = getAllUsers();
+      var user = users[username];
+      if (!user) return;
+      localStorage.setItem('mm_current_user', JSON.stringify(user));
+      window.location.href = 'index.html';
+    }
+
+    function signOut() {
+      if (!confirm('Sign out of your current account?')) return;
+      localStorage.removeItem('mm_current_user');
+      document.getElementById('input-name').value = '';
+      document.getElementById('input-username').value = '';
+      document.getElementById('signout-link').style.display = 'none';
     }
 
     updateProgress();

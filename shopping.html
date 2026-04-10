@@ -6,40 +6,27 @@
   <title>Weekly Shopping List — Meal Mate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ivory:       #F0EBE3;
-      --orange:      #C75F2F;
-      --orange-dark: #a84d22;
-      --butter:      #FCE9B2;
-      --peach:       #FAE1CC;
-      --sage:        #AACDA1;
-      --sage-dark:   #8ab380;
-      --text:        #3D342E;
-      --muted:       #7a6a5f;
-      --border:      #e0d5cc;
-      --white:       #FFFDF9;
-      --radius-sm:   12px;
-      --radius-md:   20px;
-      --radius-lg:   28px;
-      --radius-pill: 99px;
-      --shadow-sm:   0 2px 12px rgba(61,52,46,0.08);
-    }
-
-    .emphasis {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 500;
+      --green: #3a7d44;
+      --green-light: #e8f5ea;
+      --cream: #faf8f3;
+      --terracotta: #c8724a;
+      --sage: #8faa82;
+      --warm-white: #fffdf7;
+      --text: #1c2b1e;
+      --muted: #6b7f6d;
+      --border: #d4e0d5;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--ivory);
+      background: var(--cream);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -51,7 +38,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--white);
+      background: #fff;
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
     }
@@ -71,10 +58,9 @@
       flex-shrink: 0;
     }
     .nav-logo span {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--orange);
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      color: var(--green);
       letter-spacing: -0.01em;
     }
     .nav-links {
@@ -92,30 +78,30 @@
       padding-bottom: 2px;
       transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--orange); }
+    .nav-links a:hover { color: var(--text); }
     .nav-links a.active {
-      color: var(--orange);
-      border-bottom: 2px solid var(--orange);
+      color: var(--green);
+      border-bottom: 2px solid var(--green);
     }
     .nav-cta {
       margin-left: auto;
-      background: var(--orange);
-      color: var(--ivory);
+      background: var(--green);
+      color: #fff;
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 22px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       text-decoration: none;
       transition: background 0.2s, transform 0.15s;
       white-space: nowrap;
     }
-    .nav-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .nav-cta:hover { background: #2e6636; transform: translateY(-1px); }
 
     /* ── BANNER ── */
     #waste-banner {
-      background: var(--orange);
-      color: var(--ivory);
+      background: var(--green);
+      color: #fff;
       padding: 13px 24px;
       display: flex;
       align-items: center;
@@ -133,10 +119,10 @@
       transform: translateY(-50%);
       background: rgba(255,255,255,0.2);
       border: none;
-      color: var(--ivory);
+      color: #fff;
       width: 26px;
       height: 26px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       cursor: pointer;
       font-size: 1rem;
       line-height: 1;
@@ -149,14 +135,12 @@
 
     /* ── PAGE HEADER ── */
     .page-header {
-      background: var(--ivory);
       max-width: 900px;
       margin: 0 auto;
       padding: 48px 24px 32px;
     }
     .page-header h1 {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
       font-size: clamp(2rem, 5vw, 3rem);
       color: var(--text);
       line-height: 1.1;
@@ -170,9 +154,9 @@
 
     /* ── RUNNING TOTAL CARD ── */
     .total-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 20px 24px;
       max-width: 900px;
       margin: 0 auto 32px;
@@ -185,20 +169,19 @@
       gap: 16px;
       flex-wrap: wrap;
     }
+    .total-amount {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.4rem;
+      color: var(--green);
+      line-height: 1;
+    }
     .total-label {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       font-weight: 600;
       margin-bottom: 4px;
-    }
-    .total-amount {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 2.4rem;
-      color: var(--orange);
-      line-height: 1;
     }
     .total-meta {
       font-size: 0.875rem;
@@ -213,48 +196,45 @@
     }
     .btn-outline {
       background: transparent;
-      border: 2px solid var(--orange);
-      color: var(--orange);
+      border: 1.5px solid var(--border);
+      color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 18px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: border-color 0.2s, color 0.2s;
       white-space: nowrap;
     }
-    .btn-outline:hover {
-      background: var(--orange);
-      color: var(--ivory);
-    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
     .btn-primary {
-      background: var(--orange);
-      border: 2px solid var(--orange);
-      color: var(--ivory);
+      background: var(--green);
+      border: 1.5px solid var(--green);
+      color: #fff;
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 18px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       cursor: pointer;
       text-decoration: none;
       transition: background 0.2s;
       white-space: nowrap;
       display: inline-block;
     }
-    .btn-primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .btn-primary:hover { background: #2e6636; }
     .progress-bar-wrap {
       margin-top: 14px;
-      background: var(--peach);
-      border-radius: var(--radius-pill);
+      background: var(--green-light);
+      border-radius: 99px;
       height: 8px;
       overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
-      background: var(--orange);
-      border-radius: var(--radius-pill);
+      background: var(--green);
+      border-radius: 99px;
       transition: width 0.4s ease;
       width: 0%;
     }
@@ -275,9 +255,9 @@
 
     /* ── CATEGORY CARDS ── */
     .category-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
       overflow: hidden;
       margin-bottom: 20px;
     }
@@ -289,8 +269,7 @@
       border-left: 4px solid transparent;
     }
     .category-header h2 {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
       font-size: 1.15rem;
       color: var(--text);
     }
@@ -303,10 +282,10 @@
     }
 
     /* accent colors */
-    .cat-produce .category-header  { border-left-color: var(--sage); }
-    .cat-proteins .category-header { border-left-color: var(--orange); }
+    .cat-produce .category-header  { border-left-color: #8faa82; }
+    .cat-proteins .category-header { border-left-color: #c8724a; }
     .cat-pantry  .category-header  { border-left-color: #d4a853; }
-    .cat-dairy   .category-header  { border-left-color: #a8c4d0; }
+    .cat-dairy   .category-header  { border-left-color: #8aaabb; }
 
     /* ── ITEM ROWS ── */
     .item-list { list-style: none; }
@@ -319,8 +298,8 @@
       transition: background 0.15s;
       cursor: pointer;
     }
-    .item-row:hover { background: var(--ivory); }
-    .item-row.checked { background: #faf6f2; }
+    .item-row:hover { background: var(--cream); }
+    .item-row.checked { background: #f8f8f8; }
 
     /* custom checkbox */
     .item-checkbox {
@@ -336,8 +315,8 @@
       transition: border-color 0.2s, background 0.2s;
     }
     .item-checkbox:checked {
-      background: var(--orange);
-      border-color: var(--orange);
+      background: var(--green);
+      border-color: var(--green);
     }
     .item-checkbox:checked::after {
       content: '';
@@ -356,7 +335,6 @@
       flex: 1;
       font-size: 0.95rem;
       font-weight: 500;
-      color: var(--text);
       transition: color 0.2s;
     }
     .item-amount {
@@ -383,13 +361,13 @@
     /* ── SIDEBAR ── */
     .sidebar { position: sticky; top: 88px; }
     .tip-card {
-      background: var(--butter);
-      border-radius: var(--radius-lg);
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 22px 20px;
     }
     .tip-card h3 {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
       font-size: 1.1rem;
       color: var(--text);
       margin-bottom: 14px;
@@ -405,7 +383,7 @@
     }
     .tip-card ul li {
       font-size: 0.875rem;
-      color: var(--text);
+      color: var(--muted);
       padding-left: 18px;
       position: relative;
       line-height: 1.5;
@@ -414,21 +392,21 @@
       content: '•';
       position: absolute;
       left: 0;
-      color: var(--orange);
+      color: var(--sage);
       font-size: 1.1rem;
       line-height: 1.3;
     }
 
-    /* ── TOAST ── */
+    /* ── TOAST MODAL ── */
     #toast {
       position: fixed;
       bottom: 32px;
       left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: var(--text);
-      color: var(--ivory);
+      color: #fff;
       padding: 14px 28px;
-      border-radius: var(--radius-pill);
+      border-radius: 99px;
       font-size: 0.9rem;
       font-weight: 500;
       box-shadow: 0 8px 32px rgba(0,0,0,0.18);
@@ -445,7 +423,7 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--white);
+      background: #fff;
       border-top: 1px solid var(--border);
       padding: 32px 24px;
     }
@@ -464,10 +442,9 @@
       text-decoration: none;
     }
     .footer-logo span {
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
+      font-family: 'DM Serif Display', serif;
       font-size: 1rem;
-      color: var(--orange);
+      color: var(--green);
     }
     .footer-tagline {
       font-size: 0.8rem;
@@ -486,7 +463,7 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-nav a:hover { color: var(--orange); }
+    .footer-nav a:hover { color: var(--green); }
     .footer-social {
       display: flex;
       gap: 16px;
@@ -499,7 +476,7 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-social a:hover { color: var(--orange); }
+    .footer-social a:hover { color: var(--green); }
     .footer-bottom {
       max-width: 900px;
       margin: 20px auto 0;
@@ -528,6 +505,71 @@
       .footer-nav { margin: 0; }
       #waste-banner .banner-text { padding-right: 30px; font-size: 0.82rem; }
     }
+
+    /* ── RECIPE PICKER MODAL ── */
+    .rp-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(28,43,30,0.55); z-index: 500;
+      align-items: center; justify-content: center; padding: 2rem 1rem;
+    }
+    .rp-overlay.open { display: flex; }
+    .rp-modal {
+      background: #fff; border-radius: 20px; padding: 2rem;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 16px 60px rgba(28,43,30,0.18);
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+    .rp-title {
+      font-family: 'DM Serif Display', serif; font-size: 1.5rem;
+      color: var(--text); margin-bottom: 0.4rem;
+    }
+    .rp-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; }
+    .rp-close {
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      background: var(--cream); border: 1px solid var(--border);
+      width: 32px; height: 32px; border-radius: 99px; cursor: pointer;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    }
+    .rp-close:hover { background: #f5e8e8; }
+    .rp-recipe-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border: 1.5px solid var(--border);
+      border-radius: 12px; margin-bottom: 8px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .rp-recipe-row:hover { border-color: var(--green); background: var(--green-light); }
+    .rp-recipe-row.selected { border-color: var(--green); background: var(--green-light); }
+    .rp-recipe-row.selected .rp-check { background: var(--green); border-color: var(--green); color: #fff; }
+    .rp-check {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid var(--border); display: flex; align-items: center;
+      justify-content: center; font-size: 13px; flex-shrink: 0; transition: all 0.15s;
+    }
+    .rp-recipe-info { flex: 1; }
+    .rp-recipe-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .rp-recipe-meta { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .rp-actions {
+      display: flex; gap: 0.75rem; justify-content: flex-end;
+      margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border);
+    }
+    .rp-btn-cancel { padding: 10px 20px; border-radius: 99px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .rp-btn-cancel:hover { border-color: var(--green); color: var(--green); }
+    .rp-btn-apply { padding: 10px 24px; border-radius: 99px; background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .rp-btn-apply:hover { background: #2e6636; }
+
+    /* ── SELECTED RECIPES CHIPS ROW ── */
+    .selected-recipes-row {
+      max-width: 900px; margin: 0 auto 0; padding: 0 24px 16px;
+      display: none; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .selected-recipes-row.visible { display: flex; }
+    .sr-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .sr-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; background: var(--green-light); border: 1.5px solid #b2d9b5;
+      border-radius: 99px; font-size: 13px; font-weight: 500; color: var(--green);
+    }
+
   </style>
 </head>
 <body>
@@ -536,12 +578,12 @@
   <nav>
     <div class="nav-inner">
       <a class="nav-logo" href="#">
-        <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
-          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
-          <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
-          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
         </svg>
         <span>meal mate</span>
       </a>
@@ -563,7 +605,7 @@
 
   <!-- PAGE HEADER -->
   <div class="page-header">
-    <h1>Weekly <span class="emphasis">Shopping</span> List</h1>
+    <h1>Weekly Shopping List</h1>
     <p>Everything you need for the week — organized, estimated, and waste-conscious.</p>
   </div>
 
@@ -577,12 +619,17 @@
       </div>
       <div class="total-actions">
         <button class="btn-outline" onclick="regenerateList()">Regenerate List</button>
-        <a class="btn-primary" href="recipes.html">Add a Recipe +</a>
+        <button class="btn-primary" onclick="openRecipePicker()">🍽️ Choose Recipes</button>
       </div>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
+  </div>
+
+  <!-- SELECTED RECIPES CHIPS -->
+  <div class="selected-recipes-row" id="selected-recipes-row">
+    <span class="sr-label">This week's meals:</span>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -597,55 +644,55 @@
           <span class="cat-count" id="count-produce">9 items</span>
         </div>
         <ul class="item-list">
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="3.99" />
             <span class="item-name">Cherry tomatoes</span>
             <span class="item-amount">2 pints</span>
             <span class="item-cost">$3.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="0.79" />
             <span class="item-name">Garlic</span>
             <span class="item-amount">1 head</span>
             <span class="item-cost">$0.79</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.49" />
             <span class="item-name">Shallots</span>
             <span class="item-amount">3</span>
             <span class="item-cost">$1.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.99" />
             <span class="item-name">Broccoli</span>
             <span class="item-amount">1 head</span>
             <span class="item-cost">$1.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.29" />
             <span class="item-name">Carrots</span>
             <span class="item-amount">1 bunch</span>
             <span class="item-cost">$1.29</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.20" />
             <span class="item-name">Lemon</span>
             <span class="item-amount">2</span>
             <span class="item-cost">$1.20</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.49" />
             <span class="item-name">Parsley</span>
             <span class="item-amount">1 bunch</span>
             <span class="item-cost">$1.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="0.99" />
             <span class="item-name">Green onions</span>
             <span class="item-amount">1 bunch</span>
             <span class="item-cost">$0.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="0.80" />
             <span class="item-name">Lime</span>
             <span class="item-amount">2</span>
@@ -662,13 +709,13 @@
           <span class="cat-count" id="count-proteins">2 items</span>
         </div>
         <ul class="item-list">
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="8.99" />
             <span class="item-name">Shrimp</span>
             <span class="item-amount">3/4 lb, peeled</span>
             <span class="item-cost">$8.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="4.49" />
             <span class="item-name">Eggs</span>
             <span class="item-amount">1 dozen</span>
@@ -685,55 +732,55 @@
           <span class="cat-count" id="count-pantry">9 items</span>
         </div>
         <ul class="item-list">
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.79" />
             <span class="item-name">Thin spaghetti</span>
             <span class="item-amount">1 box</span>
             <span class="item-cost">$1.79</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="1.99" />
             <span class="item-name">Gemelli pasta</span>
             <span class="item-amount">1 box</span>
             <span class="item-cost">$1.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="2.49" />
             <span class="item-name">Rice</span>
             <span class="item-amount">2 lb bag</span>
             <span class="item-cost">$2.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="4.99" />
             <span class="item-name">Miso paste</span>
             <span class="item-amount">1 small tub</span>
             <span class="item-cost">$4.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="2.99" />
             <span class="item-name">Soy sauce</span>
             <span class="item-amount">1 bottle</span>
             <span class="item-cost">$2.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="6.99" />
             <span class="item-name">Olive oil</span>
             <span class="item-amount">1 bottle</span>
             <span class="item-cost">$6.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="3.49" />
             <span class="item-name">Sesame oil</span>
             <span class="item-amount">1 small</span>
             <span class="item-cost">$3.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="2.49" />
             <span class="item-name">Red pepper flakes</span>
             <span class="item-amount">1 jar</span>
             <span class="item-cost">$2.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="5.99" />
             <span class="item-name">White wine</span>
             <span class="item-amount">1 small bottle</span>
@@ -750,19 +797,19 @@
           <span class="cat-count" id="count-dairy">3 items</span>
         </div>
         <ul class="item-list">
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="2.49" />
             <span class="item-name">Butter</span>
             <span class="item-amount">1 stick</span>
             <span class="item-cost">$2.49</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="2.99" />
             <span class="item-name">Heavy cream</span>
             <span class="item-amount">1 small carton</span>
             <span class="item-cost">$2.99</span>
           </li>
-          <li class="item-row" onclick="toggleItem(this)">
+          <li class="item-row">
             <input type="checkbox" class="item-checkbox" data-cost="4.99" />
             <span class="item-name">Parmesan</span>
             <span class="item-amount">wedge</span>
@@ -778,9 +825,9 @@
       <div class="tip-card">
         <h3>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="9" cy="9" r="8" fill="rgba(199,95,47,0.12)"/>
-            <path d="M9 5v4l2.5 2.5" stroke="#C75F2F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="9" r="4" stroke="#C75F2F" stroke-width="1.8" fill="none"/>
+            <circle cx="9" cy="9" r="8" fill="#e8f5ea"/>
+            <path d="M9 5v4l2.5 2.5" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="9" r="4" stroke="#3a7d44" stroke-width="1.8" fill="none"/>
           </svg>
           Reduce Waste Tips
         </h3>
@@ -800,11 +847,11 @@
     <div class="footer-inner">
       <a class="footer-logo" href="#">
         <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
-          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
-          <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
-          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
         </svg>
         <div>
           <span>meal mate</span>
@@ -829,49 +876,426 @@
   <!-- TOAST -->
   <div id="toast">List regenerated based on your recipes!</div>
 
-  <script>
-    const FULL_TOTAL = 67.18;
-    const TOTAL_ITEMS = 24;
+    <script>
+    // ── Built-in recipe database (mirrors recipes.html) ──
+    const BUILTIN_RECIPES = [
+      {
+        id: 'tomato-miso-pasta', name: 'Tomato Miso Pasta w/ Shrimp',
+        meta: 'Quick & Easy · High Protein · 8 ingredients',
+        ingredients: [
+          { name: 'Cherry tomatoes', amount: '2 pints', cost: 3.99, category: 'produce' },
+          { name: 'Shrimp', amount: '3/4 lb, peeled', cost: 8.99, category: 'proteins' },
+          { name: 'Thin spaghetti', amount: '1 box', cost: 1.79, category: 'pantry' },
+          { name: 'Garlic', amount: '1 head', cost: 0.79, category: 'produce' },
+          { name: 'Shallots', amount: '3', cost: 1.49, category: 'produce' },
+          { name: 'Miso paste', amount: '1 small tub', cost: 4.99, category: 'pantry' },
+          { name: 'Olive oil', amount: '1 bottle', cost: 6.99, category: 'pantry' },
+          { name: 'Lemon', amount: '2', cost: 1.20, category: 'produce' },
+          { name: 'Red pepper flakes', amount: '1 jar', cost: 2.49, category: 'pantry' },
+          { name: 'Butter', amount: '1 stick', cost: 2.49, category: 'dairy' },
+          { name: 'Parsley', amount: '1 bunch', cost: 1.49, category: 'produce' },
+        ]
+      },
+      {
+        id: 'miso-mushroom-pasta', name: 'Miso Mushroom Pasta',
+        meta: 'Vegetarian · Budget-Friendly · 10 ingredients',
+        ingredients: [
+          { name: 'Oyster mushrooms', amount: '3 oz', cost: 2.99, category: 'produce' },
+          { name: 'Shimeji mushrooms', amount: '3 oz', cost: 2.99, category: 'produce' },
+          { name: 'Gemelli pasta', amount: '1 box', cost: 1.99, category: 'pantry' },
+          { name: 'Garlic', amount: '1 head', cost: 0.79, category: 'produce' },
+          { name: 'Shallots', amount: '3', cost: 1.49, category: 'produce' },
+          { name: 'Miso paste', amount: '1 small tub', cost: 4.99, category: 'pantry' },
+          { name: 'Heavy cream', amount: '1 small carton', cost: 2.99, category: 'dairy' },
+          { name: 'White wine', amount: '1 small bottle', cost: 5.99, category: 'pantry' },
+          { name: 'Parmesan', amount: 'wedge', cost: 4.99, category: 'dairy' },
+          { name: 'Butter', amount: '1 stick', cost: 2.49, category: 'dairy' },
+          { name: 'Lemon', amount: '2', cost: 1.20, category: 'produce' },
+          { name: 'Parsley', amount: '1 bunch', cost: 1.49, category: 'produce' },
+        ]
+      },
+      {
+        id: 'garlic-butter-rice', name: 'Garlic Butter Rice Bowl',
+        meta: 'Budget-Friendly · Quick & Easy · Vegetarian',
+        ingredients: [
+          { name: 'Rice', amount: '2 lb bag', cost: 2.49, category: 'pantry' },
+          { name: 'Garlic', amount: '1 head', cost: 0.79, category: 'produce' },
+          { name: 'Butter', amount: '1 stick', cost: 2.49, category: 'dairy' },
+          { name: 'Eggs', amount: '1 dozen', cost: 4.49, category: 'proteins' },
+          { name: 'Broccoli', amount: '1 head', cost: 1.99, category: 'produce' },
+          { name: 'Carrots', amount: '1 bunch', cost: 1.29, category: 'produce' },
+          { name: 'Soy sauce', amount: '1 bottle', cost: 2.99, category: 'pantry' },
+          { name: 'Green onions', amount: '1 bunch', cost: 0.99, category: 'produce' },
+          { name: 'Sesame oil', amount: '1 small', cost: 3.49, category: 'pantry' },
+          { name: 'Lime', amount: '2', cost: 0.80, category: 'produce' },
+        ]
+      }
+    ];
 
-    let checkedCost = 0;
-    let checkedCount = 0;
+    // ── State ──
+    let selectedRecipeIds = JSON.parse(localStorage.getItem('mm_selected_recipes') || '[]');
+    let checkedCost = 0, checkedCount = 0;
+    let currentItems = []; // { name, amount, cost, category }
 
-    function toggleItem(row) {
-      const checkbox = row.querySelector('.item-checkbox');
-      // If the click was directly on the checkbox, let the browser handle the toggle
-      // then sync the row state; otherwise manually toggle
-      if (event && event.target === checkbox) {
-        // browser will toggle — defer to after event
-        setTimeout(() => syncRow(row, checkbox), 0);
+    // ── Init ──
+    window.addEventListener('DOMContentLoaded', () => {
+      // Greet user
+      try {
+        const user = JSON.parse(localStorage.getItem('mm_current_user'));
+        if (user && user.name) {
+          const cta = document.querySelector('.nav-cta');
+          if (cta) { cta.textContent = 'Hi, ' + user.name + ' 👋'; cta.href = 'onboarding.html'; }
+        }
+      } catch(e) {}
+
+      // Attach overlay click-outside-to-close (modal HTML now exists in DOM)
+      const rpOverlay = document.getElementById('rp-overlay');
+      if (rpOverlay) {
+        rpOverlay.addEventListener('click', function(e) {
+          if (e.target === this) closeRecipePicker();
+        });
+      }
+
+      if (selectedRecipeIds.length > 0) {
+        buildShoppingList(selectedRecipeIds);
+      }
+    });
+
+    // ── Recipe picker ──
+    function openRecipePicker() {
+      const list = document.getElementById('rp-recipe-list');
+      const allRecipes = getAllRecipes();
+      list.innerHTML = allRecipes.length === 0
+        ? '<p style="color:var(--muted); font-size:14px; text-align:center; padding:1rem;">No recipes found. <a href="recipes.html" style="color:var(--green);">Add some first →</a></p>'
+        : allRecipes.map(r =>
+            '<div class="rp-recipe-row' + (selectedRecipeIds.includes(r.id) ? ' selected' : '') + '" onclick="toggleRecipe(this, \'' + r.id + '\')" data-id="' + r.id + '">' +
+            '<div class="rp-check">' + (selectedRecipeIds.includes(r.id) ? '✓' : '') + '</div>' +
+            '<div class="rp-recipe-info"><div class="rp-recipe-name">' + escHtml(r.name) + '</div>' +
+            '<div class="rp-recipe-meta">' + escHtml(r.meta || (r.ingredients.length + ' ingredients')) + '</div></div>' +
+            '</div>'
+          ).join('');
+      document.getElementById('rp-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRecipePicker() {
+      document.getElementById('rp-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // NOTE: rp-overlay listener moved to DOMContentLoaded (modal HTML comes after script)
+
+    function toggleRecipe(row, id) {
+      row.classList.toggle('selected');
+      const check = row.querySelector('.rp-check');
+      if (row.classList.contains('selected')) {
+        check.textContent = '✓';
+        if (!selectedRecipeIds.includes(id)) selectedRecipeIds.push(id);
       } else {
-        checkbox.checked = !checkbox.checked;
-        syncRow(row, checkbox);
+        check.textContent = '';
+        selectedRecipeIds = selectedRecipeIds.filter(x => x !== id);
       }
     }
 
-    function syncRow(row, checkbox) {
-      const cost = parseFloat(checkbox.dataset.cost);
-      if (checkbox.checked) {
-        row.classList.add('checked');
-        checkedCost += cost;
-        checkedCount++;
-      } else {
-        row.classList.remove('checked');
-        checkedCost -= cost;
-        checkedCount--;
+    function applyRecipeSelection() {
+      localStorage.setItem('mm_selected_recipes', JSON.stringify(selectedRecipeIds));
+      buildShoppingList(selectedRecipeIds);
+      closeRecipePicker();
+      showToast('Shopping list updated from selected recipes!');
+    }
+
+    // ── Build shopping list from selected recipes ──
+    // ── Quantity merging engine ──
+    // Understands fractions, decimals, and common units so amounts add up correctly.
+    // e.g. "1 stick" + "1 stick" → "2 sticks", "1/4 cup" + "1/2 cup" → "3/4 cup"
+
+    const UNIT_ALIASES = {
+      'tbsp': 'tbsp', 'tablespoon': 'tbsp', 'tablespoons': 'tbsp', 'tbs': 'tbsp',
+      'tsp': 'tsp', 'teaspoon': 'tsp', 'teaspoons': 'tsp',
+      'cup': 'cup', 'cups': 'cup',
+      'oz': 'oz', 'ounce': 'oz', 'ounces': 'oz',
+      'lb': 'lb', 'lbs': 'lb', 'pound': 'lb', 'pounds': 'lb',
+      'g': 'g', 'gram': 'g', 'grams': 'g',
+      'ml': 'ml', 'milliliter': 'ml', 'milliliters': 'ml',
+      'l': 'l', 'liter': 'l', 'liters': 'l',
+      'stick': 'stick', 'sticks': 'stick',
+      'clove': 'clove', 'cloves': 'clove',
+      'pint': 'pint', 'pints': 'pint',
+      'bunch': 'bunch', 'bunches': 'bunch',
+      'head': 'head', 'heads': 'head',
+      'slice': 'slice', 'slices': 'slice',
+      'can': 'can', 'cans': 'can',
+      'box': 'box', 'boxes': 'box',
+      'bottle': 'bottle', 'bottles': 'bottle',
+      'bag': 'bag', 'bags': 'bag',
+      'jar': 'jar', 'jars': 'jar',
+      'carton': 'carton', 'cartons': 'carton',
+      'tub': 'tub', 'tubs': 'tub',
+      'wedge': 'wedge', 'wedges': 'wedge',
+    };
+
+    const UNIT_PLURAL = {
+      'tbsp': 'tbsp', 'tsp': 'tsp', 'cup': 'cups', 'oz': 'oz', 'lb': 'lb',
+      'g': 'g', 'ml': 'ml', 'l': 'l', 'stick': 'sticks', 'clove': 'cloves',
+      'pint': 'pints', 'bunch': 'bunches', 'head': 'heads', 'slice': 'slices',
+      'can': 'cans', 'box': 'boxes', 'bottle': 'bottles', 'bag': 'bags',
+      'jar': 'jars', 'carton': 'cartons', 'tub': 'tubs', 'wedge': 'wedges',
+    };
+
+    // Convert fraction strings like "1/4", "3/4", "1 1/2" to decimal
+    function parseFraction(str) {
+      str = str.trim();
+      // mixed number: "1 1/2"
+      const mixed = str.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+      if (mixed) return parseInt(mixed[1]) + parseInt(mixed[2]) / parseInt(mixed[3]);
+      // simple fraction: "3/4"
+      const frac = str.match(/^(\d+)\/(\d+)$/);
+      if (frac) return parseInt(frac[1]) / parseInt(frac[2]);
+      // decimal or integer
+      const num = parseFloat(str);
+      return isNaN(num) ? null : num;
+    }
+
+    // Format a decimal back to a nice fraction string
+    function formatQty(num) {
+      if (num === Math.floor(num)) return String(num);
+      const whole = Math.floor(num);
+      const frac = num - whole;
+      const fracs = [[1,4],[1,3],[1,2],[2,3],[3,4],[1,8],[3,8],[5,8],[7,8]];
+      let best = null, bestDiff = Infinity;
+      fracs.forEach(([n,d]) => {
+        const diff = Math.abs(frac - n/d);
+        if (diff < bestDiff) { bestDiff = diff; best = [n,d]; }
+      });
+      if (best && bestDiff < 0.05) {
+        return whole > 0 ? whole + ' ' + best[0] + '/' + best[1] : best[0] + '/' + best[1];
       }
-      updateTotal();
+      return num.toFixed(2).replace(/\.?0+$/, '');
+    }
+
+    // Parse an amount string like "3/4 lb, peeled" → { qty: 0.75, unit: 'lb', note: 'peeled' }
+    function parseAmount(amountStr) {
+      if (!amountStr) return { qty: null, unit: null, note: amountStr || '' };
+      const s = amountStr.trim();
+      // Try to match: optional number/fraction, optional unit, optional note
+      const m = s.match(/^([\d\/\s\.]+)\s*([a-zA-Z]+)?(,?\s*.*)$/);
+      if (!m) return { qty: null, unit: null, note: s };
+      const qty = parseFraction(m[1].trim());
+      const rawUnit = (m[2] || '').toLowerCase().trim();
+      const unit = UNIT_ALIASES[rawUnit] || rawUnit || null;
+      const note = (m[3] || '').replace(/^,\s*/, '').trim();
+      return { qty, unit, note };
+    }
+
+    // Merge two amount strings together
+    function mergeAmounts(a1, a2) {
+      const p1 = parseAmount(a1);
+      const p2 = parseAmount(a2);
+
+      // Both have quantities and same unit → add them
+      if (p1.qty !== null && p2.qty !== null && p1.unit === p2.unit) {
+        const total = p1.qty + p2.qty;
+        const unit = p1.unit || '';
+        const unitStr = total !== 1 ? (UNIT_PLURAL[unit] || unit) : unit;
+        const note = p1.note || p2.note;
+        return formatQty(total) + (unitStr ? ' ' + unitStr : '') + (note ? ', ' + note : '');
+      }
+
+      // Both are plain counts with no unit (e.g. "2 lemons" + "3 lemons")
+      if (p1.qty !== null && p2.qty !== null && !p1.unit && !p2.unit) {
+        const total = p1.qty + p2.qty;
+        const note = p1.note || p2.note;
+        return formatQty(total) + (note ? ' ' + note : '');
+      }
+
+      // Can't merge numerically — just combine as text
+      if (a1 === a2) return a1;
+      return a1 + ' + ' + a2;
+    }
+
+    // Guess ingredient category from its name
+    function guessCategory(name) {
+      const n = name.toLowerCase();
+      const produce = ['tomato','lettuce','spinach','kale','broccoli','carrot','onion','garlic','shallot',
+        'pepper','cucumber','zucchini','mushroom','potato','sweet potato','corn','pea','bean','lemon',
+        'lime','orange','apple','banana','berry','avocado','celery','cabbage','beet','radish','herb',
+        'basil','parsley','cilantro','mint','thyme','rosemary','ginger','green onion','scallion',
+        'chive','jalapeño','leek','fennel','arugula','chard','eggplant','squash','pumpkin','cherry'];
+      const proteins = ['chicken','beef','pork','lamb','turkey','salmon','tuna','shrimp','fish','tofu',
+        'tempeh','seitan','egg','eggs','bacon','sausage','ham','steak','ground','mince','crab','lobster',
+        'scallop','clam','mussel','anchovy','sardine'];
+      const dairy = ['milk','cream','butter','cheese','yogurt','sour cream','parmesan','mozzarella',
+        'cheddar','ricotta','brie','gouda','feta','cottage','kefir','ghee','half and half','half-and-half'];
+      if (produce.some(w => n.includes(w))) return 'produce';
+      if (proteins.some(w => n.includes(w))) return 'proteins';
+      if (dairy.some(w => n.includes(w))) return 'dairy';
+      return 'pantry';
+    }
+
+    // Parse user recipe ingredient line: "2 cups rice" or "1/4 cup olive oil" or "3 cloves garlic, minced"
+    function parseUserIngredient(line) {
+      const p = parseAmount(line);
+      // The "name" is whatever comes after the qty+unit
+      let name = line.trim();
+      if (p.qty !== null) {
+        // strip the leading qty + unit from the original string to get the name
+        const qtyStr = line.match(/^[\d\/\s\.]+/);
+        if (qtyStr) {
+          name = line.slice(qtyStr[0].length).trim();
+          if (p.unit) {
+            const unitRe = new RegExp('^' + p.unit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 's?\\b', 'i');
+            // try to strip unit from name
+            const rawUnit = line.slice(qtyStr[0].length).trim().split(/\s+/)[0];
+            if (UNIT_ALIASES[rawUnit.toLowerCase().replace(/,$/,'')]) {
+              name = line.slice(qtyStr[0].length).trim().replace(/^\S+\s*,?\s*/, '').trim();
+            }
+          }
+        }
+      }
+      // strip trailing descriptors like ", minced" for the ingredient key
+      const cleanName = name.replace(/,.*$/, '').trim();
+      return {
+        name: cleanName || line,
+        amount: line, // keep original full line as amount display
+        cost: 0,
+        category: guessCategory(cleanName || line)
+      };
+    }
+
+    function buildShoppingList(ids) {
+      if (!ids || ids.length === 0) return;
+
+      const allRecipes = getAllRecipes();
+      const selected = allRecipes.filter(r => ids.includes(r.id));
+
+      // Merge ingredients: add up quantities for matching ingredient names
+      const merged = {}; // key → { name, amount, cost, category }
+
+      selected.forEach(recipe => {
+        recipe.ingredients.forEach(ing => {
+          const key = ing.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (!merged[key]) {
+            merged[key] = { ...ing };
+          } else {
+            // Add quantities together
+            merged[key].amount = mergeAmounts(merged[key].amount || '', ing.amount || '');
+            merged[key].cost = (merged[key].cost || 0) + (ing.cost || 0);
+          }
+        });
+      });
+
+      // Group by category
+      const groups = { produce: [], proteins: [], pantry: [], dairy: [] };
+      Object.values(merged).forEach(ing => {
+        const cat = ing.category || 'pantry';
+        if (groups[cat]) groups[cat].push(ing);
+        else groups.pantry.push(ing);
+      });
+
+      currentItems = Object.values(merged);
+
+      renderCategory('produce', groups.produce, '🥦', 'Produce', 'cat-produce');
+      renderCategory('proteins', groups.proteins, '🥩', 'Proteins', 'cat-proteins');
+      renderCategory('pantry', groups.pantry, '🥫', 'Pantry', 'cat-pantry');
+      renderCategory('dairy', groups.dairy, '🧀', 'Dairy', 'cat-dairy');
+
+      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      document.getElementById('total-display').textContent = '$' + total.toFixed(2);
+      checkedCost = 0; checkedCount = 0;
+      document.getElementById('total-meta').textContent = currentItems.length + ' items remaining · 0 bought';
+      document.getElementById('progress-bar').style.width = '0%';
+
+      updateSelectedChips(selected);
+      attachCheckboxEvents();
+    }
+
+    function renderCategory(id, items, emoji, label, catClass) {
+      const card = document.querySelector('.' + catClass);
+      if (!card) return;
+      const countEl = document.getElementById('count-' + id);
+      if (countEl) countEl.textContent = items.length + ' item' + (items.length !== 1 ? 's' : '');
+      const ul = card.querySelector('.item-list');
+      ul.innerHTML = items.length === 0
+        ? '<li style="padding:12px 20px; font-size:0.875rem; color:var(--muted);">No items from selected recipes.</li>'
+        : items.map(ing => {
+            const hasPrice = (ing.cost || 0) > 0;
+            return '<li class="item-row">' +
+              '<input type="checkbox" class="item-checkbox" data-cost="' + (ing.cost || 0).toFixed(2) + '" />' +
+              '<span class="item-name">' + escHtml(ing.name) + '</span>' +
+              '<span class="item-amount">' + escHtml(ing.amount || '') + '</span>' +
+              '<span class="item-cost">' + (hasPrice ? '$' + (ing.cost).toFixed(2) : '—') + '</span>' +
+              '</li>';
+          }).join('');
+    }
+
+    function updateSelectedChips(recipes) {
+      const row = document.getElementById('selected-recipes-row');
+      Array.from(row.querySelectorAll('.sr-chip')).forEach(c => c.remove());
+      recipes.forEach(r => {
+        const chip = document.createElement('span');
+        chip.className = 'sr-chip';
+        chip.textContent = r.name;
+        row.appendChild(chip);
+      });
+      row.classList.toggle('visible', recipes.length > 0);
+    }
+
+    function getAllRecipes() {
+      // Load user-specific recipes (same key logic as recipes.html)
+      let rawRecipes = [];
+      try {
+        const user = JSON.parse(localStorage.getItem('mm_current_user'));
+        if (user && user.username) {
+          const personal = JSON.parse(localStorage.getItem('mm_user_recipes_' + user.username) || 'null');
+          rawRecipes = personal || JSON.parse(localStorage.getItem('mm_user_recipes') || '[]');
+        } else {
+          rawRecipes = JSON.parse(localStorage.getItem('mm_user_recipes') || '[]');
+        }
+      } catch(e) {}
+
+      const userRecipes = rawRecipes.map(r => ({
+        id: String(r.id),
+        name: r.title,
+        meta: 'My Recipe · ' + r.ingredients.length + ' ingredients',
+        ingredients: r.ingredients.map(line => parseUserIngredient(line))
+      }));
+      return [...BUILTIN_RECIPES, ...userRecipes];
+    }
+
+    // ── Checkbox / toggle logic ──
+    function attachCheckboxEvents() {
+      document.querySelectorAll('.item-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const row = this.closest('.item-row');
+          const cost = parseFloat(this.dataset.cost) || 0;
+          if (this.checked) {
+            row.classList.add('checked');
+            checkedCost += cost; checkedCount++;
+          } else {
+            row.classList.remove('checked');
+            checkedCost -= cost; checkedCount--;
+          }
+          updateTotal();
+        });
+      });
+      document.querySelectorAll('.item-row').forEach(row => {
+        row.addEventListener('click', function(e) {
+          if (e.target.classList.contains('item-checkbox')) return;
+          const cb = this.querySelector('.item-checkbox');
+          cb.checked = !cb.checked;
+          cb.dispatchEvent(new Event('change'));
+        });
+      });
     }
 
     function updateTotal() {
-      const remaining = Math.max(0, FULL_TOTAL - checkedCost);
-      const remainingItems = TOTAL_ITEMS - checkedCount;
-      const pct = (checkedCount / TOTAL_ITEMS) * 100;
-
+      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      const remaining = Math.max(0, total - checkedCost);
+      const remainingItems = currentItems.length - checkedCount;
+      const pct = currentItems.length > 0 ? (checkedCount / currentItems.length) * 100 : 0;
       document.getElementById('total-display').textContent = '$' + remaining.toFixed(2);
       document.getElementById('total-meta').textContent =
-        remainingItems + ' item' + (remainingItems !== 1 ? 's' : '') + ' remaining · ' +
-        checkedCount + ' bought';
+        remainingItems + ' item' + (remainingItems !== 1 ? 's' : '') + ' remaining · ' + checkedCount + ' bought';
       document.getElementById('progress-bar').style.width = pct + '%';
     }
 
@@ -881,41 +1305,58 @@
       banner.style.overflow = 'hidden';
       banner.style.transition = 'max-height 0.35s ease, padding 0.35s ease, opacity 0.25s';
       requestAnimationFrame(() => {
-        banner.style.maxHeight = '0';
-        banner.style.padding = '0';
-        banner.style.opacity = '0';
+        banner.style.maxHeight = '0'; banner.style.padding = '0'; banner.style.opacity = '0';
       });
       setTimeout(() => banner.remove(), 380);
     }
 
     let toastTimer;
-    function regenerateList() {
+    function showToast(msg) {
       const toast = document.getElementById('toast');
+      toast.textContent = msg || 'List regenerated based on your recipes!';
       clearTimeout(toastTimer);
       toast.classList.add('show');
       toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
+    function regenerateList() { showToast(); }
 
-    // Prevent double-toggle when clicking the checkbox directly
-    document.querySelectorAll('.item-checkbox').forEach(cb => {
-      cb.addEventListener('click', e => e.stopPropagation());
-      cb.addEventListener('change', function() {
-        const row = this.closest('.item-row');
-        syncRow(row, this);
-      });
-    });
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
 
-    // Remove the inline onclick from item-rows to avoid double-firing
-    // (handled via checkbox change event above; row click toggles checkbox)
-    document.querySelectorAll('.item-row').forEach(row => {
-      row.addEventListener('click', function(e) {
-        if (e.target.classList.contains('item-checkbox')) return;
-        const cb = this.querySelector('.item-checkbox');
-        cb.checked = !cb.checked;
-        syncRow(this, cb);
-      });
-    });
+    // ── Init: attach events and seed currentItems from whatever rows are on screen ──
+    function initStaticList() {
+      // Build currentItems from the actual data-cost values on static HTML rows
+      currentItems = Array.from(document.querySelectorAll('.item-checkbox')).map(cb => ({
+        cost: parseFloat(cb.dataset.cost) || 0
+      }));
+    }
+
+    if (selectedRecipeIds.length === 0) {
+      // No recipes selected yet — use the static default list
+      initStaticList();
+    }
+    // Always attach checkbox events (works for both static and dynamic rows)
+    attachCheckboxEvents();
   </script>
+
+
+  <!-- RECIPE PICKER MODAL -->
+  <div class="rp-overlay" id="rp-overlay">
+    <div class="rp-modal">
+      <button class="rp-close" onclick="closeRecipePicker()">✕</button>
+      <h2 class="rp-title">Choose This Week's Recipes</h2>
+      <p class="rp-sub">Select recipes to generate your shopping list from their ingredients.</p>
+      <div id="rp-recipe-list">
+        <!-- populated by JS -->
+      </div>
+      <div class="rp-actions">
+        <button class="rp-btn-cancel" onclick="closeRecipePicker()">Cancel</button>
+        <button class="rp-btn-apply" onclick="applyRecipeSelection()">Generate List →</button>
+      </div>
+    </div>
+  </div>
+
 
 </body>
 </html>
