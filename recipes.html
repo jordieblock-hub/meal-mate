@@ -6,7 +6,7 @@
   <title>Recipe Library — Meal Mate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
 
   <style>
     *, *::before, *::after {
@@ -16,15 +16,29 @@
     }
 
     :root {
-      --green: #3a7d44;
-      --green-light: #e8f5ea;
-      --cream: #faf8f3;
-      --terracotta: #c8724a;
-      --sage: #8faa82;
-      --warm-white: #fffdf7;
-      --text: #1c2b1e;
-      --muted: #6b7f6d;
-      --border: #d4e0d5;
+      --ivory:       #F0EBE3;
+      --orange:      #C75F2F;
+      --orange-dark: #a84d22;
+      --butter:      #FCE9B2;
+      --peach:       #FAE1CC;
+      --sage:        #AACDA1;
+      --sage-dark:   #8ab380;
+      --text:        #3D342E;
+      --muted:       #7a6a5f;
+      --border:      #e0d5cc;
+      --white:       #FFFDF9;
+      --radius-sm:   12px;
+      --radius-md:   20px;
+      --radius-lg:   28px;
+      --radius-pill: 99px;
+      --shadow-sm:   0 2px 12px rgba(61,52,46,0.08);
+      --shadow-md:   0 6px 28px rgba(61,52,46,0.12);
+    }
+
+    .emphasis {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 500;
     }
 
     html {
@@ -33,7 +47,7 @@
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background-color: var(--cream);
+      background-color: var(--ivory);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -44,7 +58,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--warm-white);
+      background: var(--white);
       border-bottom: 1px solid var(--border);
       padding: 0 2rem;
     }
@@ -67,9 +81,10 @@
     }
 
     .nav-logo-wordmark {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.25rem;
-      color: var(--green);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--orange);
       letter-spacing: -0.01em;
     }
 
@@ -92,19 +107,19 @@
     }
 
     .nav-links a:hover {
-      color: var(--text);
+      color: var(--orange);
     }
 
     .nav-links a.active {
-      color: var(--green);
-      border-bottom: 2px solid var(--green);
+      color: var(--orange);
+      border-bottom: 2px solid var(--orange);
     }
 
     .nav-cta {
       margin-left: auto;
-      background: var(--green);
-      color: #fff !important;
-      border-radius: 99px;
+      background: var(--orange);
+      color: var(--ivory) !important;
+      border-radius: var(--radius-pill);
       padding: 0.45rem 1.25rem !important;
       font-weight: 600 !important;
       border-bottom: none !important;
@@ -114,24 +129,28 @@
     }
 
     .nav-cta:hover {
-      background: #2e6636 !important;
-      color: #fff !important;
+      background: var(--orange-dark) !important;
+      color: var(--ivory) !important;
       transform: translateY(-1px);
     }
 
     /* ─── PAGE HEADER ─── */
     .page-header {
+      background: var(--ivory);
+      padding: 60px 24px 40px;
+    }
+
+    .page-header-inner {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 4rem 2rem 2rem;
     }
 
     .page-header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
       line-height: 1.1;
       color: var(--text);
-      letter-spacing: -0.02em;
       margin-bottom: 0.75rem;
     }
 
@@ -146,22 +165,23 @@
     .filter-section {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem 2.5rem;
+      padding: 0 24px 2.5rem;
     }
 
     .filter-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 10px;
+      margin-bottom: 40px;
     }
 
     .chip {
       display: inline-flex;
       align-items: center;
-      padding: 0.45rem 1.1rem;
-      border-radius: 99px;
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
       border: 1.5px solid var(--border);
-      background: transparent;
+      background: var(--white);
       color: var(--muted);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
@@ -172,132 +192,124 @@
     }
 
     .chip:hover {
-      border-color: var(--green);
-      color: var(--green);
-      background: var(--green-light);
+      border-color: var(--orange);
+      color: var(--orange);
     }
 
     .chip.active {
-      background: var(--green);
-      border-color: var(--green);
-      color: #fff;
+      background: var(--orange);
+      border-color: var(--orange);
+      color: var(--ivory);
     }
 
     /* ─── RECIPE CARDS CONTAINER ─── */
     .recipes-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem 5rem;
+      padding: 0 24px 5rem;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
     }
 
     /* ─── RECIPE CARD ─── */
     .recipe-card {
-      border-radius: 20px;
+      border-radius: var(--radius-lg);
       padding: 2.5rem;
-      box-shadow: 0 2px 20px rgba(28, 43, 30, 0.06), 0 1px 4px rgba(28, 43, 30, 0.04);
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-sm);
       transition: box-shadow 0.2s;
     }
 
     .recipe-card:hover {
-      box-shadow: 0 6px 32px rgba(28, 43, 30, 0.1), 0 2px 8px rgba(28, 43, 30, 0.06);
+      box-shadow: var(--shadow-md);
     }
 
     .recipe-card.hidden {
       display: none;
     }
 
-    .card-cream { background: var(--warm-white); }
-    .card-sage  { background: #e8f4e8; }
-    .card-terra { background: #fdf0eb; }
+    .card-white  { background: var(--white); }
+    .card-peach  { background: var(--peach); }
+    .card-butter { background: var(--butter); }
 
     /* Top 2-col layout */
     .card-top {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: 2rem;
       align-items: start;
     }
 
     /* LEFT: title col */
-    .card-title-col {}
-
     .card-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.1;
       color: var(--text);
       margin-bottom: 1rem;
     }
 
     .card-description {
-      font-size: 0.975rem;
+      font-size: 0.95rem;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.6;
+      margin-top: 1rem;
       margin-bottom: 1.5rem;
     }
 
     .card-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 6px;
     }
 
     .tag-pill {
-      display: inline-block;
-      padding: 0.3rem 0.85rem;
-      border-radius: 99px;
-      font-size: 0.78rem;
+      display: inline-flex;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.01em;
+      background: var(--sage);
+      color: var(--text);
     }
 
-    .tag-pill.vegetarian    { background: #ddf0dd; color: #2e6636; }
-    .tag-pill.quick         { background: #fff0e6; color: #a0522d; }
-    .tag-pill.protein       { background: #e6f0ff; color: #2b4fa0; }
-    .tag-pill.budget        { background: #fff8dc; color: #8b6914; }
-
     /* RIGHT: ingredients col */
-    .card-ingredients-col {}
-
     .ingredients-heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.15rem;
-      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--orange);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 1rem;
     }
 
     .ingredients-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem 0.85rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
 
     .ingredient-item {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.3rem;
     }
 
-    .ingredient-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.35rem;
-      flex-shrink: 0;
+    .ingredient-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      display: block;
     }
 
     .ingredient-name {
       font-size: 0.78rem;
       font-weight: 600;
       color: var(--text);
+      margin-top: 6px;
       line-height: 1.3;
     }
 
@@ -318,37 +330,27 @@
     .card-bottom {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: 2rem;
       align-items: start;
     }
 
-    /* LEFT: photo placeholder */
+    /* LEFT: food photo */
     .card-photo {
-      border-radius: 14px;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 0.5rem;
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      display: block;
     }
-
-    .card-photo-label {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1rem;
-      font-style: italic;
-      opacity: 0.7;
-    }
-
-    .photo-cream { background: #e8d8c0; color: #6b4e2a; }
-    .photo-sage  { background: #b8d4b0; color: #2d5a27; }
-    .photo-terra { background: #e8b898; color: #7a3a1a; }
 
     /* RIGHT: instructions */
     .instructions-heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.15rem;
-      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--orange);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 1rem;
     }
 
@@ -356,13 +358,13 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
     }
 
     .instructions-list li {
       display: flex;
-      gap: 0.85rem;
+      gap: 12px;
       align-items: flex-start;
+      margin-bottom: 12px;
     }
 
     .step-num {
@@ -370,17 +372,17 @@
       width: 26px;
       height: 26px;
       border-radius: 50%;
-      background: var(--green);
-      color: #fff;
-      font-size: 0.72rem;
+      background: var(--orange);
+      color: var(--ivory);
+      font-size: 0.8rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 1px;
     }
 
     .step-text {
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
       color: var(--text);
       line-height: 1.6;
@@ -388,8 +390,8 @@
 
     /* ─── FOOTER ─── */
     footer {
-      background: var(--text);
-      color: rgba(255, 255, 255, 0.7);
+      background: var(--white);
+      border-top: 1px solid var(--border);
       padding: 3rem 2rem 2rem;
     }
 
@@ -415,14 +417,15 @@
     }
 
     .footer-logo-wordmark {
-      font-family: 'DM Serif Display', serif;
-      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      color: var(--orange);
       font-size: 1.1rem;
     }
 
     .footer-tagline {
       font-size: 0.8rem;
-      color: rgba(255,255,255,0.45);
+      color: var(--muted);
       margin-top: 2px;
     }
 
@@ -434,13 +437,13 @@
 
     .footer-nav a {
       text-decoration: none;
-      color: rgba(255,255,255,0.6);
+      color: var(--muted);
       font-size: 0.875rem;
       transition: color 0.2s;
     }
 
     .footer-nav a:hover {
-      color: #fff;
+      color: var(--orange);
     }
 
     .footer-social {
@@ -450,21 +453,21 @@
 
     .footer-social a {
       text-decoration: none;
-      color: rgba(255,255,255,0.7);
+      color: var(--text);
       font-size: 0.875rem;
       font-weight: 700;
       transition: color 0.2s;
     }
 
     .footer-social a:hover {
-      color: #fff;
+      color: var(--orange);
     }
 
     .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid var(--border);
       padding-top: 1.5rem;
       font-size: 0.8rem;
-      color: rgba(255,255,255,0.35);
+      color: var(--muted);
       text-align: center;
     }
 
@@ -477,7 +480,7 @@
       }
 
       .card-photo {
-        height: 200px;
+        height: 220px;
       }
 
       .ingredients-grid {
@@ -522,7 +525,7 @@
       }
 
       .ingredients-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
@@ -533,12 +536,12 @@
   <nav>
     <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
-          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
-          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
-          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
         </svg>
         <span class="nav-logo-wordmark">meal mate</span>
       </a>
@@ -553,8 +556,10 @@
 
   <!-- ─── PAGE HEADER ─── -->
   <header class="page-header">
-    <h1>Recipe Library</h1>
-    <p>Simple, student-friendly recipes designed to minimize waste and maximize flavor.</p>
+    <div class="page-header-inner">
+      <h1>Recipe <span class="emphasis">Library</span></h1>
+      <p>Simple, student-friendly recipes designed to minimize waste and maximize flavor.</p>
+    </div>
   </header>
 
   <!-- ─── FILTER CHIPS ─── -->
@@ -572,15 +577,15 @@
   <main class="recipes-container">
 
     <!-- RECIPE 1: Tomato Miso Pasta w/ Shrimp -->
-    <article class="recipe-card card-cream" data-tags="Quick & Easy,High Protein">
+    <article class="recipe-card card-white" data-tags="Quick & Easy,High Protein">
       <div class="card-top">
 
         <div class="card-title-col">
-          <h2 class="card-title">Tomato Miso Pasta w/ Shrimp</h2>
+          <h2 class="card-title">Tomato <span class="emphasis">Miso</span> Pasta w/ Shrimp</h2>
           <p class="card-description">One of those recipes you'll be repeating for a long, long time. Find quality cherry tomatoes and you absolutely cannot go wrong. So simple and so good.</p>
           <div class="card-tags">
-            <span class="tag-pill quick">Quick &amp; Easy</span>
-            <span class="tag-pill protein">High Protein</span>
+            <span class="tag-pill">Quick &amp; Easy</span>
+            <span class="tag-pill">High Protein</span>
           </div>
         </div>
 
@@ -589,69 +594,51 @@
           <div class="ingredients-grid">
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#ffe4e4;">🍅</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=120&q=80" alt="Cherry tomatoes" />
               <span class="ingredient-name">Cherry tomatoes</span>
               <span class="ingredient-amount">2 pints vine-on</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4f4ff;">🦐</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=120&q=80" alt="Shrimp" />
               <span class="ingredient-name">Shrimp</span>
               <span class="ingredient-amount">3/4 lb, peeled</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff0e4;">🍝</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=120&q=80" alt="Thin spaghetti" />
               <span class="ingredient-name">Thin spaghetti</span>
               <span class="ingredient-amount">2 servings</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1501420193986-b6bba0e5a94a?w=120&q=80" alt="Garlic" />
               <span class="ingredient-name">Garlic</span>
               <span class="ingredient-amount">3 cloves, chopped</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff4e4;">🧅</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=120&q=80" alt="Shallots" />
               <span class="ingredient-name">Shallots</span>
               <span class="ingredient-amount">2 small, sliced</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e8e4d4;">🫙</div>
-              <span class="ingredient-name">Miso</span>
-              <span class="ingredient-amount">1 Tbsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4ffe8;">🫒</div>
-              <span class="ingredient-name">Olive oil</span>
-              <span class="ingredient-amount">1/4 cup</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1587740908075-9e245070dfaa?w=120&q=80" alt="Lemon" />
               <span class="ingredient-name">Lemon juice</span>
               <span class="ingredient-amount">1/4 lemon</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#ffe8e4;">🌶️</div>
-              <span class="ingredient-name">Red pepper flake</span>
-              <span class="ingredient-amount">1 tsp</span>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=120&q=80" alt="Olive oil" />
+              <span class="ingredient-name">Olive oil</span>
+              <span class="ingredient-amount">1/4 cup</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1550411294-2b145107e82e?w=120&q=80" alt="Butter" />
               <span class="ingredient-name">Butter</span>
               <span class="ingredient-amount">1 Tbsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
-              <span class="ingredient-name">Parsley</span>
-              <span class="ingredient-amount">finely chopped</span>
             </div>
 
           </div>
@@ -662,10 +649,7 @@
 
       <div class="card-bottom">
 
-        <div class="card-photo photo-cream">
-          <span style="font-size:2.5rem;">🍝</span>
-          <span class="card-photo-label">Finished dish</span>
-        </div>
+        <img class="card-photo" src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80" alt="Tomato miso pasta with shrimp" />
 
         <div class="card-instructions-col">
           <h3 class="instructions-heading">Instructions:</h3>
@@ -686,15 +670,15 @@
 
 
     <!-- RECIPE 2: Miso Mushroom Pasta -->
-    <article class="recipe-card card-sage" data-tags="Vegetarian,Budget-Friendly">
+    <article class="recipe-card card-peach" data-tags="Vegetarian,Budget-Friendly">
       <div class="card-top">
 
         <div class="card-title-col">
-          <h2 class="card-title">Miso Mushroom Pasta</h2>
+          <h2 class="card-title"><span class="emphasis">Miso</span> Mushroom Pasta</h2>
           <p class="card-description">So addicting and fully vegetarian, this pasta uses miso and a touch of cream for a rich flavor that compliments a medley of mushrooms. Serves 2.</p>
           <div class="card-tags">
-            <span class="tag-pill vegetarian">Vegetarian</span>
-            <span class="tag-pill budget">Budget-Friendly</span>
+            <span class="tag-pill">Vegetarian</span>
+            <span class="tag-pill">Budget-Friendly</span>
           </div>
         </div>
 
@@ -703,75 +687,51 @@
           <div class="ingredients-grid">
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#f0e8e0;">🍄</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&q=80" alt="Oyster mushrooms" />
               <span class="ingredient-name">Oyster mushrooms</span>
               <span class="ingredient-amount">3 oz</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#ece4dc;">🍄</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&q=80" alt="Shimeji mushrooms" />
               <span class="ingredient-name">Shimeji mushrooms</span>
               <span class="ingredient-amount">3 oz</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff0e4;">🍝</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=120&q=80" alt="Gemelli pasta" />
               <span class="ingredient-name">Gemelli pasta</span>
               <span class="ingredient-amount">2 servings</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1501420193986-b6bba0e5a94a?w=120&q=80" alt="Garlic" />
               <span class="ingredient-name">Garlic</span>
               <span class="ingredient-amount">2 cloves</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff4e4;">🧅</div>
-              <span class="ingredient-name">Shallot</span>
-              <span class="ingredient-amount">1 small</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e8e4d4;">🫙</div>
-              <span class="ingredient-name">Miso</span>
-              <span class="ingredient-amount">1 Tbsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff8f0;">🥛</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=120&q=80" alt="Heavy cream" />
               <span class="ingredient-name">Heavy cream</span>
               <span class="ingredient-amount">1/4 cup</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#f0e8f4;">🍷</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=120&q=80" alt="White wine" />
               <span class="ingredient-name">White wine</span>
               <span class="ingredient-amount">1/3 cup</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff8e4;">🧀</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1552767059-ce182ead6c1b?w=120&q=80" alt="Parmesan" />
               <span class="ingredient-name">Parmesan</span>
               <span class="ingredient-amount">1/4 cup grated</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1550411294-2b145107e82e?w=120&q=80" alt="Butter" />
               <span class="ingredient-name">Butter</span>
               <span class="ingredient-amount">2 Tbsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
-              <span class="ingredient-name">Lemon</span>
-              <span class="ingredient-amount">juice of 1/4</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
-              <span class="ingredient-name">Parsley</span>
-              <span class="ingredient-amount">for garnish</span>
             </div>
 
           </div>
@@ -782,10 +742,7 @@
 
       <div class="card-bottom">
 
-        <div class="card-photo photo-sage">
-          <span style="font-size:2.5rem;">🍄</span>
-          <span class="card-photo-label">Finished dish</span>
-        </div>
+        <img class="card-photo" src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80" alt="Miso mushroom pasta" />
 
         <div class="card-instructions-col">
           <h3 class="instructions-heading">Instructions:</h3>
@@ -805,16 +762,16 @@
 
 
     <!-- RECIPE 3: Garlic Butter Rice Bowl -->
-    <article class="recipe-card card-terra" data-tags="Budget-Friendly,Quick & Easy,Vegetarian">
+    <article class="recipe-card card-butter" data-tags="Budget-Friendly,Quick & Easy,Vegetarian">
       <div class="card-top">
 
         <div class="card-title-col">
-          <h2 class="card-title">Garlic Butter Rice Bowl</h2>
+          <h2 class="card-title">Garlic Butter <span class="emphasis">Rice</span> Bowl</h2>
           <p class="card-description">The ultimate budget meal that never gets old. Perfectly seasoned garlic butter rice topped with a crispy fried egg and whatever veggies you have on hand.</p>
           <div class="card-tags">
-            <span class="tag-pill budget">Budget-Friendly</span>
-            <span class="tag-pill quick">Quick &amp; Easy</span>
-            <span class="tag-pill vegetarian">Vegetarian</span>
+            <span class="tag-pill">Budget-Friendly</span>
+            <span class="tag-pill">Quick &amp; Easy</span>
+            <span class="tag-pill">Vegetarian</span>
           </div>
         </div>
 
@@ -823,63 +780,51 @@
           <div class="ingredients-grid">
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff8e4;">🍚</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=120&q=80" alt="Rice" />
               <span class="ingredient-name">Rice</span>
               <span class="ingredient-amount">1 cup, any variety</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#f4ffe4;">🧄</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1501420193986-b6bba0e5a94a?w=120&q=80" alt="Garlic" />
               <span class="ingredient-name">Garlic</span>
               <span class="ingredient-amount">4 cloves, minced</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffce4;">🧈</div>
-              <span class="ingredient-name">Butter</span>
-              <span class="ingredient-amount">2 Tbsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff8f0;">🥚</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=120&q=80" alt="Eggs" />
               <span class="ingredient-name">Eggs</span>
               <span class="ingredient-amount">2 large</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4f4e4;">🥦</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=120&q=80" alt="Broccoli" />
               <span class="ingredient-name">Broccoli</span>
               <span class="ingredient-amount">1 head, florets</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff0e4;">🥕</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=120&q=80" alt="Carrots" />
               <span class="ingredient-name">Carrots</span>
               <span class="ingredient-amount">2, julienned</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e8e8e4;">🧂</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=120&q=80" alt="Soy sauce" />
               <span class="ingredient-name">Soy sauce</span>
               <span class="ingredient-amount">2 Tbsp</span>
             </div>
 
             <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#e4ffe8;">🌿</div>
-              <span class="ingredient-name">Green onions</span>
-              <span class="ingredient-amount">for garnish</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fff0e0;">🌶️</div>
-              <span class="ingredient-name">Sesame oil</span>
-              <span class="ingredient-amount">1 tsp</span>
-            </div>
-
-            <div class="ingredient-item">
-              <div class="ingredient-icon" style="background:#fffff0;">🍋</div>
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1590502593747-42a996133562?w=120&q=80" alt="Lime" />
               <span class="ingredient-name">Lime</span>
               <span class="ingredient-amount">1, wedged</span>
+            </div>
+
+            <div class="ingredient-item">
+              <img class="ingredient-img" src="https://images.unsplash.com/photo-1550411294-2b145107e82e?w=120&q=80" alt="Butter" />
+              <span class="ingredient-name">Butter</span>
+              <span class="ingredient-amount">2 Tbsp</span>
             </div>
 
           </div>
@@ -890,10 +835,7 @@
 
       <div class="card-bottom">
 
-        <div class="card-photo photo-terra">
-          <span style="font-size:2.5rem;">🍳</span>
-          <span class="card-photo-label">Finished dish</span>
-        </div>
+        <img class="card-photo" src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" alt="Garlic butter rice bowl" />
 
         <div class="card-instructions-col">
           <h3 class="instructions-heading">Instructions:</h3>
@@ -920,12 +862,12 @@
 
         <div>
           <a href="#" class="footer-logo">
-            <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
-              <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
-              <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
-              <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
-              <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+            <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+              <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
+              <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
+              <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
+              <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
             </svg>
             <span class="footer-logo-wordmark">meal mate</span>
           </a>

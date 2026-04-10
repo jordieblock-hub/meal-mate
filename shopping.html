@@ -6,27 +6,40 @@
   <title>Weekly Shopping List — Meal Mate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green: #3a7d44;
-      --green-light: #e8f5ea;
-      --cream: #faf8f3;
-      --terracotta: #c8724a;
-      --sage: #8faa82;
-      --warm-white: #fffdf7;
-      --text: #1c2b1e;
-      --muted: #6b7f6d;
-      --border: #d4e0d5;
+      --ivory:       #F0EBE3;
+      --orange:      #C75F2F;
+      --orange-dark: #a84d22;
+      --butter:      #FCE9B2;
+      --peach:       #FAE1CC;
+      --sage:        #AACDA1;
+      --sage-dark:   #8ab380;
+      --text:        #3D342E;
+      --muted:       #7a6a5f;
+      --border:      #e0d5cc;
+      --white:       #FFFDF9;
+      --radius-sm:   12px;
+      --radius-md:   20px;
+      --radius-lg:   28px;
+      --radius-pill: 99px;
+      --shadow-sm:   0 2px 12px rgba(61,52,46,0.08);
+    }
+
+    .emphasis {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 500;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
+      background: var(--ivory);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -38,7 +51,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: #fff;
+      background: var(--white);
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
     }
@@ -58,9 +71,10 @@
       flex-shrink: 0;
     }
     .nav-logo span {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.25rem;
-      color: var(--green);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--orange);
       letter-spacing: -0.01em;
     }
     .nav-links {
@@ -78,30 +92,30 @@
       padding-bottom: 2px;
       transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover { color: var(--orange); }
     .nav-links a.active {
-      color: var(--green);
-      border-bottom: 2px solid var(--green);
+      color: var(--orange);
+      border-bottom: 2px solid var(--orange);
     }
     .nav-cta {
       margin-left: auto;
-      background: var(--green);
-      color: #fff;
+      background: var(--orange);
+      color: var(--ivory);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 22px;
-      border-radius: 99px;
+      border-radius: var(--radius-pill);
       text-decoration: none;
       transition: background 0.2s, transform 0.15s;
       white-space: nowrap;
     }
-    .nav-cta:hover { background: #2e6636; transform: translateY(-1px); }
+    .nav-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
 
     /* ── BANNER ── */
     #waste-banner {
-      background: var(--green);
-      color: #fff;
+      background: var(--orange);
+      color: var(--ivory);
       padding: 13px 24px;
       display: flex;
       align-items: center;
@@ -119,10 +133,10 @@
       transform: translateY(-50%);
       background: rgba(255,255,255,0.2);
       border: none;
-      color: #fff;
+      color: var(--ivory);
       width: 26px;
       height: 26px;
-      border-radius: 99px;
+      border-radius: var(--radius-pill);
       cursor: pointer;
       font-size: 1rem;
       line-height: 1;
@@ -135,12 +149,14 @@
 
     /* ── PAGE HEADER ── */
     .page-header {
+      background: var(--ivory);
       max-width: 900px;
       margin: 0 auto;
       padding: 48px 24px 32px;
     }
     .page-header h1 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
       font-size: clamp(2rem, 5vw, 3rem);
       color: var(--text);
       line-height: 1.1;
@@ -154,9 +170,9 @@
 
     /* ── RUNNING TOTAL CARD ── */
     .total-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       padding: 20px 24px;
       max-width: 900px;
       margin: 0 auto 32px;
@@ -169,19 +185,20 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    .total-amount {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.4rem;
-      color: var(--green);
-      line-height: 1;
-    }
     .total-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       font-weight: 600;
       margin-bottom: 4px;
+    }
+    .total-amount {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--orange);
+      line-height: 1;
     }
     .total-meta {
       font-size: 0.875rem;
@@ -196,45 +213,48 @@
     }
     .btn-outline {
       background: transparent;
-      border: 1.5px solid var(--border);
-      color: var(--text);
+      border: 2px solid var(--orange);
+      color: var(--orange);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 18px;
-      border-radius: 99px;
+      border-radius: var(--radius-pill);
       cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
+      transition: background 0.2s, color 0.2s;
       white-space: nowrap;
     }
-    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-outline:hover {
+      background: var(--orange);
+      color: var(--ivory);
+    }
     .btn-primary {
-      background: var(--green);
-      border: 1.5px solid var(--green);
-      color: #fff;
+      background: var(--orange);
+      border: 2px solid var(--orange);
+      color: var(--ivory);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
       font-weight: 600;
       padding: 9px 18px;
-      border-radius: 99px;
+      border-radius: var(--radius-pill);
       cursor: pointer;
       text-decoration: none;
       transition: background 0.2s;
       white-space: nowrap;
       display: inline-block;
     }
-    .btn-primary:hover { background: #2e6636; }
+    .btn-primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
     .progress-bar-wrap {
       margin-top: 14px;
-      background: var(--green-light);
-      border-radius: 99px;
+      background: var(--peach);
+      border-radius: var(--radius-pill);
       height: 8px;
       overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
-      background: var(--green);
-      border-radius: 99px;
+      background: var(--orange);
+      border-radius: var(--radius-pill);
       transition: width 0.4s ease;
       width: 0%;
     }
@@ -255,9 +275,9 @@
 
     /* ── CATEGORY CARDS ── */
     .category-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
       margin-bottom: 20px;
     }
@@ -269,7 +289,8 @@
       border-left: 4px solid transparent;
     }
     .category-header h2 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
       font-size: 1.15rem;
       color: var(--text);
     }
@@ -282,10 +303,10 @@
     }
 
     /* accent colors */
-    .cat-produce .category-header  { border-left-color: #8faa82; }
-    .cat-proteins .category-header { border-left-color: #c8724a; }
+    .cat-produce .category-header  { border-left-color: var(--sage); }
+    .cat-proteins .category-header { border-left-color: var(--orange); }
     .cat-pantry  .category-header  { border-left-color: #d4a853; }
-    .cat-dairy   .category-header  { border-left-color: #8aaabb; }
+    .cat-dairy   .category-header  { border-left-color: #a8c4d0; }
 
     /* ── ITEM ROWS ── */
     .item-list { list-style: none; }
@@ -298,8 +319,8 @@
       transition: background 0.15s;
       cursor: pointer;
     }
-    .item-row:hover { background: var(--cream); }
-    .item-row.checked { background: #f8f8f8; }
+    .item-row:hover { background: var(--ivory); }
+    .item-row.checked { background: #faf6f2; }
 
     /* custom checkbox */
     .item-checkbox {
@@ -315,8 +336,8 @@
       transition: border-color 0.2s, background 0.2s;
     }
     .item-checkbox:checked {
-      background: var(--green);
-      border-color: var(--green);
+      background: var(--orange);
+      border-color: var(--orange);
     }
     .item-checkbox:checked::after {
       content: '';
@@ -335,6 +356,7 @@
       flex: 1;
       font-size: 0.95rem;
       font-weight: 500;
+      color: var(--text);
       transition: color 0.2s;
     }
     .item-amount {
@@ -361,13 +383,13 @@
     /* ── SIDEBAR ── */
     .sidebar { position: sticky; top: 88px; }
     .tip-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: var(--butter);
+      border-radius: var(--radius-lg);
       padding: 22px 20px;
     }
     .tip-card h3 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
       font-size: 1.1rem;
       color: var(--text);
       margin-bottom: 14px;
@@ -383,7 +405,7 @@
     }
     .tip-card ul li {
       font-size: 0.875rem;
-      color: var(--muted);
+      color: var(--text);
       padding-left: 18px;
       position: relative;
       line-height: 1.5;
@@ -392,21 +414,21 @@
       content: '•';
       position: absolute;
       left: 0;
-      color: var(--sage);
+      color: var(--orange);
       font-size: 1.1rem;
       line-height: 1.3;
     }
 
-    /* ── TOAST MODAL ── */
+    /* ── TOAST ── */
     #toast {
       position: fixed;
       bottom: 32px;
       left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: var(--text);
-      color: #fff;
+      color: var(--ivory);
       padding: 14px 28px;
-      border-radius: 99px;
+      border-radius: var(--radius-pill);
       font-size: 0.9rem;
       font-weight: 500;
       box-shadow: 0 8px 32px rgba(0,0,0,0.18);
@@ -423,7 +445,7 @@
 
     /* ── FOOTER ── */
     footer {
-      background: #fff;
+      background: var(--white);
       border-top: 1px solid var(--border);
       padding: 32px 24px;
     }
@@ -442,9 +464,10 @@
       text-decoration: none;
     }
     .footer-logo span {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
       font-size: 1rem;
-      color: var(--green);
+      color: var(--orange);
     }
     .footer-tagline {
       font-size: 0.8rem;
@@ -463,7 +486,7 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-nav a:hover { color: var(--green); }
+    .footer-nav a:hover { color: var(--orange); }
     .footer-social {
       display: flex;
       gap: 16px;
@@ -476,7 +499,7 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-social a:hover { color: var(--green); }
+    .footer-social a:hover { color: var(--orange); }
     .footer-bottom {
       max-width: 900px;
       margin: 20px auto 0;
@@ -513,12 +536,12 @@
   <nav>
     <div class="nav-inner">
       <a class="nav-logo" href="#">
-        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
-          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
-          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
-          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
         </svg>
         <span>meal mate</span>
       </a>
@@ -540,7 +563,7 @@
 
   <!-- PAGE HEADER -->
   <div class="page-header">
-    <h1>Weekly Shopping List</h1>
+    <h1>Weekly <span class="emphasis">Shopping</span> List</h1>
     <p>Everything you need for the week — organized, estimated, and waste-conscious.</p>
   </div>
 
@@ -755,9 +778,9 @@
       <div class="tip-card">
         <h3>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="9" cy="9" r="8" fill="#e8f5ea"/>
-            <path d="M9 5v4l2.5 2.5" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="9" cy="9" r="4" stroke="#3a7d44" stroke-width="1.8" fill="none"/>
+            <circle cx="9" cy="9" r="8" fill="rgba(199,95,47,0.12)"/>
+            <path d="M9 5v4l2.5 2.5" stroke="#C75F2F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="9" r="4" stroke="#C75F2F" stroke-width="1.8" fill="none"/>
           </svg>
           Reduce Waste Tips
         </h3>
@@ -777,11 +800,11 @@
     <div class="footer-inner">
       <a class="footer-logo" href="#">
         <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
-          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
-          <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
-          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
-          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+          <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#C75F2F"/>
+          <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#a84d22"/>
+          <line x1="17" y1="13" x2="17" y2="6" stroke="#AACDA1" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#AACDA1"/>
+          <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#8ab380"/>
         </svg>
         <div>
           <span>meal mate</span>
