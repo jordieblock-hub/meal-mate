@@ -118,52 +118,73 @@
       .footer-nav { margin: 0; flex-wrap: wrap; }
     }
 
-    /* ─── PASTE IMPORT ─── */
-    .import-section {
-      border-bottom: 1px solid var(--border);
-      padding: 0 0 1.5rem 0;
-      margin-bottom: 1.5rem;
+    /* ─── SMART FORM ─── */
+    .form-preview {
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 2px; padding: 10px 14px; margin-top: 6px;
+      font-size: 12px; color: var(--muted); min-height: 28px;
+      line-height: 1.6; transition: border-color 0.2s;
     }
-    .import-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px;
+    .form-preview .parsed-line {
+      display: flex; align-items: baseline; gap: 8px; padding: 2px 0;
     }
-    .import-hint {
-      font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5;
+    .form-preview .parsed-amount {
+      font-weight: 700; color: var(--black); min-width: 80px; flex-shrink: 0;
     }
-    .import-paste-box {
-      width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
+    .form-preview .parsed-name { color: var(--text); }
+    .form-preview .parsed-error { color: #c0392b; font-style: italic; }
+    .form-counter {
+      font-size: 11px; color: var(--muted); text-align: right;
+      margin-top: 3px; letter-spacing: 0.02em;
+    }
+    .form-counter.warn { color: var(--accent); font-weight: 600; }
+    .ing-status {
+      font-size: 11px; margin-top: 4px; font-weight: 600;
+    }
+    .ing-status.good { color: var(--accent); }
+    .ing-status.bad  { color: #c0392b; }
+    .step-counter {
+      font-size: 11px; color: var(--muted); margin-top: 4px;
+    }
+    .modal-tabs {
+      display: flex; gap: 0; margin-bottom: 1.5rem;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .modal-tab {
+      padding: 10px 18px; font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; background: none; border: none;
+      color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -1.5px; transition: color 0.2s;
+    }
+    .modal-tab.active { color: var(--black); border-bottom-color: var(--black); }
+    .modal-tab:hover { color: var(--black); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .paste-box {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
       border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 13px;
       color: var(--text); background: var(--cream); outline: none;
-      transition: border-color 0.2s; resize: vertical; min-height: 100px;
-      line-height: 1.5;
+      transition: border-color 0.2s; resize: vertical; min-height: 180px;
+      line-height: 1.6;
     }
-    .import-paste-box:focus { border-color: var(--black); }
-    .import-paste-box::placeholder { color: var(--muted); font-style: italic; }
-    .btn-import {
-      margin-top: 8px; padding: 10px 20px; background: var(--black); color: #fff;
+    .paste-box:focus { border-color: var(--black); }
+    .paste-box::placeholder { color: var(--muted); font-style: italic; font-size: 12px; }
+    .btn-parse {
+      margin-top: 10px; padding: 10px 22px; background: var(--black); color: #fff;
       border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif;
-      font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 0.06em;
-      text-transform: uppercase; transition: background 0.2s; white-space: nowrap;
-      display: inline-block;
+      font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 0.07em;
+      text-transform: uppercase; transition: background 0.2s;
     }
-    .btn-import:hover { background: var(--accent); }
-    .btn-import:disabled { background: var(--muted); cursor: not-allowed; }
-    .import-status {
-      margin-top: 8px; font-size: 12px; color: var(--muted);
-      min-height: 18px; transition: color 0.2s;
+    .btn-parse:hover { background: var(--accent); }
+    .parse-hint {
+      font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.55;
     }
-    .import-status.error { color: #c0392b; font-weight: 600; }
-    .import-status.success { color: var(--accent); font-weight: 600; }
-    .import-status.loading { color: var(--muted); font-style: italic; }
-    .modal-divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 0 0 1.5rem 0; color: var(--muted); font-size: 11px;
-      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    .parse-result {
+      margin-top: 10px; font-size: 12px; color: var(--accent);
+      font-weight: 600; min-height: 18px;
     }
-    .modal-divider::before, .modal-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
-    }
+    .parse-result.error { color: #c0392b; }
   </style>
 </head>
 <body>
@@ -653,97 +674,237 @@
     }
 
     function clearForm() {
-      ['r-title','r-desc','r-emoji','r-ingredients','r-instructions','r-paste'].forEach(id => {
-        const el = document.getElementById(id);
+      ['r-title','r-desc','r-emoji','r-ingredients','r-instructions','r-paste-raw'].forEach(function(id) {
+        var el = document.getElementById(id);
         if (el) el.value = '';
       });
       document.getElementById('r-tags').value = '';
-      const status = document.getElementById('import-status');
-      if (status) { status.textContent = ''; status.className = 'import-status'; }
+      // Reset live feedback
+      var ingPreview = document.getElementById('ing-preview');
+      if (ingPreview) { ingPreview.innerHTML = ''; ingPreview.style.display = 'none'; }
+      var ingStatus = document.getElementById('ing-status');
+      if (ingStatus) ingStatus.textContent = '';
+      var stepCounter = document.getElementById('step-counter');
+      if (stepCounter) stepCounter.textContent = '';
+      var descCounter = document.getElementById('desc-counter');
+      if (descCounter) descCounter.textContent = '0 / 160';
+      var parseResult = document.getElementById('parse-result');
+      if (parseResult) { parseResult.textContent = ''; parseResult.className = 'parse-result'; }
+      // Go back to paste tab
+      switchTab('tab-paste', document.querySelector('.modal-tab'));
     }
 
-    // ── URL Import via Claude AI ──
-    async function importFromPaste() {
-      const pasteText = document.getElementById('r-paste').value.trim();
-      const status = document.getElementById('import-status');
-      const btn = document.getElementById('btn-import');
+    // ── Tab switching ──
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      document.querySelectorAll('.modal-tab').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
 
-      if (!pasteText || pasteText.length < 20) {
-        status.textContent = 'Please paste some recipe text first.';
-        status.className = 'import-status error';
+    // ── Live form feedback ──
+    function liveTitle(el) {
+      // Auto-suggest emoji based on title keywords
+      var title = el.value.toLowerCase();
+      var emojiMap = {
+        'pasta|spaghetti|noodle|linguine|fettuccine|penne|rigatoni': '🍝',
+        'pizza': '🍕', 'burger|sandwich': '🍔', 'taco|burrito|quesadilla': '🌮',
+        'soup|stew|chili|chowder': '🍲', 'salad': '🥗', 'rice|bowl': '🍚',
+        'chicken': '🍗', 'fish|salmon|tuna|shrimp|seafood': '🐟',
+        'steak|beef|meat': '🥩', 'egg|omelette|frittata': '🍳',
+        'cake|cupcake|dessert|cookie|brownie': '🎂', 'pie': '🥧',
+        'bread|toast|bagel': '🍞', 'pancake|waffle': '🥞',
+        'smoothie|shake': '🥤', 'coffee': '☕', 'tea': '🍵',
+        'curry': '🍛', 'sushi|roll': '🍣', 'stir.fry|fried rice': '🥘',
+        'mushroom': '🍄', 'veggie|vegetable|vegan': '🥦',
+      };
+      var emoji = document.getElementById('r-emoji');
+      if (emoji && !emoji.value) {
+        for (var pattern in emojiMap) {
+          if (new RegExp(pattern).test(title)) {
+            emoji.value = emojiMap[pattern];
+            break;
+          }
+        }
+      }
+    }
+
+    function liveDesc(el) {
+      var len = el.value.length;
+      var counter = document.getElementById('desc-counter');
+      if (!counter) return;
+      counter.textContent = len + ' / 160';
+      counter.className = 'form-counter' + (len > 140 ? ' warn' : '');
+    }
+
+    function liveIngredients(el) {
+      var lines = el.value.split('\n').filter(function(l) { return l.trim(); });
+      var ingStatus = document.getElementById('ing-status');
+      var ingPreview = document.getElementById('ing-preview');
+
+      if (lines.length === 0) {
+        if (ingStatus) ingStatus.textContent = '';
+        if (ingPreview) { ingPreview.style.display = 'none'; ingPreview.innerHTML = ''; }
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = 'Extracting...';
-      status.textContent = 'AI is reading your recipe...';
-      status.className = 'import-status loading';
+      // Parse each line and give feedback
+      var parsed = lines.map(function(line) {
+        line = line.trim();
+        // Match: optional number/fraction at start
+        var m = line.match(/^([\d\/\s\.¼½¾⅓⅔⅛]+)?\s*([a-zA-Z]+\.)?\s*(.+)$/);
+        var hasAmount = /^[\d\/\s\.¼½¾⅓⅔⅛]/.test(line);
+        return { line: line, hasAmount: hasAmount };
+      });
 
-      const prompt = 'Extract this recipe into structured JSON. Respond ONLY with valid JSON, no markdown, no backticks, no extra text. Recipe text: ' + pasteText + ' Return this exact format: {"title":"Recipe Name","description":"1-2 sentence description","ingredients":["2 cups flour","1 tsp salt"],"instructions":["Step one","Step two"],"tags":"Vegetarian","emoji":"🍝"} Rules: ingredients must each start with quantity and unit. tags must be one of: Vegetarian, Quick & Easy, High Protein, Budget-Friendly, or empty string. emoji should match the dish.';
+      var goodCount = parsed.filter(function(p) { return p.hasAmount; }).length;
+      var badCount  = parsed.length - goodCount;
 
-      try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1500,
-            messages: [{ role: 'user', content: prompt }]
-          })
-        });
+      if (ingStatus) {
+        if (badCount === 0) {
+          ingStatus.textContent = '✓ ' + goodCount + ' ingredient' + (goodCount !== 1 ? 's' : '') + ' — looks great';
+          ingStatus.className = 'ing-status good';
+        } else {
+          ingStatus.textContent = badCount + ' line' + (badCount !== 1 ? 's' : '') + ' missing amounts';
+          ingStatus.className = 'ing-status bad';
+        }
+      }
 
-        const data = await response.json();
+      // Show parsed preview
+      if (ingPreview && lines.length > 0) {
+        ingPreview.style.display = 'block';
+        ingPreview.innerHTML = '<div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Preview</div>' +
+          parsed.map(function(p) {
+            if (!p.hasAmount) {
+              return '<div class="parsed-line"><span class="parsed-error">⚠ ' + escHtml(p.line) + ' (add an amount like "2 cups")</span></div>';
+            }
+            // Split amount from name
+            var parts = p.line.split(/\s+/);
+            var amount = '', name = p.line;
+            // Find where the ingredient name starts (after quantity + optional unit)
+            var amtMatch = p.line.match(/^([\d\/\s\.¼½¾⅓⅔⅛]+\s*(?:cups?|tbsp|tsp|oz|lbs?|g|kg|ml|l|cloves?|sticks?|pints?|bunches?|heads?|cans?|bags?|jars?|tubs?|boxes?|bottles?|slices?|pieces?|large|medium|small|whole)?\s*)/i);
+            if (amtMatch) { amount = amtMatch[1].trim(); name = p.line.slice(amtMatch[1].length).trim(); }
+            return '<div class="parsed-line"><span class="parsed-amount">' + escHtml(amount || parts[0]) + '</span><span class="parsed-name">' + escHtml(name || parts.slice(1).join(' ')) + '</span></div>';
+          }).join('');
+      }
+    }
 
-        if (data.error) {
-          throw new Error(data.error.message || 'AI request failed');
+    function liveSteps(el) {
+      var lines = el.value.split('\n').filter(function(l) { return l.trim(); });
+      var counter = document.getElementById('step-counter');
+      if (!counter) return;
+      if (lines.length === 0) { counter.textContent = ''; return; }
+      counter.textContent = lines.length + ' step' + (lines.length !== 1 ? 's' : '');
+    }
+
+    // ── Paste & parse raw recipe text ──
+    function parseRawRecipe() {
+      var raw = document.getElementById('r-paste-raw').value.trim();
+      var resultEl = document.getElementById('parse-result');
+
+      if (!raw || raw.length < 30) {
+        resultEl.textContent = 'Please paste a full recipe first.';
+        resultEl.className = 'parse-result error';
+        return;
+      }
+
+      // ── Smart line-by-line parser ──
+      var lines = raw.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
+
+      var title = '';
+      var description = [];
+      var ingredients = [];
+      var instructions = [];
+      var currentSection = 'unknown';
+
+      var ingHeaders  = /^(ingredients?|what you.ll need|you.ll need|what you need|shopping list)/i;
+      var stepHeaders = /^(instructions?|directions?|steps?|method|how to make|preparation|to make|to cook)/i;
+      var stepLine    = /^(\d+[\.\)]\s+|step\s+\d+[\.:]\s*)/i;
+      var amountStart = /^[\d\/¼½¾⅓⅔⅛]/;
+      var unitWords   = /(cup|tbsp|tsp|tablespoon|teaspoon|oz|ounce|lb|pound|gram|kg|ml|liter|litre|clove|stick|pint|bunch|head|can|bag|jar|tub|box|bottle|piece|slice|large|medium|small|whole|pinch|dash)/i;
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+
+        // Skip short divider lines
+        if (/^[-=*_]{2,}$/.test(line)) continue;
+
+        // Detect section headers
+        if (ingHeaders.test(line) && line.length < 40) { currentSection = 'ingredients'; continue; }
+        if (stepHeaders.test(line) && line.length < 40) { currentSection = 'instructions'; continue; }
+
+        // First non-empty line with no amount is probably the title
+        if (!title && currentSection === 'unknown' && !amountStart.test(line) && !stepLine.test(line)) {
+          title = line.replace(/^(recipe:|title:)\s*/i, '');
+          currentSection = 'description';
+          continue;
         }
 
-        const text = (data.content || []).map(b => b.text || '').join('').trim();
-        const clean = text.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
-
-        let parsed;
-        try {
-          parsed = JSON.parse(clean);
-        } catch(e) {
-          // Try to extract JSON from within the response
-          const jsonMatch = clean.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            parsed = JSON.parse(jsonMatch[0]);
-          } else {
-            throw new Error('Could not parse AI response. Please try again or fill in the form manually.');
+        if (currentSection === 'ingredients') {
+          // Ingredient: starts with a number or fraction, or contains a unit word
+          if (amountStart.test(line) || unitWords.test(line)) {
+            // Clean up bullet characters
+            ingredients.push(line.replace(/^[•\-\*→▸►]\s*/, ''));
+          }
+        } else if (currentSection === 'instructions') {
+          // Step: strip leading number/bullet
+          var step = line.replace(stepLine, '').replace(/^[•\-\*→▸►]\s*/, '').trim();
+          if (step.length > 5) instructions.push(step);
+        } else if (currentSection === 'description') {
+          // Short lines before ingredients = description
+          if (!amountStart.test(line) && !stepLine.test(line) && line.length < 300 && description.length < 3) {
+            description.push(line);
+          } else if (amountStart.test(line) || unitWords.test(line)) {
+            // Looks like an ingredient without a header — switch to ingredients
+            currentSection = 'ingredients';
+            ingredients.push(line.replace(/^[•\-\*→▸►]\s*/, ''));
+          }
+        } else {
+          // unknown — try to classify
+          if (amountStart.test(line) || unitWords.test(line)) {
+            currentSection = 'ingredients';
+            ingredients.push(line.replace(/^[•\-\*→▸►]\s*/, ''));
+          } else if (stepLine.test(line)) {
+            currentSection = 'instructions';
+            var step = line.replace(stepLine, '').trim();
+            if (step.length > 5) instructions.push(step);
           }
         }
+      }
 
-        // Populate the form fields
-        if (parsed.title)       document.getElementById('r-title').value = parsed.title;
-        if (parsed.description) document.getElementById('r-desc').value = parsed.description;
-        if (parsed.emoji)       document.getElementById('r-emoji').value = parsed.emoji;
+      if (!title && lines.length > 0) title = lines[0];
 
-        if (Array.isArray(parsed.ingredients)) {
-          document.getElementById('r-ingredients').value = parsed.ingredients.join('\n');
-        }
-        if (Array.isArray(parsed.instructions)) {
-          document.getElementById('r-instructions').value = parsed.instructions.join('\n');
-        }
+      // Validate we got something useful
+      if (ingredients.length === 0 && instructions.length === 0) {
+        resultEl.textContent = '✗ Could not find ingredients or instructions. Try the Manual tab and paste each section separately.';
+        resultEl.className = 'parse-result error';
+        return;
+      }
 
-        const validTags = ['Vegetarian', 'Quick & Easy', 'High Protein', 'Budget-Friendly'];
-        if (parsed.tags && validTags.includes(parsed.tags)) {
-          document.getElementById('r-tags').value = parsed.tags;
-        }
+      // Populate form fields
+      document.getElementById('r-title').value = title;
+      document.getElementById('r-desc').value = description.slice(0,2).join(' ');
+      document.getElementById('r-ingredients').value = ingredients.join('\n');
+      document.getElementById('r-instructions').value = instructions.join('\n');
 
-        status.textContent = '✓ Recipe extracted! Review the fields below and click Save.';
-        status.className = 'import-status success';
-        btn.textContent = 'Extract Recipe with AI ↓';
-        btn.disabled = false;
+      // Auto-suggest emoji from title
+      liveTitle(document.getElementById('r-title'));
 
-        // Scroll down to show the populated form
-        document.getElementById('r-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Switch to manual tab so they can review
+      switchTab('tab-manual', document.querySelectorAll('.modal-tab')[1]);
 
-      } catch(err) {
-        status.textContent = '✗ ' + (err.message || 'Failed. Please fill in the form manually.');
-        status.className = 'import-status error';
-        btn.textContent = 'Extract Recipe with AI ↓';
-        btn.disabled = false;
+      // Trigger live feedback
+      liveIngredients(document.getElementById('r-ingredients'));
+      liveSteps(document.getElementById('r-instructions'));
+
+      resultEl.textContent = '';
+      resultEl.className = 'parse-result';
+
+      // Show success via ingredient status
+      var ingEl = document.getElementById('ing-status');
+      if (ingEl && ingredients.length > 0) {
+        ingEl.textContent = '✓ Parsed ' + ingredients.length + ' ingredients & ' + instructions.length + ' steps — review below';
+        ingEl.className = 'ing-status good';
       }
     }
 
@@ -883,63 +1044,81 @@
       <button class="modal-close" onclick="closeAddRecipe()">✕</button>
       <h2 class="modal-title">Add a Recipe</h2>
 
-      <!-- PASTE IMPORT SECTION -->
-      <div class="import-section">
-        <label class="import-label">✦ Paste &amp; Import Any Recipe</label>
-        <p class="import-hint">Copy the full text of any recipe — from NYT Cooking, TikTok, Instagram, a blog, anywhere — and paste it below. AI will extract the title, ingredients, and steps automatically.</p>
-        <textarea class="import-paste-box" id="r-paste"
-          placeholder="Paste the full recipe text here...&#10;&#10;e.g. Tomato Miso Pasta&#10;Ingredients: 2 pints cherry tomatoes, 3/4 lb shrimp...&#10;Instructions: 1. Heat olive oil in a pan..."></textarea>
-        <button class="btn-import" id="btn-import" onclick="importFromPaste()">Extract Recipe with AI ↓</button>
-        <div class="import-status" id="import-status"></div>
+      <!-- TABS -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" onclick="switchTab('tab-paste', this)">Paste from any site</button>
+        <button class="modal-tab" onclick="switchTab('tab-manual', this)">Fill in manually</button>
       </div>
 
-      <div class="modal-divider">or fill in manually</div>
-
-      <div class="form-group">
-        <label class="form-label" for="r-title">Recipe name *</label>
-        <input class="form-input" type="text" id="r-title" placeholder="e.g. Spicy Tofu Stir-Fry" />
+      <!-- TAB: PASTE & PARSE -->
+      <div class="tab-panel active" id="tab-paste">
+        <p class="parse-hint">Copy the full recipe text from NYT Cooking, TikTok, Instagram, a food blog — anything. Paste it below and click <strong>Format Recipe</strong>. It will be automatically split into the right fields.</p>
+        <textarea class="paste-box" id="r-paste-raw"
+          placeholder="Paste the full recipe here...&#10;&#10;For example:&#10;&#10;Tomato Miso Pasta with Shrimp&#10;&#10;This is one of those recipes you'll be making again and again.&#10;&#10;Ingredients&#10;2 pints cherry tomatoes&#10;3/4 lb shrimp, peeled&#10;2 servings thin spaghetti&#10;3 cloves garlic&#10;1 Tbsp miso paste&#10;&#10;Instructions&#10;1. Heat olive oil in a pan over medium heat.&#10;2. Add tomatoes and cook until they burst.&#10;3. Add shrimp and cook through."></textarea>
+        <button class="btn-parse" onclick="parseRawRecipe()">Format Recipe →</button>
+        <div class="parse-result" id="parse-result"></div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="r-desc">Description</label>
-        <textarea class="form-textarea" id="r-desc" placeholder="A short description of the dish..."></textarea>
-      </div>
+      <!-- TAB: MANUAL ENTRY -->
+      <div class="tab-panel" id="tab-manual">
 
-      <div class="form-row">
         <div class="form-group">
-          <label class="form-label" for="r-tags">Category</label>
-          <select class="form-select" id="r-tags">
-            <option value="">— pick one —</option>
-            <option value="Vegetarian">Vegetarian</option>
-            <option value="Quick &amp; Easy">Quick &amp; Easy</option>
-            <option value="High Protein">High Protein</option>
-            <option value="Budget-Friendly">Budget-Friendly</option>
-          </select>
+          <label class="form-label" for="r-title">Recipe name *</label>
+          <input class="form-input" type="text" id="r-title"
+            placeholder="e.g. Spicy Tofu Stir-Fry"
+            oninput="liveTitle(this)" />
         </div>
+
         <div class="form-group">
-          <label class="form-label" for="r-emoji">Dish emoji</label>
-          <input class="form-input" type="text" id="r-emoji" placeholder="🍜" maxlength="4" />
-          <div class="form-hint">One emoji for the photo placeholder</div>
+          <label class="form-label" for="r-desc">Description</label>
+          <textarea class="form-textarea" id="r-desc"
+            placeholder="A short description of the dish..."
+            oninput="liveDesc(this)"></textarea>
+          <div class="form-counter" id="desc-counter">0 / 160</div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label class="form-label" for="r-ingredients">Ingredients *</label>
-        <textarea class="form-textarea" id="r-ingredients" style="min-height:110px"
-          placeholder="One per line — start with the amount:&#10;2 cups rice&#10;3/4 lb shrimp, peeled&#10;1 stick butter&#10;3 cloves garlic, minced"></textarea>
-        <div class="form-hint">One per line, amount first. These will be converted to grocery store quantities on your shopping list.</div>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="r-tags">Category</label>
+            <select class="form-select" id="r-tags">
+              <option value="">— pick one —</option>
+              <option value="Vegetarian">Vegetarian</option>
+              <option value="Quick &amp; Easy">Quick &amp; Easy</option>
+              <option value="High Protein">High Protein</option>
+              <option value="Budget-Friendly">Budget-Friendly</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="r-emoji">Dish emoji</label>
+            <input class="form-input" type="text" id="r-emoji" placeholder="🍜" maxlength="4" />
+            <div class="form-hint">One emoji for the dish card</div>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label class="form-label" for="r-instructions">Instructions *</label>
-        <textarea class="form-textarea" id="r-instructions" style="min-height:110px"
-          placeholder="One step per line:&#10;Cook rice according to package directions.&#10;Heat oil in a pan over medium-high heat."></textarea>
-        <div class="form-hint">One step per line.</div>
-      </div>
+        <div class="form-group">
+          <label class="form-label" for="r-ingredients">Ingredients *
+            <span id="ing-status" class="ing-status"></span>
+          </label>
+          <textarea class="form-textarea" id="r-ingredients" style="min-height:120px"
+            placeholder="One per line — amount first:&#10;2 cups rice&#10;3/4 lb shrimp, peeled&#10;1 stick butter&#10;3 cloves garlic, minced&#10;2 tbsp soy sauce"
+            oninput="liveIngredients(this)"></textarea>
+          <div class="form-hint">Start each line with the quantity and unit. The shopping list converts these to grocery store amounts.</div>
+          <div class="form-preview" id="ing-preview" style="display:none;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="r-instructions">Instructions *</label>
+          <textarea class="form-textarea" id="r-instructions" style="min-height:120px"
+            placeholder="One step per line (numbers optional):&#10;1. Cook rice according to package directions.&#10;2. Heat oil in a pan over medium-high heat.&#10;3. Add garlic and cook 2 minutes."
+            oninput="liveSteps(this)"></textarea>
+          <div class="step-counter" id="step-counter"></div>
+        </div>
+
+      </div><!-- /tab-manual -->
 
       <div id="r-error" style="color:#c0392b; font-size:13px; display:none; margin-top:0.5rem;"></div>
 
-      <div class="modal-actions">
+      <div class="modal-actions" style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border); display:flex; gap:0.75rem; justify-content:flex-end;">
         <button class="btn-cancel" onclick="closeAddRecipe()">Cancel</button>
         <button class="btn-save" onclick="saveRecipe()">Save Recipe →</button>
       </div>
