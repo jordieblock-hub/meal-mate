@@ -1162,14 +1162,29 @@
     }
 
     function updateTotal() {
-      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
-      const remaining = Math.max(0, total - checkedCost);
-      const remainingItems = currentItems.length - checkedCount;
-      const pct = currentItems.length > 0 ? (checkedCount / currentItems.length) * 100 : 0;
+      const fullTotal = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+
+      // Count pantry items and their cost
+      let pantryItemCost = 0;
+      let pantryCount    = 0;
+      document.querySelectorAll('.item-row.in-pantry .item-checkbox').forEach(cb => {
+        pantryItemCost += parseFloat(cb.dataset.cost) || 0;
+        pantryCount++;
+      });
+
+      const remaining      = Math.max(0, fullTotal - pantryItemCost - checkedCost);
+      const remainingItems = Math.max(0, currentItems.length - pantryCount - checkedCount);
+      const pct = currentItems.length > 0
+        ? ((checkedCount + pantryCount) / currentItems.length) * 100 : 0;
+
       document.getElementById('total-display').textContent = '$' + remaining.toFixed(2);
       document.getElementById('total-meta').textContent =
-        remainingItems + ' item' + (remainingItems !== 1 ? 's' : '') + ' remaining · ' + checkedCount + ' bought';
+        remainingItems + ' item' + (remainingItems !== 1 ? 's' : '') + ' to buy'
+        + (pantryCount > 0 ? ' · ' + pantryCount + ' in pantry' : '')
+        + ' · ' + checkedCount + ' bought';
       document.getElementById('progress-bar').style.width = pct + '%';
+
+      updateBudgetBarWithTotal(remaining);
     }
 
     function dismissBanner() {
@@ -1200,29 +1215,40 @@
     // ══════════════════════════════════════════════════
     // FEATURE: BUDGET TRACKER
     // ══════════════════════════════════════════════════
-    function updateBudgetBar() {
-      const user = getUser();
+    function updateBudgetBarWithTotal(total) {
+      const user   = getUser();
       const budget = user.budget || 0;
-      const wrap = document.getElementById('budget-track-wrap');
-      const fill = document.getElementById('budget-bar-fill');
-      const label = document.getElementById('budget-label');
-      if (!wrap || !budget) { if (wrap) wrap.style.display = 'none'; return; }
+      const wrap   = document.getElementById('budget-track-wrap');
+      const fill   = document.getElementById('budget-bar-fill');
+      const label  = document.getElementById('budget-label');
+      if (!wrap) return;
+      if (!budget) { wrap.style.display = 'none'; return; }
 
-      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
-      const pct   = Math.min((total / budget) * 100, 100);
-      const over  = total > budget;
-      const warn  = total > budget * 0.85;
+      const pct  = Math.min((total / budget) * 100, 100);
+      const over = total > budget;
+      const warn = total > budget * 0.85;
 
       wrap.style.display = 'flex';
       fill.style.width   = pct + '%';
       fill.className     = 'budget-bar-fill' + (over ? ' over' : warn ? ' warn' : '');
-      label.className    = 'budget-label' + (over ? ' over' : warn ? ' warn' : '');
+      label.className    = 'budget-label'    + (over ? ' over' : warn ? ' warn' : '');
 
       if (over) {
         label.textContent = '$' + total.toFixed(2) + ' — $' + (total - budget).toFixed(2) + ' over your $' + budget + ' budget';
       } else {
         label.textContent = '$' + total.toFixed(2) + ' of $' + budget + ' weekly budget (' + Math.round(pct) + '%)';
       }
+    }
+
+    // Called after list generation (before pantry deductions are applied)
+    function updateBudgetBar() {
+      const fullTotal = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      // Subtract pantry items so bar reflects what you actually need to buy
+      let pantryDeduction = 0;
+      document.querySelectorAll('.item-row.in-pantry .item-checkbox').forEach(cb => {
+        pantryDeduction += parseFloat(cb.dataset.cost) || 0;
+      });
+      updateBudgetBarWithTotal(Math.max(0, fullTotal - pantryDeduction - checkedCost));
     }
 
     // ══════════════════════════════════════════════════
@@ -1245,17 +1271,33 @@
 
     function getPantry() {
       try {
+        // Primary: read from user profile object so it persists with the account
         const user = getUser();
+        if (user && user.pantry) return user.pantry;
+        // Fallback: legacy separate key
         const key = user.username ? 'mm_pantry_' + user.username : 'mm_pantry';
-        return JSON.parse(localStorage.getItem(key) || '[]');
+        const legacy = JSON.parse(localStorage.getItem(key) || '[]');
+        // Migrate: write into user profile
+        if (legacy.length > 0 && user) {
+          user.pantry = legacy;
+          saveUser(user);
+          localStorage.removeItem(key); // clean up legacy key
+        }
+        return legacy;
       } catch(e) { return []; }
     }
 
     function savePantry(items) {
       try {
+        // Save into user profile so it is truly part of the account
         const user = getUser();
-        const key = user.username ? 'mm_pantry_' + user.username : 'mm_pantry';
-        localStorage.setItem(key, JSON.stringify(items));
+        if (user) {
+          user.pantry = items;
+          saveUser(user);
+        } else {
+          // Not logged in — fall back to anonymous key
+          localStorage.setItem('mm_pantry', JSON.stringify(items));
+        }
       } catch(e) {}
     }
 
@@ -1318,32 +1360,59 @@
 
     function applyPantryToList() {
       const owned = getPantry();
-      if (owned.length === 0) return;
-      let skipped = 0;
+
+      // Always run through all rows — even if owned is empty, clear old tags
+      let pantryItemCost = 0;
+      let pantryCount    = 0;
+
       document.querySelectorAll('.item-row').forEach(row => {
         const nameEl = row.querySelector('.item-name');
         if (!nameEl) return;
-        const name = nameEl.textContent.trim().toLowerCase();
-        const inPantry = owned.some(o => {
-          const ow = o.toLowerCase();
-          return name.includes(ow) || ow.includes(name.split(',')[0]);
+
+        // Get clean name (strip any existing "in pantry" tag text)
+        const existingTag = row.querySelector('.item-pantry-tag');
+        const cleanName = nameEl.textContent.replace('in pantry', '').trim().toLowerCase();
+
+        const inPantry = owned.length > 0 && owned.some(o => {
+          const ow = o.toLowerCase().replace(/s$/, ''); // simple depluralize
+          const nm = cleanName.split(',')[0].replace(/s$/, '');
+          return nm.includes(ow) || ow.includes(nm);
         });
+
         if (inPantry) {
           row.classList.add('in-pantry');
-          // Add pantry tag if not already there
-          if (!row.querySelector('.item-pantry-tag')) {
+          if (!existingTag) {
             const tag = document.createElement('span');
             tag.className = 'item-pantry-tag';
             tag.textContent = 'in pantry';
             nameEl.appendChild(tag);
           }
-          skipped++;
+          // Add this item's cost to the pantry deduction
+          const cb = row.querySelector('.item-checkbox');
+          if (cb) pantryItemCost += parseFloat(cb.dataset.cost) || 0;
+          pantryCount++;
         } else {
           row.classList.remove('in-pantry');
-          const tag = row.querySelector('.item-pantry-tag');
-          if (tag) tag.remove();
+          if (existingTag) existingTag.remove();
         }
       });
+
+      // ── Recalculate displayed total excluding pantry items ──
+      const fullTotal = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      const displayTotal = Math.max(0, fullTotal - pantryItemCost - checkedCost);
+      const remainingItems = currentItems.length - checkedCount - pantryCount;
+      const pct = currentItems.length > 0
+        ? ((checkedCount + pantryCount) / currentItems.length) * 100 : 0;
+
+      document.getElementById('total-display').textContent = '$' + displayTotal.toFixed(2);
+      document.getElementById('total-meta').textContent =
+        Math.max(0, remainingItems) + ' item' + (remainingItems !== 1 ? 's' : '') + ' to buy'
+        + (pantryCount > 0 ? ' · ' + pantryCount + ' in pantry' : '')
+        + ' · ' + checkedCount + ' bought';
+      document.getElementById('progress-bar').style.width = pct + '%';
+
+      // Update budget bar with the adjusted total
+      updateBudgetBarWithTotal(displayTotal);
     }
 
     // ══════════════════════════════════════════════════
@@ -1730,6 +1799,8 @@
     if (selectedRecipeIds.length === 0) {
       // No recipes selected yet — use the static default list
       initStaticList();
+      updateBudgetBar();
+      setTimeout(() => applyPantryToList(), 80);
     }
     // Always attach checkbox events (works for both static and dynamic rows)
     attachCheckboxEvents();
