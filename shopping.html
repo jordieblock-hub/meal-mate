@@ -188,6 +188,153 @@
     .item-row { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
     .item-amount { font-size: 0.82rem; color: var(--muted); min-width: 70px; text-align: right; }
 
+
+    /* ══════════════════════════════════
+       BUDGET TRACKER
+    ══════════════════════════════════ */
+    .budget-track-wrap {
+      margin-top: 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .budget-bar-outer {
+      flex: 1; height: 6px; background: var(--border);
+      border-radius: 0; overflow: hidden;
+    }
+    .budget-bar-fill {
+      height: 100%; border-radius: 0;
+      background: var(--black);
+      transition: width 0.4s ease, background 0.3s;
+    }
+    .budget-bar-fill.warn  { background: #d4820a; }
+    .budget-bar-fill.over  { background: #c0392b; }
+    .budget-label {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      white-space: nowrap; letter-spacing: 0.04em;
+    }
+    .budget-label.warn { color: #d4820a; }
+    .budget-label.over { color: #c0392b; }
+
+    /* ══════════════════════════════════
+       PANTRY TRACKER
+    ══════════════════════════════════ */
+    .pantry-card {
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 0; padding: 18px 24px;
+      max-width: 900px; margin: 0 auto 16px; width: calc(100% - 48px);
+    }
+    .pantry-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .pantry-card-title {
+      font-family: 'Playfair Display', serif; font-size: 1rem;
+      font-weight: 700; color: var(--black);
+    }
+    .pantry-toggle-hint {
+      font-size: 11px; color: var(--muted); font-style: italic;
+    }
+    .pantry-chips {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .pantry-chip {
+      padding: 5px 12px; border: 1.5px solid var(--border);
+      border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      background: transparent; color: var(--muted);
+      transition: all 0.15s; user-select: none;
+    }
+    .pantry-chip:hover { border-color: var(--black); color: var(--black); }
+    .pantry-chip.owned {
+      background: var(--black); color: #fff; border-color: var(--black);
+    }
+    .pantry-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 10px 0 6px; display: block;
+    }
+    .pantry-add-row {
+      display: flex; gap: 8px; margin-top: 10px;
+    }
+    .pantry-add-input {
+      flex: 1; padding: 7px 12px; border: 1.5px solid var(--border);
+      border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; color: var(--text); background: var(--cream);
+      outline: none; transition: border-color 0.2s;
+    }
+    .pantry-add-input:focus { border-color: var(--black); }
+    .btn-pantry-add {
+      padding: 7px 14px; background: transparent; color: var(--black);
+      border: 1.5px solid var(--black); border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-pantry-add:hover { background: var(--black); color: #fff; }
+    .pantry-save-note {
+      font-size: 11px; color: var(--accent); margin-top: 6px;
+      display: none; font-weight: 600;
+    }
+    /* items skipped because in pantry */
+    .item-row.in-pantry .item-name { text-decoration: line-through; color: var(--muted); }
+    .item-row.in-pantry .item-pantry-tag {
+      font-size: 10px; color: var(--accent); font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-left: 4px;
+    }
+    .pantry-skip-count {
+      font-size: 11px; color: var(--accent); font-weight: 600;
+      margin-left: auto; white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════
+       MEAL PREP MODE
+    ══════════════════════════════════ */
+    .meal-prep-banner {
+      background: var(--black); color: #fff;
+      padding: 14px 24px; max-width: 900px;
+      margin: 0 auto 0; width: calc(100% - 48px);
+      display: none; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .meal-prep-banner.visible { display: flex; }
+    .meal-prep-text {
+      font-size: 13px; font-weight: 600; line-height: 1.5;
+    }
+    .meal-prep-text strong { color: var(--accent-light, #f5ede8); }
+    .meal-prep-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-prep-dismiss {
+      padding: 6px 14px; background: rgba(255,255,255,0.15);
+      color: #fff; border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      letter-spacing: 0.05em; text-transform: uppercase; transition: background 0.2s;
+    }
+    .btn-prep-dismiss:hover { background: rgba(255,255,255,0.25); }
+    /* Servings adjuster in recipe picker */
+    .rp-servings {
+      display: flex; align-items: center; gap: 6px; margin-left: auto;
+    }
+    .rp-servings-label {
+      font-size: 11px; color: var(--muted); white-space: nowrap;
+    }
+    .rp-servings-btn {
+      width: 24px; height: 24px; border: 1.5px solid var(--border);
+      border-radius: 2px; background: transparent; cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--black);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; line-height: 1;
+    }
+    .rp-servings-btn:hover { background: var(--black); color: #fff; border-color: var(--black); }
+    .rp-servings-count {
+      font-size: 13px; font-weight: 700; color: var(--black);
+      min-width: 20px; text-align: center;
+    }
+    /* Shared ingredient highlight */
+    .item-row.shared-ing .item-grocery-unit::after {
+      content: ' · shared'; color: var(--accent);
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
   </style>
 </head>
 <body>
@@ -244,6 +391,13 @@
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
+    <!-- BUDGET TRACKER -->
+    <div class="budget-track-wrap" id="budget-track-wrap" style="display:none;">
+      <span class="budget-label" id="budget-label">$0 of $0 budget</span>
+      <div class="budget-bar-outer">
+        <div class="budget-bar-fill" id="budget-bar-fill"></div>
+      </div>
+    </div>
   </div>
 
   <!-- STORE & LOCATION CARD -->
@@ -260,6 +414,33 @@
       <button class="btn-store-save" onclick="saveStorePrefs()">Save</button>
     </div>
     <div class="store-status" id="store-status"></div>
+  </div>
+
+  <!-- PANTRY TRACKER CARD -->
+  <div class="pantry-card" id="pantry-card">
+    <div class="pantry-card-top">
+      <span class="pantry-card-title">🏠 What I Already Have</span>
+      <span class="pantry-toggle-hint">Tap items you own — they'll be skipped on your list</span>
+    </div>
+    <span class="pantry-section-label">Common pantry staples</span>
+    <div class="pantry-chips" id="pantry-chips">
+      <!-- populated by JS -->
+    </div>
+    <div class="pantry-add-row">
+      <input class="pantry-add-input" type="text" id="pantry-add-input"
+        placeholder="Add something else (e.g. fish sauce, tahini)..."
+        onkeydown="pantryKeydown(event)" />
+      <button class="btn-pantry-add" onclick="addPantryItem()">+ Add</button>
+    </div>
+    <div class="pantry-save-note" id="pantry-save-note">✓ Pantry saved</div>
+  </div>
+
+  <!-- MEAL PREP BANNER -->
+  <div class="meal-prep-banner" id="meal-prep-banner">
+    <div class="meal-prep-text" id="meal-prep-text"></div>
+    <div class="meal-prep-actions">
+      <button class="btn-prep-dismiss" onclick="dismissMealPrepBanner()">Got it</button>
+    </div>
   </div>
 
   <!-- SELECTED RECIPES CHIPS -->
@@ -569,6 +750,7 @@
 
     // ── State ──
     let selectedRecipeIds = JSON.parse(localStorage.getItem('mm_selected_recipes') || '[]');
+    let recipeServings    = JSON.parse(localStorage.getItem('mm_recipe_servings') || '{}'); // { recipeId: servings }
     let checkedCost = 0, checkedCount = 0;
     let currentItems = []; // { name, amount, cost, category }
 
@@ -592,9 +774,14 @@
       }
 
       loadStorePrefs();
+      buildPantryChips();
 
       if (selectedRecipeIds.length > 0) {
         buildShoppingList(selectedRecipeIds);
+      } else {
+        // Static list: still init budget bar and pantry
+        updateBudgetBar();
+        setTimeout(() => applyPantryToList(), 50);
       }
     });
 
@@ -605,11 +792,22 @@
       list.innerHTML = allRecipes.length === 0
         ? '<p style="color:var(--muted); font-size:14px; text-align:center; padding:1rem;">No recipes found. <a href="recipes.html" style="color:var(--green);">Add some first →</a></p>'
         : allRecipes.map(r =>
-            '<div class="rp-recipe-row' + (selectedRecipeIds.includes(r.id) ? ' selected' : '') + '" onclick="toggleRecipe(this, \'' + r.id + '\')" data-id="' + r.id + '">' +
-            '<div class="rp-check">' + (selectedRecipeIds.includes(r.id) ? '✓' : '') + '</div>' +
-            '<div class="rp-recipe-info"><div class="rp-recipe-name">' + escHtml(r.name) + '</div>' +
-            '<div class="rp-recipe-meta">' + escHtml(r.meta || (r.ingredients.length + ' ingredients')) + '</div></div>' +
-            '</div>'
+            (function(recipe) {
+              var isSelected = selectedRecipeIds.includes(recipe.id);
+              var servings = recipeServings[recipe.id] || 1;
+              return '<div class="rp-recipe-row' + (isSelected ? ' selected' : '') + '" data-id="' + recipe.id + '">' +
+                '<div class="rp-check" onclick="toggleRecipe(this.closest(\'.rp-recipe-row\'), \'' + recipe.id + '\')">' + (isSelected ? '✓' : '') + '</div>' +
+                '<div class="rp-recipe-info" onclick="toggleRecipe(this.closest(\'.rp-recipe-row\'), \'' + recipe.id + '\')">' +
+                '<div class="rp-recipe-name">' + escHtml(recipe.name) + '</div>' +
+                '<div class="rp-recipe-meta">' + escHtml(recipe.meta || (recipe.ingredients.length + ' ingredients')) + '</div></div>' +
+                '<div class="rp-servings">' +
+                '<span class="rp-servings-label">servings:</span>' +
+                '<button class="rp-servings-btn" onclick="adjustServings(event, \'' + recipe.id + '\', -1)">−</button>' +
+                '<span class="rp-servings-count" id="srv-' + recipe.id + '">' + servings + '</span>' +
+                '<button class="rp-servings-btn" onclick="adjustServings(event, \'' + recipe.id + '\', 1)">+</button>' +
+                '</div>' +
+                '</div>';
+            })(r)
           ).join('');
       document.getElementById('rp-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -636,6 +834,7 @@
 
     function applyRecipeSelection() {
       localStorage.setItem('mm_selected_recipes', JSON.stringify(selectedRecipeIds));
+      localStorage.setItem('mm_recipe_servings', JSON.stringify(recipeServings));
       buildShoppingList(selectedRecipeIds);
       closeRecipePicker();
       showToast('Shopping list updated from selected recipes!');
@@ -806,14 +1005,24 @@
       const merged = {}; // key → { name, amount, cost, category }
 
       selected.forEach(recipe => {
+        const servings = recipeServings[recipe.id] || 1;
         recipe.ingredients.forEach(ing => {
           const key = ing.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          // Scale ingredient by servings multiplier
+          const scaledIng = { ...ing };
+          if (servings !== 1 && scaledIng.qty != null) {
+            scaledIng.qty = scaledIng.qty * servings;
+            // Rebuild the amount string with scaled qty
+            const unitPart = scaledIng.unit ? ' ' + scaledIng.unit : '';
+            const notePart = scaledIng.amount && scaledIng.amount.includes(',')
+              ? scaledIng.amount.substring(scaledIng.amount.indexOf(',')) : '';
+            scaledIng.amount = formatQty(scaledIng.qty) + unitPart + notePart;
+          }
           if (!merged[key]) {
-            merged[key] = { ...ing };
+            merged[key] = { ...scaledIng };
           } else {
-            // Add quantities together
-            merged[key].amount = mergeAmounts(merged[key].amount || '', ing.amount || '');
-            merged[key].cost = (merged[key].cost || 0) + (ing.cost || 0);
+            merged[key].amount = mergeAmounts(merged[key].amount || '', scaledIng.amount || '');
+            merged[key].cost = (merged[key].cost || 0) + (scaledIng.cost || 0);
           }
         });
       });
@@ -833,12 +1042,6 @@
       renderCategory('pantry', groups.pantry, '🥫', 'Pantry', 'cat-pantry');
       renderCategory('dairy', groups.dairy, '🧀', 'Dairy', 'cat-dairy');
 
-      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
-      document.getElementById('total-display').textContent = '$' + total.toFixed(2);
-      checkedCost = 0; checkedCount = 0;
-      document.getElementById('total-meta').textContent = currentItems.length + ' items remaining · 0 bought';
-      document.getElementById('progress-bar').style.width = '0%';
-
       // Pre-compute grocery units AND base prices for all items
       currentItems.forEach(function(item) {
         var info = getGroceryInfo(item.name, item.qty || null, item.unit || null);
@@ -852,7 +1055,22 @@
       });
 
       updateSelectedChips(selected);
+
+      // Reorder: total → pre-compute → render → budget → pantry → meal prep
+      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      document.getElementById('total-display').textContent = '$' + total.toFixed(2);
+      checkedCost = 0; checkedCount = 0;
+      document.getElementById('total-meta').textContent = currentItems.length + ' items remaining · 0 bought';
+      document.getElementById('progress-bar').style.width = '0%';
+
       attachCheckboxEvents();
+      updateBudgetBar();
+
+      // Apply pantry after a tick so DOM is settled
+      setTimeout(() => {
+        applyPantryToList();
+        analyzeMealPrep(selected, merged);
+      }, 50);
     }
 
     function renderCategory(id, items, emoji, label, catClass) {
@@ -977,6 +1195,229 @@
 
     function escHtml(str) {
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ══════════════════════════════════════════════════
+    // FEATURE: BUDGET TRACKER
+    // ══════════════════════════════════════════════════
+    function updateBudgetBar() {
+      const user = getUser();
+      const budget = user.budget || 0;
+      const wrap = document.getElementById('budget-track-wrap');
+      const fill = document.getElementById('budget-bar-fill');
+      const label = document.getElementById('budget-label');
+      if (!wrap || !budget) { if (wrap) wrap.style.display = 'none'; return; }
+
+      const total = currentItems.reduce((s, i) => s + (i.cost || 0), 0);
+      const pct   = Math.min((total / budget) * 100, 100);
+      const over  = total > budget;
+      const warn  = total > budget * 0.85;
+
+      wrap.style.display = 'flex';
+      fill.style.width   = pct + '%';
+      fill.className     = 'budget-bar-fill' + (over ? ' over' : warn ? ' warn' : '');
+      label.className    = 'budget-label' + (over ? ' over' : warn ? ' warn' : '');
+
+      if (over) {
+        label.textContent = '$' + total.toFixed(2) + ' — $' + (total - budget).toFixed(2) + ' over your $' + budget + ' budget';
+      } else {
+        label.textContent = '$' + total.toFixed(2) + ' of $' + budget + ' weekly budget (' + Math.round(pct) + '%)';
+      }
+    }
+
+    // ══════════════════════════════════════════════════
+    // FEATURE: PANTRY TRACKER
+    // ══════════════════════════════════════════════════
+    const PANTRY_DEFAULTS = [
+      // Oils & fats
+      'Olive oil', 'Vegetable oil', 'Butter',
+      // Condiments
+      'Soy sauce', 'Salt', 'Black pepper', 'Hot sauce',
+      // Dry goods
+      'Rice', 'Pasta', 'Flour', 'Sugar',
+      // Aromatics
+      'Garlic', 'Onion',
+      // Spices
+      'Cumin', 'Paprika', 'Red pepper flakes', 'Oregano',
+      // Pantry staples
+      'Olive oil', 'Honey', 'Baking soda',
+    ];
+
+    function getPantry() {
+      try {
+        const user = getUser();
+        const key = user.username ? 'mm_pantry_' + user.username : 'mm_pantry';
+        return JSON.parse(localStorage.getItem(key) || '[]');
+      } catch(e) { return []; }
+    }
+
+    function savePantry(items) {
+      try {
+        const user = getUser();
+        const key = user.username ? 'mm_pantry_' + user.username : 'mm_pantry';
+        localStorage.setItem(key, JSON.stringify(items));
+      } catch(e) {}
+    }
+
+    function buildPantryChips() {
+      const owned  = getPantry();
+      const chips  = document.getElementById('pantry-chips');
+      if (!chips) return;
+
+      // Combine defaults + any custom items the user has added
+      const custom = owned.filter(i => !PANTRY_DEFAULTS.map(d => d.toLowerCase()).includes(i.toLowerCase()));
+      const allItems = [...new Set([...PANTRY_DEFAULTS, ...custom])];
+
+      chips.innerHTML = allItems.map(item => {
+        const isOwned = owned.some(o => o.toLowerCase() === item.toLowerCase());
+        return '<button class="pantry-chip' + (isOwned ? ' owned' : '') + '" ' +
+          'data-item="' + escHtml(item) + '" onclick="togglePantryItem(this)">' +
+          escHtml(item) + '</button>';
+      }).join('');
+    }
+
+    function togglePantryItem(btn) {
+      var item = btn.getAttribute('data-item');
+      let owned = getPantry();
+      const idx = owned.findIndex(o => o.toLowerCase() === item.toLowerCase());
+      if (idx >= 0) {
+        owned.splice(idx, 1);
+        btn.classList.remove('owned');
+      } else {
+        owned.push(item);
+        btn.classList.add('owned');
+      }
+      savePantry(owned);
+      applyPantryToList();
+      flashPantryNote();
+    }
+
+    function pantryKeydown(e) { if (e.key === 'Enter') addPantryItem(); }
+    function addPantryItem() {
+      const input = document.getElementById('pantry-add-input');
+      const val   = (input.value || '').trim();
+      if (!val) return;
+      let owned = getPantry();
+      if (!owned.some(o => o.toLowerCase() === val.toLowerCase())) {
+        owned.push(val);
+        savePantry(owned);
+      }
+      input.value = '';
+      buildPantryChips();
+      applyPantryToList();
+      flashPantryNote();
+    }
+
+    function flashPantryNote() {
+      const note = document.getElementById('pantry-save-note');
+      if (!note) return;
+      note.style.display = 'block';
+      clearTimeout(flashPantryNote._t);
+      flashPantryNote._t = setTimeout(() => { note.style.display = 'none'; }, 2000);
+    }
+
+    function applyPantryToList() {
+      const owned = getPantry();
+      if (owned.length === 0) return;
+      let skipped = 0;
+      document.querySelectorAll('.item-row').forEach(row => {
+        const nameEl = row.querySelector('.item-name');
+        if (!nameEl) return;
+        const name = nameEl.textContent.trim().toLowerCase();
+        const inPantry = owned.some(o => {
+          const ow = o.toLowerCase();
+          return name.includes(ow) || ow.includes(name.split(',')[0]);
+        });
+        if (inPantry) {
+          row.classList.add('in-pantry');
+          // Add pantry tag if not already there
+          if (!row.querySelector('.item-pantry-tag')) {
+            const tag = document.createElement('span');
+            tag.className = 'item-pantry-tag';
+            tag.textContent = 'in pantry';
+            nameEl.appendChild(tag);
+          }
+          skipped++;
+        } else {
+          row.classList.remove('in-pantry');
+          const tag = row.querySelector('.item-pantry-tag');
+          if (tag) tag.remove();
+        }
+      });
+    }
+
+    // ══════════════════════════════════════════════════
+    // FEATURE: MEAL PREP MODE (servings + overlap analysis)
+    // ══════════════════════════════════════════════════
+    function adjustServings(e, recipeId, delta) {
+      e.stopPropagation();
+      const current = recipeServings[recipeId] || 1;
+      const next    = Math.max(1, Math.min(8, current + delta));
+      recipeServings[recipeId] = next;
+      const el = document.getElementById('srv-' + recipeId);
+      if (el) el.textContent = next;
+    }
+
+    function dismissMealPrepBanner() {
+      const banner = document.getElementById('meal-prep-banner');
+      if (banner) banner.classList.remove('visible');
+    }
+
+    function analyzeMealPrep(selected, merged) {
+      if (selected.length < 2) { dismissMealPrepBanner(); return; }
+
+      // Find which ingredients appear in more than one recipe
+      const ingRecipes = {};
+      selected.forEach(recipe => {
+        recipe.ingredients.forEach(ing => {
+          const key = ing.name.toLowerCase().replace(/[^a-z0-9]/g,'');
+          if (!ingRecipes[key]) ingRecipes[key] = { name: ing.name, recipes: [] };
+          if (!ingRecipes[key].recipes.includes(recipe.name)) {
+            ingRecipes[key].recipes.push(recipe.name);
+          }
+        });
+      });
+
+      const shared = Object.values(ingRecipes).filter(i => i.recipes.length > 1);
+
+      // Mark shared items on the list
+      document.querySelectorAll('.item-row').forEach(row => {
+        const nameEl = row.querySelector('.item-name');
+        if (!nameEl) return;
+        const name = nameEl.textContent.replace('in pantry','').trim().toLowerCase();
+        const isShared = shared.some(s => {
+          const sw = s.name.toLowerCase();
+          return name.includes(sw.split(',')[0]) || sw.includes(name.split(',')[0]);
+        });
+        row.classList.toggle('shared-ing', isShared);
+      });
+
+      // Calculate total servings
+      const totalServings = selected.reduce((sum, r) => {
+        return sum + ((recipeServings[r.id] || 1) * 2); // default 2 servings per recipe
+      }, 0);
+
+      // Build banner message
+      const sharedCount = shared.length;
+      const savedItems  = sharedCount;
+      const banner      = document.getElementById('meal-prep-banner');
+      const text        = document.getElementById('meal-prep-text');
+
+      if (!banner || !text) return;
+
+      let msg = '🥡 <strong>Meal Prep Summary:</strong> ';
+      msg += selected.length + ' recipes · ';
+      msg += '~' + totalServings + ' total servings';
+      if (sharedCount > 0) {
+        msg += ' · <strong>' + sharedCount + ' ingredient' + (sharedCount > 1 ? 's' : '') + ' shared</strong> across recipes — less waste, one shop';
+      }
+      const pantrySkipped = document.querySelectorAll('.item-row.in-pantry').length;
+      if (pantrySkipped > 0) {
+        msg += ' · <strong>' + pantrySkipped + ' pantry item' + (pantrySkipped > 1 ? 's' : '') + ' skipped</strong>';
+      }
+
+      text.innerHTML = msg;
+      banner.classList.add('visible');
     }
 
     // ══════════════════════════════════════════════════
@@ -1200,6 +1641,8 @@
         currentItems.length + ' items remaining · 0 bought';
       document.getElementById('progress-bar').style.width = '0%';
       attachCheckboxEvents();
+      updateBudgetBar();
+      setTimeout(() => applyPantryToList(), 50);
     }
 
     // ── Refine prices by ZIP using a regional multiplier ──
