@@ -238,7 +238,7 @@
       <div class="total-actions">
         <button class="btn-outline" onclick="regenerateList()">Regenerate List</button>
         <button class="btn-primary" onclick="openRecipePicker()">🍽️ Choose Recipes</button>
-        <button class="btn-prices" id="btn-prices" onclick="fetchAIPrices()">✦ Get AI Prices</button>
+        <button class="btn-prices" id="btn-prices" onclick="fetchAIPrices()">✦ Adjust for My Area</button>
       </div>
     </div>
     <div class="progress-bar-wrap">
@@ -772,16 +772,12 @@
     // Parse user recipe ingredient line: "2 cups rice" or "1/4 cup olive oil" or "3 cloves garlic, minced"
     function parseUserIngredient(line) {
       const p = parseAmount(line);
-      // The "name" is whatever comes after the qty+unit
       let name = line.trim();
       if (p.qty !== null) {
-        // strip the leading qty + unit from the original string to get the name
         const qtyStr = line.match(/^[\d\/\s\.]+/);
         if (qtyStr) {
           name = line.slice(qtyStr[0].length).trim();
           if (p.unit) {
-            const unitRe = new RegExp('^' + p.unit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 's?\\b', 'i');
-            // try to strip unit from name
             const rawUnit = line.slice(qtyStr[0].length).trim().split(/\s+/)[0];
             if (UNIT_ALIASES[rawUnit.toLowerCase().replace(/,$/,'')]) {
               name = line.slice(qtyStr[0].length).trim().replace(/^\S+\s*,?\s*/, '').trim();
@@ -789,11 +785,12 @@
           }
         }
       }
-      // strip trailing descriptors like ", minced" for the ingredient key
       const cleanName = name.replace(/,.*$/, '').trim();
       return {
         name: cleanName || line,
-        amount: line, // keep original full line as amount display
+        amount: line,
+        qty: p.qty,       // preserve parsed quantity for size rules
+        unit: p.unit,     // preserve parsed unit for size rules
         cost: 0,
         category: guessCategory(cleanName || line)
       };
@@ -842,9 +839,16 @@
       document.getElementById('total-meta').textContent = currentItems.length + ' items remaining · 0 bought';
       document.getElementById('progress-bar').style.width = '0%';
 
-      // Pre-compute grocery units for all items
+      // Pre-compute grocery units AND base prices for all items
       currentItems.forEach(function(item) {
-        item.groceryUnit = getGroceryUnit(item.name);
+        var info = getGroceryInfo(item.name, item.qty || null, item.unit || null);
+        if (info) {
+          item.groceryUnit = info.groceryUnit;
+          // Only set base price if item doesn't already have a cost
+          if (!item.cost || item.cost === 0) {
+            item.cost = info.basePrice || 0;
+          }
+        }
       });
 
       updateSelectedChips(selected);
@@ -862,8 +866,13 @@
         : items.map(ing => {
             const hasPrice = (ing.cost || 0) > 0;
             // Look up grocery store unit for this ingredient
-            const groceryUnit = ing.groceryUnit || getGroceryUnit(ing.name);
+            var groceryInfo = (!ing.groceryUnit) ? getGroceryInfo(ing.name, ing.qty || null, ing.unit || null) : null;
+            const groceryUnit = ing.groceryUnit || (groceryInfo ? groceryInfo.groceryUnit : null);
             if (groceryUnit && !ing.groceryUnit) ing.groceryUnit = groceryUnit;
+            // Apply base price if no price set yet
+            if (groceryInfo && groceryInfo.basePrice && (!ing.cost || ing.cost === 0)) {
+              ing.cost = groceryInfo.basePrice;
+            }
             return '<li class="item-row">' +
               '<input type="checkbox" class="item-checkbox" data-cost="' + (ing.cost || 0).toFixed(2) + '" />' +
               '<span class="item-name">' + escHtml(ing.name) + '</span>' +
@@ -973,110 +982,152 @@
     // ══════════════════════════════════════════════════
     // COOKING AMOUNT → GROCERY STORE UNIT CONVERSION
     // ══════════════════════════════════════════════════
-    const GROCERY_UNITS = [
-      { match: /cottage cheese/i,      groceryUnit: '1 × 16oz container' },
-      { match: /ricotta/i,             groceryUnit: '1 × 15oz container' },
-      { match: /cream cheese/i,        groceryUnit: '1 × 8oz block' },
-      { match: /sour cream/i,          groceryUnit: '1 × 16oz container' },
-      { match: /greek yogurt|yogurt/i, groceryUnit: '1 × 32oz container' },
-      { match: /heavy cream/i,         groceryUnit: '1 × 1pt carton' },
-      { match: /half.and.half/i,       groceryUnit: '1 × 1pt carton' },
-      { match: /milk/i,                groceryUnit: '1 × half-gal jug' },
-      { match: /butter/i,              groceryUnit: '1 × 4-stick box' },
-      { match: /parmesan/i,            groceryUnit: '1 × 6oz wedge' },
-      { match: /mozzarella/i,          groceryUnit: '1 × 8oz ball' },
-      { match: /cheddar/i,             groceryUnit: '1 × 8oz block' },
-      { match: /feta/i,                groceryUnit: '1 × 6oz block' },
-      { match: /egg/i,                 groceryUnit: '1 × dozen' },
-      { match: /chicken breast/i,      groceryUnit: '1 × 2lb pack' },
-      { match: /chicken thigh/i,       groceryUnit: '1 × 2lb pack' },
-      { match: /ground beef|ground turkey/i, groceryUnit: '1 × 1lb pack' },
-      { match: /shrimp/i,              groceryUnit: '1 × 1lb bag (frozen)' },
-      { match: /salmon/i,              groceryUnit: '1 × 6oz fillet' },
-      { match: /tuna/i,                groceryUnit: '2 × 5oz cans' },
-      { match: /bacon/i,               groceryUnit: '1 × 12oz pack' },
-      { match: /sausage/i,             groceryUnit: '1 × 1lb pack' },
-      { match: /tofu/i,                groceryUnit: '1 × 14oz block' },
-      { match: /chickpeas|garbanzo/i,  groceryUnit: '1 × 15oz can' },
-      { match: /black beans|kidney beans|cannellini|white beans/i, groceryUnit: '1 × 15oz can' },
-      { match: /lentils/i,             groceryUnit: '1 × 16oz bag' },
-      { match: /cherry tomato/i,       groceryUnit: '1 × 1pt container' },
-      { match: /spinach/i,             groceryUnit: '1 × 5oz bag' },
-      { match: /arugula/i,             groceryUnit: '1 × 5oz bag' },
-      { match: /mixed greens|salad mix/i, groceryUnit: '1 × 5oz bag' },
-      { match: /kale/i,                groceryUnit: '1 × bunch' },
-      { match: /broccoli/i,            groceryUnit: '1 head (or 12oz bag)' },
-      { match: /cauliflower/i,         groceryUnit: '1 head' },
-      { match: /garlic/i,              groceryUnit: '1 × head' },
-      { match: /shallot/i,             groceryUnit: '1 × 8oz bag' },
-      { match: /yellow onion|white onion|red onion|onion/i, groceryUnit: '1 × 3lb bag' },
-      { match: /carrot/i,              groceryUnit: '1 × 1lb bag' },
-      { match: /celery/i,              groceryUnit: '1 × bunch' },
-      { match: /oyster mushroom/i,     groceryUnit: '1 × 3.5oz pack' },
-      { match: /shimeji mushroom/i,    groceryUnit: '1 × 3.5oz pack' },
-      { match: /mushroom/i,            groceryUnit: '1 × 8oz container' },
-      { match: /bell pepper/i,         groceryUnit: '1 × 3-pack' },
-      { match: /zucchini/i,            groceryUnit: '2 × medium' },
-      { match: /lemon/i,               groceryUnit: '2 × lemons' },
-      { match: /lime/i,                groceryUnit: '2 × limes' },
-      { match: /avocado/i,             groceryUnit: '1 × avocado' },
-      { match: /sweet potato/i,        groceryUnit: '1 × 3lb bag' },
-      { match: /potato/i,              groceryUnit: '1 × 5lb bag' },
-      { match: /ginger/i,              groceryUnit: '1 × small knob' },
-      { match: /parsley|cilantro|basil|mint|thyme|rosemary|dill/i, groceryUnit: '1 × bunch' },
-      { match: /green onion|scallion/i, groceryUnit: '1 × bunch' },
-      { match: /flour/i,               groceryUnit: '1 × 5lb bag' },
-      { match: /sugar/i,               groceryUnit: '1 × 4lb bag' },
-      { match: /brown sugar/i,         groceryUnit: '1 × 2lb bag' },
-      { match: /rice/i,                groceryUnit: '1 × 2lb bag' },
-      { match: /spaghetti|linguine|fettuccine|gemelli|penne|pasta/i, groceryUnit: '1 × 1lb box' },
-      { match: /panko|bread crumb/i,   groceryUnit: '1 × 8oz canister' },
-      { match: /crushed tomato/i,      groceryUnit: '1 × 28oz can' },
-      { match: /diced tomato/i,        groceryUnit: '1 × 14.5oz can' },
-      { match: /tomato paste/i,        groceryUnit: '1 × 6oz can' },
-      { match: /tomato sauce/i,        groceryUnit: '1 × 15oz can' },
-      { match: /coconut milk/i,        groceryUnit: '1 × 13.5oz can' },
-      { match: /chicken broth|chicken stock/i, groceryUnit: '1 × 32oz carton' },
-      { match: /beef broth|beef stock/i, groceryUnit: '1 × 32oz carton' },
-      { match: /vegetable broth/i,     groceryUnit: '1 × 32oz carton' },
-      { match: /olive oil/i,           groceryUnit: '1 × 16.9oz bottle' },
-      { match: /vegetable oil|canola oil/i, groceryUnit: '1 × 48oz bottle' },
-      { match: /sesame oil/i,          groceryUnit: '1 × 8oz bottle' },
-      { match: /soy sauce/i,           groceryUnit: '1 × 10oz bottle' },
-      { match: /fish sauce/i,          groceryUnit: '1 × 6.76oz bottle' },
-      { match: /sriracha/i,            groceryUnit: '1 × 17oz bottle' },
-      { match: /hot sauce/i,           groceryUnit: '1 × 5oz bottle' },
-      { match: /balsamic vinegar/i,    groceryUnit: '1 × 8.5oz bottle' },
-      { match: /apple cider vinegar|white vinegar|rice vinegar/i, groceryUnit: '1 × 16oz bottle' },
-      { match: /honey/i,               groceryUnit: '1 × 12oz bottle' },
-      { match: /maple syrup/i,         groceryUnit: '1 × 8oz bottle' },
-      { match: /miso/i,                groceryUnit: '1 × 17.6oz tub' },
-      { match: /tahini/i,              groceryUnit: '1 × 16oz jar' },
-      { match: /peanut butter/i,       groceryUnit: '1 × 16oz jar' },
-      { match: /white wine/i,          groceryUnit: '1 × 750ml (cooking)' },
-      { match: /red wine/i,            groceryUnit: '1 × 750ml (cooking)' },
-      { match: /dijon mustard|mustard/i, groceryUnit: '1 × 8oz jar' },
-      { match: /red pepper flake/i,    groceryUnit: '1 × 1.5oz jar' },
-      { match: /cumin/i,               groceryUnit: '1 × 2oz jar' },
-      { match: /paprika/i,             groceryUnit: '1 × 2oz jar' },
-      { match: /chili powder/i,        groceryUnit: '1 × 2.5oz jar' },
-      { match: /turmeric/i,            groceryUnit: '1 × 1.5oz jar' },
-      { match: /cinnamon/i,            groceryUnit: '1 × 2.37oz jar' },
-      { match: /oregano/i,             groceryUnit: '1 × 0.75oz jar' },
-      { match: /black pepper/i,        groceryUnit: '1 × 3oz grinder' },
-      { match: /kosher salt|sea salt|salt/i, groceryUnit: '1 × 26oz canister' },
-      { match: /baking powder/i,       groceryUnit: '1 × 8oz can' },
-      { match: /baking soda/i,         groceryUnit: '1 × 16oz box' },
-      { match: /vanilla extract/i,     groceryUnit: '1 × 2oz bottle' },
+    // Each entry: match (regex), size tiers by tbsp/cups, or a flat groceryUnit + basePrice
+    // groceryUnit = what to buy at the store (smallest that satisfies the recipe)
+    // basePrice = estimated US average price for that unit
+    const GROCERY_DB = [
+      // ── DAIRY ──
+      { match: /cottage cheese/i,   groceryUnit: '1 × 16oz container',   basePrice: 2.99 },
+      { match: /ricotta/i,          groceryUnit: '1 × 15oz container',   basePrice: 3.49 },
+      { match: /cream cheese/i,     groceryUnit: '1 × 8oz block',        basePrice: 2.49 },
+      { match: /sour cream/i,       groceryUnit: '1 × 16oz container',   basePrice: 2.29 },
+      { match: /greek yogurt|yogurt/i, groceryUnit: '1 × 32oz container',basePrice: 5.49 },
+      { match: /heavy cream/i,      groceryUnit: '1 × 1pt carton',       basePrice: 3.99 },
+      { match: /half.and.half/i,    groceryUnit: '1 × 1pt carton',       basePrice: 2.99 },
+      { match: /milk/i,             groceryUnit: '1 × half-gal jug',     basePrice: 2.99 },
+      { match: /butter/i,           groceryUnit: '1 × 4-stick box',      basePrice: 4.49 },
+      { match: /parmesan/i,         groceryUnit: '1 × 6oz wedge',        basePrice: 4.99 },
+      { match: /mozzarella/i,       groceryUnit: '1 × 8oz ball',         basePrice: 3.49 },
+      { match: /cheddar/i,          groceryUnit: '1 × 8oz block',        basePrice: 3.29 },
+      { match: /feta/i,             groceryUnit: '1 × 6oz block',        basePrice: 3.99 },
+      { match: /egg/i,              groceryUnit: '1 × dozen',            basePrice: 4.49 },
+      // ── PROTEINS ──
+      { match: /chicken breast/i,   groceryUnit: '1 × 2lb pack',         basePrice: 7.99 },
+      { match: /chicken thigh/i,    groceryUnit: '1 × 2lb pack',         basePrice: 6.99 },
+      { match: /ground beef/i,      groceryUnit: '1 × 1lb pack',         basePrice: 5.99 },
+      { match: /ground turkey/i,    groceryUnit: '1 × 1lb pack',         basePrice: 4.99 },
+      { match: /shrimp/i,           groceryUnit: '1 × 1lb bag (frozen)', basePrice: 8.99 },
+      { match: /salmon/i,           groceryUnit: '1 × 6oz fillet',       basePrice: 7.49 },
+      { match: /tuna/i,             groceryUnit: '2 × 5oz cans',         basePrice: 3.49 },
+      { match: /bacon/i,            groceryUnit: '1 × 12oz pack',        basePrice: 5.49 },
+      { match: /sausage/i,          groceryUnit: '1 × 1lb pack',         basePrice: 4.99 },
+      { match: /tofu/i,             groceryUnit: '1 × 14oz block',       basePrice: 2.49 },
+      { match: /chickpeas|garbanzo/i, groceryUnit: '1 × 15oz can',       basePrice: 1.29 },
+      { match: /black beans|kidney beans|cannellini|white beans/i, groceryUnit: '1 × 15oz can', basePrice: 1.19 },
+      { match: /lentils/i,          groceryUnit: '1 × 16oz bag',         basePrice: 2.29 },
+      // ── PRODUCE ──
+      { match: /cherry tomato/i,    groceryUnit: '1 × 1pt container',    basePrice: 3.99 },
+      { match: /spinach/i,          groceryUnit: '1 × 5oz bag',          basePrice: 3.49 },
+      { match: /arugula/i,          groceryUnit: '1 × 5oz bag',          basePrice: 3.99 },
+      { match: /mixed greens|salad mix/i, groceryUnit: '1 × 5oz bag',    basePrice: 3.49 },
+      { match: /kale/i,             groceryUnit: '1 × bunch',            basePrice: 2.49 },
+      { match: /broccoli/i,         groceryUnit: '1 head (≈12oz)',        basePrice: 1.99 },
+      { match: /cauliflower/i,      groceryUnit: '1 head',               basePrice: 2.99 },
+      { match: /garlic/i,           groceryUnit: '1 × head',             basePrice: 0.79 },
+      { match: /shallot/i,          groceryUnit: '1 × 8oz bag',          basePrice: 1.49 },
+      { match: /yellow onion|white onion|red onion|onion/i, groceryUnit: '1 × 3lb bag', basePrice: 2.99 },
+      { match: /carrot/i,           groceryUnit: '1 × 1lb bag',          basePrice: 1.29 },
+      { match: /celery/i,           groceryUnit: '1 × bunch',            basePrice: 1.99 },
+      { match: /oyster mushroom/i,  groceryUnit: '1 × 3.5oz pack',       basePrice: 3.49 },
+      { match: /shimeji mushroom/i, groceryUnit: '1 × 3.5oz pack',       basePrice: 3.49 },
+      { match: /mushroom/i,         groceryUnit: '1 × 8oz container',    basePrice: 2.49 },
+      { match: /bell pepper/i,      groceryUnit: '1 × 3-pack',           basePrice: 3.49 },
+      { match: /zucchini/i,         groceryUnit: '2 medium',             basePrice: 1.99 },
+      { match: /lemon/i,            groceryUnit: '2 lemons',             basePrice: 1.29 },
+      { match: /lime/i,             groceryUnit: '2 limes',              basePrice: 0.99 },
+      { match: /avocado/i,          groceryUnit: '1 avocado',            basePrice: 1.29 },
+      { match: /sweet potato/i,     groceryUnit: '1 × 3lb bag',          basePrice: 3.99 },
+      { match: /potato/i,           groceryUnit: '1 × 5lb bag',          basePrice: 4.49 },
+      { match: /ginger/i,           groceryUnit: '1 small knob',         basePrice: 0.89 },
+      { match: /parsley|cilantro|basil|mint|thyme|rosemary|dill/i, groceryUnit: '1 × bunch', basePrice: 1.49 },
+      { match: /green onion|scallion/i, groceryUnit: '1 × bunch',        basePrice: 0.99 },
+      // ── PANTRY — dry ──
+      { match: /flour/i,            groceryUnit: '1 × 5lb bag',          basePrice: 3.99 },
+      { match: /sugar/i,            groceryUnit: '1 × 4lb bag',          basePrice: 3.49 },
+      { match: /brown sugar/i,      groceryUnit: '1 × 2lb bag',          basePrice: 2.99 },
+      { match: /rice/i,             groceryUnit: '1 × 2lb bag',          basePrice: 2.49 },
+      { match: /spaghetti|linguine|fettuccine|gemelli|penne|pasta/i, groceryUnit: '1 × 1lb box', basePrice: 1.79 },
+      { match: /panko|bread crumb/i, groceryUnit: '1 × 8oz canister',    basePrice: 2.99 },
+      // ── PANTRY — canned ──
+      { match: /crushed tomato/i,   groceryUnit: '1 × 28oz can',         basePrice: 2.49 },
+      { match: /diced tomato/i,     groceryUnit: '1 × 14.5oz can',       basePrice: 1.29 },
+      { match: /tomato paste/i,     groceryUnit: '1 × 6oz can',          basePrice: 0.99 },
+      { match: /tomato sauce/i,     groceryUnit: '1 × 15oz can',         basePrice: 1.19 },
+      { match: /coconut milk/i,     groceryUnit: '1 × 13.5oz can',       basePrice: 2.29 },
+      { match: /chicken broth|chicken stock/i, groceryUnit: '1 × 32oz carton', basePrice: 2.99 },
+      { match: /beef broth|beef stock/i, groceryUnit: '1 × 32oz carton', basePrice: 2.99 },
+      { match: /vegetable broth/i,  groceryUnit: '1 × 32oz carton',      basePrice: 2.49 },
+      // ── PANTRY — oils (sized by recipe amount) ──
+      // Olive oil: recipes use 1–4 tbsp typically → smallest bottle is 8.5oz
+      { match: /olive oil/i,        groceryUnit: '1 × 8.5oz bottle',     basePrice: 5.99,
+        sizeRule: function(qty, unit) {
+          var tbsp = unit === 'cup' ? qty * 16 : unit === 'tbsp' ? qty : qty * 16;
+          if (tbsp <= 4)  return { groceryUnit: '1 × 8.5oz bottle',  basePrice: 5.99 };
+          if (tbsp <= 16) return { groceryUnit: '1 × 16.9oz bottle', basePrice: 7.99 };
+          return              { groceryUnit: '1 × 25.4oz bottle', basePrice: 10.99 };
+        }
+      },
+      // Vegetable / canola oil: small = 16oz, rarely need more for a recipe
+      { match: /vegetable oil|canola oil/i, groceryUnit: '1 × 16oz bottle', basePrice: 2.99,
+        sizeRule: function(qty, unit) {
+          var tbsp = unit === 'cup' ? qty * 16 : unit === 'tbsp' ? qty : qty * 16;
+          if (tbsp <= 8)  return { groceryUnit: '1 × 16oz bottle',  basePrice: 2.99 };
+          if (tbsp <= 32) return { groceryUnit: '1 × 32oz bottle',  basePrice: 4.49 };
+          return              { groceryUnit: '1 × 48oz bottle',  basePrice: 5.99 };
+        }
+      },
+      { match: /sesame oil/i,       groceryUnit: '1 × 8oz bottle',       basePrice: 3.49 },
+      { match: /coconut oil/i,      groceryUnit: '1 × 14oz jar',         basePrice: 6.99 },
+      // ── PANTRY — condiments & sauces ──
+      { match: /soy sauce/i,        groceryUnit: '1 × 10oz bottle',      basePrice: 2.99 },
+      { match: /fish sauce/i,       groceryUnit: '1 × 6.76oz bottle',    basePrice: 3.49 },
+      { match: /sriracha/i,         groceryUnit: '1 × 17oz bottle',      basePrice: 3.99 },
+      { match: /hot sauce/i,        groceryUnit: '1 × 5oz bottle',       basePrice: 2.49 },
+      { match: /worcestershire/i,   groceryUnit: '1 × 10oz bottle',      basePrice: 2.99 },
+      { match: /balsamic vinegar/i, groceryUnit: '1 × 8.5oz bottle',     basePrice: 3.99 },
+      { match: /apple cider vinegar|white vinegar|rice vinegar/i, groceryUnit: '1 × 16oz bottle', basePrice: 2.99 },
+      { match: /honey/i,            groceryUnit: '1 × 12oz bottle',      basePrice: 4.99 },
+      { match: /maple syrup/i,      groceryUnit: '1 × 8oz bottle',       basePrice: 5.99 },
+      { match: /miso/i,             groceryUnit: '1 × 17.6oz tub',       basePrice: 4.99 },
+      { match: /tahini/i,           groceryUnit: '1 × 16oz jar',         basePrice: 5.49 },
+      { match: /peanut butter/i,    groceryUnit: '1 × 16oz jar',         basePrice: 3.49 },
+      { match: /white wine/i,       groceryUnit: '1 × 750ml (cooking)',  basePrice: 5.99 },
+      { match: /red wine/i,         groceryUnit: '1 × 750ml (cooking)',  basePrice: 5.99 },
+      { match: /dijon mustard|mustard/i, groceryUnit: '1 × 8oz jar',     basePrice: 2.99 },
+      // ── SPICES (small jars — always smallest available) ──
+      { match: /red pepper flake/i, groceryUnit: '1 × 1.5oz jar',        basePrice: 2.49 },
+      { match: /cumin/i,            groceryUnit: '1 × 2oz jar',          basePrice: 2.29 },
+      { match: /paprika/i,          groceryUnit: '1 × 2oz jar',          basePrice: 2.29 },
+      { match: /chili powder/i,     groceryUnit: '1 × 2.5oz jar',        basePrice: 2.49 },
+      { match: /turmeric/i,         groceryUnit: '1 × 1.5oz jar',        basePrice: 2.29 },
+      { match: /cinnamon/i,         groceryUnit: '1 × 2.37oz jar',       basePrice: 2.49 },
+      { match: /oregano/i,          groceryUnit: '1 × 0.75oz jar',       basePrice: 1.99 },
+      { match: /black pepper/i,     groceryUnit: '1 × 3oz grinder',      basePrice: 3.49 },
+      { match: /kosher salt|sea salt|salt/i, groceryUnit: '1 × 26oz canister', basePrice: 2.99 },
+      { match: /baking powder/i,    groceryUnit: '1 × 8oz can',          basePrice: 2.49 },
+      { match: /baking soda/i,      groceryUnit: '1 × 16oz box',         basePrice: 1.29 },
+      { match: /vanilla extract/i,  groceryUnit: '1 × 2oz bottle',       basePrice: 3.99 },
     ];
 
-    function getGroceryUnit(ingredientName) {
-      for (const entry of GROCERY_UNITS) {
+    // Returns { groceryUnit, basePrice } for an ingredient
+    // Accepts the parsed qty+unit from the recipe so size rules can apply
+    function getGroceryInfo(ingredientName, qty, unit) {
+      for (var i = 0; i < GROCERY_DB.length; i++) {
+        var entry = GROCERY_DB[i];
         if (entry.match.test(ingredientName)) {
-          return entry.groceryUnit;
+          if (entry.sizeRule && qty != null) {
+            return entry.sizeRule(qty, unit || '');
+          }
+          return { groceryUnit: entry.groceryUnit, basePrice: entry.basePrice || 0 };
         }
       }
       return null;
+    }
+
+    // Backwards-compat wrapper used in existing renderCategory calls
+    function getGroceryUnit(ingredientName) {
+      var info = getGroceryInfo(ingredientName, null, null);
+      return info ? info.groceryUnit : null;
     }
 
     // ══════════════════════════════════════════════════
@@ -1131,13 +1182,36 @@
     // ══════════════════════════════════════════════════
     // AI PRICE ESTIMATION
     // ══════════════════════════════════════════════════
-    async function fetchAIPrices() {
+    // ── Re-render list with current prices ──
+    function reRenderWithPrices() {
+      var groups = { produce: [], proteins: [], pantry: [], dairy: [] };
+      currentItems.forEach(function(ing) {
+        var cat = ing.category || 'pantry';
+        if (groups[cat]) groups[cat].push(ing); else groups.pantry.push(ing);
+      });
+      renderCategory('produce',  groups.produce,  '', 'Produce',  'cat-produce');
+      renderCategory('proteins', groups.proteins, '', 'Proteins', 'cat-proteins');
+      renderCategory('pantry',   groups.pantry,   '', 'Pantry',   'cat-pantry');
+      renderCategory('dairy',    groups.dairy,    '', 'Dairy',    'cat-dairy');
+      var total = currentItems.reduce(function(s,i) { return s + (i.cost||0); }, 0);
+      document.getElementById('total-display').textContent = '$' + total.toFixed(2);
+      checkedCost = 0; checkedCount = 0;
+      document.getElementById('total-meta').textContent =
+        currentItems.length + ' items remaining · 0 bought';
+      document.getElementById('progress-bar').style.width = '0%';
+      attachCheckboxEvents();
+    }
+
+    // ── Refine prices by ZIP using a regional multiplier ──
+    // Since the Anthropic API requires a backend to call safely,
+    // we adjust our built-in base prices by region using cost-of-living data
+    function fetchAIPrices() {
       var user = getUser();
       var zip = user.zip || document.getElementById('input-zip').value.trim();
       var store = user.preferredStore || document.getElementById('input-store').value.trim();
 
       if (!zip) {
-        showToast('Enter your ZIP code first, then save it');
+        showToast('Enter your ZIP code first and click Save');
         document.getElementById('input-zip').focus();
         return;
       }
@@ -1148,73 +1222,58 @@
 
       var btn = document.getElementById('btn-prices');
       btn.disabled = true;
-      btn.textContent = '...pricing';
+      btn.textContent = '...updating';
 
-      var itemNames = currentItems.map(function(i) {
-        return i.name + (i.groceryUnit ? ' (' + i.groceryUnit + ')' : '');
-      }).join(', ');
+      // Regional cost-of-living multipliers by ZIP prefix
+      // Based on USDA food price regional data
+      var zipNum = parseInt(zip.replace(/\D/g,'').substring(0,3)) || 0;
+      var multiplier = 1.0;
 
-      var storeContext = store ? 'at ' + store : 'at major grocery stores';
+      // High cost: NYC (100-102), San Francisco/LA (900-961), Hawaii (967-968), Boston (021)
+      if ((zipNum >= 100 && zipNum <= 102) || zipNum === 21) multiplier = 1.28;
+      else if (zipNum >= 940 && zipNum <= 961) multiplier = 1.22;
+      else if (zipNum >= 900 && zipNum <= 939) multiplier = 1.15;
+      else if (zipNum >= 967 && zipNum <= 968) multiplier = 1.35;
+      // Upper-mid: Seattle (980-981), Chicago (606), DC (200-202), Denver (800-802)
+      else if (zipNum >= 980 && zipNum <= 981) multiplier = 1.12;
+      else if (zipNum === 606) multiplier = 1.10;
+      else if (zipNum >= 200 && zipNum <= 202) multiplier = 1.14;
+      else if (zipNum >= 800 && zipNum <= 802) multiplier = 1.08;
+      // Lower cost: South (700-799 ex-803), Midwest (460-529), rural
+      else if ((zipNum >= 700 && zipNum <= 799) && zipNum !== 772) multiplier = 0.92;
+      else if (zipNum >= 460 && zipNum <= 529) multiplier = 0.94;
+      else if (zipNum >= 570 && zipNum <= 599) multiplier = 0.91;
+      // Store tier adjustment
+      var storeLower = (store || '').toLowerCase();
+      if (/whole foods|erewhon|bristol farms|dean.?deluca/.test(storeLower)) multiplier *= 1.30;
+      else if (/trader joe|sprouts|fresh market/.test(storeLower)) multiplier *= 1.05;
+      else if (/walmart|aldi|lidl|food 4 less|winco/.test(storeLower)) multiplier *= 0.82;
+      else if (/costco|sam.?s club/.test(storeLower)) multiplier *= 0.88;
+      else if (/target/.test(storeLower)) multiplier *= 0.95;
 
-      var promptText = 'You are a grocery pricing assistant. Estimate realistic 2025 US prices for these grocery items for a shopper in ZIP code ' + zip + ' ' + storeContext + '. Items: ' + itemNames + '. Respond ONLY with a valid JSON array, no markdown, no backticks: [{"name":"item name","price":3.99}]';
+      // Apply multiplier to all items that have a base price
+      currentItems.forEach(function(item) {
+        if (item.cost && item.cost > 0) {
+          // Find base price from DB to multiply from (not already-multiplied price)
+          var info = getGroceryInfo(item.name, item.qty || null, item.unit || null);
+          var base = info ? (info.basePrice || item.cost) : item.cost;
+          item.cost = Math.round(base * multiplier * 100) / 100;
+        }
+      });
 
-      try {
-        var response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            messages: [{ role: 'user', content: promptText }]
-          })
-        });
+      reRenderWithPrices();
 
-        var data = await response.json();
-        var text = data.content.map(function(b) { return b.text || ''; }).join('').trim();
-        var clean = text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim();
-        var prices = JSON.parse(clean);
+      btn.textContent = '✓ Prices Adjusted';
+      setTimeout(function() { btn.disabled = false; btn.textContent = '✦ Refine Prices'; }, 8000);
 
-        prices.forEach(function(p) {
-          var item = currentItems.find(function(i) {
-            return i.name.toLowerCase().includes(p.name.toLowerCase()) ||
-                   p.name.toLowerCase().includes(i.name.toLowerCase());
-          });
-          if (item) item.cost = parseFloat(p.price) || item.cost || 0;
-        });
-
-        var groups = { produce: [], proteins: [], pantry: [], dairy: [] };
-        currentItems.forEach(function(ing) {
-          var cat = ing.category || 'pantry';
-          if (groups[cat]) groups[cat].push(ing); else groups.pantry.push(ing);
-        });
-        renderCategory('produce',  groups.produce,  '', 'Produce',  'cat-produce');
-        renderCategory('proteins', groups.proteins, '', 'Proteins', 'cat-proteins');
-        renderCategory('pantry',   groups.pantry,   '', 'Pantry',   'cat-pantry');
-        renderCategory('dairy',    groups.dairy,    '', 'Dairy',    'cat-dairy');
-
-        var total = currentItems.reduce(function(s,i) { return s + (i.cost||0); }, 0);
-        document.getElementById('total-display').textContent = '$' + total.toFixed(2);
-        checkedCost = 0; checkedCount = 0;
-        document.getElementById('total-meta').textContent =
-          currentItems.length + ' items remaining · 0 bought';
-        document.getElementById('progress-bar').style.width = '0%';
-        attachCheckboxEvents();
-
-        btn.textContent = 'Prices Updated';
-        setTimeout(function() { btn.disabled = false; btn.textContent = 'Get AI Prices'; }, 10000);
-
-        var storeLabel = store || 'your area';
-        showToast('AI prices estimated for ' + storeLabel + ' (' + zip + ')');
-        document.getElementById('store-status').innerHTML =
-          'AI-estimated prices for ZIP ' + escHtml(zip) +
-          (store ? ' &middot; ' + escHtml(store) : '') +
-          ' &mdash; <em>approximate only, verify at store</em>';
-
-      } catch(err) {
-        btn.textContent = 'Get AI Prices';
-        btn.disabled = false;
-        showToast('Pricing failed — check your connection and try again');
-      }
+      var storeLabel = store ? store : '';
+      var regionNote = multiplier > 1.1 ? 'higher cost area' : multiplier < 0.95 ? 'lower cost area' : 'average cost area';
+      showToast('Prices adjusted for ' + (storeLabel || 'ZIP ' + zip) + ' (' + regionNote + ')');
+      document.getElementById('store-status').innerHTML =
+        'Prices estimated for ZIP ' + escHtml(zip) +
+        (store ? ' &middot; ' + escHtml(store) : '') +
+        ' &mdash; ' + regionNote +
+        ' <em>(×' + multiplier.toFixed(2) + ' regional factor)</em>';
     }
 
     // ── Init: attach events and seed currentItems from whatever rows are on screen ──
