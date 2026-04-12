@@ -1172,5 +1172,172 @@
   </div>
 
 
+
+  <!-- PROFILE MODAL -->
+  <div class="profile-overlay" id="profile-overlay">
+    <div class="profile-modal">
+      <div class="profile-header">
+        <div class="profile-header-left">
+          <span class="profile-username" id="pm-username">@username</span>
+          <span class="profile-member-since" id="pm-since"></span>
+        </div>
+        <button class="profile-close" onclick="closeProfile()">&#x2715;</button>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Account</div>
+        <div class="profile-field">
+          <label class="profile-field-label" for="pm-name">Name</label>
+          <input class="profile-input" type="text" id="pm-name" placeholder="Your name" />
+        </div>
+        <div class="profile-field">
+          <label class="profile-field-label">Weekly Budget</label>
+          <div class="profile-range-row">
+            <span class="profile-budget-num" id="pm-budget-display">$50</span>
+            <input class="profile-range" type="range" min="10" max="200" step="5" id="pm-budget"
+              oninput="document.getElementById('pm-budget-display').textContent='$'+this.value" />
+          </div>
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Dietary Restrictions</div>
+        <div class="profile-chips" id="pm-diet">
+          <button class="profile-chip" data-val="None" onclick="profileChipToggle(this)">None</button>
+          <button class="profile-chip" data-val="Vegetarian" onclick="profileChipToggle(this)">Vegetarian</button>
+          <button class="profile-chip" data-val="Vegan" onclick="profileChipToggle(this)">Vegan</button>
+          <button class="profile-chip" data-val="Gluten-free" onclick="profileChipToggle(this)">Gluten-free</button>
+          <button class="profile-chip" data-val="Dairy-free" onclick="profileChipToggle(this)">Dairy-free</button>
+          <button class="profile-chip" data-val="Halal" onclick="profileChipToggle(this)">Halal</button>
+          <button class="profile-chip" data-val="Kosher" onclick="profileChipToggle(this)">Kosher</button>
+          <button class="profile-chip" data-val="Low-carb / Keto" onclick="profileChipToggle(this)">Low-carb / Keto</button>
+          <button class="profile-chip" data-val="Paleo" onclick="profileChipToggle(this)">Paleo</button>
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Allergies</div>
+        <div class="profile-chips" id="pm-allergy">
+          <button class="profile-chip" data-val="None" onclick="profileChipToggle(this)">None</button>
+          <button class="profile-chip" data-val="Peanuts" onclick="profileChipToggle(this)">Peanuts</button>
+          <button class="profile-chip" data-val="Tree nuts" onclick="profileChipToggle(this)">Tree nuts</button>
+          <button class="profile-chip" data-val="Shellfish" onclick="profileChipToggle(this)">Shellfish</button>
+          <button class="profile-chip" data-val="Fish" onclick="profileChipToggle(this)">Fish</button>
+          <button class="profile-chip" data-val="Eggs" onclick="profileChipToggle(this)">Eggs</button>
+          <button class="profile-chip" data-val="Soy" onclick="profileChipToggle(this)">Soy</button>
+          <button class="profile-chip" data-val="Wheat" onclick="profileChipToggle(this)">Wheat</button>
+          <button class="profile-chip" data-val="Sesame" onclick="profileChipToggle(this)">Sesame</button>
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Cooking Skill</div>
+        <div id="pm-skill">
+          <button class="profile-skill-chip" data-val="Beginner" onclick="profileSkillSelect(this)">Beginner — I mostly reheat or make simple meals</button>
+          <button class="profile-skill-chip" data-val="Intermediate" onclick="profileSkillSelect(this)">Intermediate — I can follow a recipe</button>
+          <button class="profile-skill-chip" data-val="Confident" onclick="profileSkillSelect(this)">Confident — I cook regularly without much help</button>
+        </div>
+      </div>
+      <div class="profile-section">
+        <div class="profile-section-title">Habit Goals</div>
+        <div class="profile-chips" id="pm-goals">
+          <button class="profile-chip" data-val="Meal prep on Sundays" onclick="profileChipToggle(this)">Meal prep Sundays</button>
+          <button class="profile-chip" data-val="Eat breakfast daily" onclick="profileChipToggle(this)">Eat breakfast daily</button>
+          <button class="profile-chip" data-val="Reduce takeout" onclick="profileChipToggle(this)">Reduce takeout</button>
+          <button class="profile-chip" data-val="Drink more water" onclick="profileChipToggle(this)">Drink more water</button>
+          <button class="profile-chip" data-val="Reduce food waste" onclick="profileChipToggle(this)">Reduce food waste</button>
+          <button class="profile-chip" data-val="Track nutrition" onclick="profileChipToggle(this)">Track nutrition</button>
+          <button class="profile-chip" data-val="Cook at home 5x/week" onclick="profileChipToggle(this)">Cook 5x/week</button>
+          <button class="profile-chip" data-val="Eat more vegetables" onclick="profileChipToggle(this)">Eat more vegetables</button>
+        </div>
+      </div>
+      <div class="profile-saved-msg" id="pm-saved">Profile saved</div>
+      <div class="profile-actions">
+        <button class="btn-profile-save" onclick="saveProfile()">Save Changes</button>
+        <button class="btn-profile-signout" onclick="signOutProfile()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openProfile() {
+      var user = pmGetUser();
+      if (!user || !user.name) { window.location.href = 'onboarding.html'; return; }
+      document.getElementById('pm-username').textContent = '@' + (user.username || user.name);
+      document.getElementById('pm-name').value = user.name || '';
+      var budget = user.budget || 50;
+      document.getElementById('pm-budget').value = budget;
+      document.getElementById('pm-budget-display').textContent = '$' + budget;
+      if (user.createdAt) {
+        var d = new Date(user.createdAt);
+        document.getElementById('pm-since').textContent = 'Member since ' +
+          d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      }
+      pmSetChips('pm-diet',    user.dietRestrictions || []);
+      pmSetChips('pm-allergy', user.allergies        || []);
+      pmSetChips('pm-goals',   user.habitGoals       || []);
+      document.querySelectorAll('#pm-skill .profile-skill-chip').forEach(function(btn) {
+        btn.classList.toggle('selected', !!(user.skillLevel && user.skillLevel.includes(btn.dataset.val)));
+      });
+      document.getElementById('pm-saved').style.display = 'none';
+      document.getElementById('profile-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeProfile() {
+      document.getElementById('profile-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function pmSetChips(groupId, values) {
+      document.querySelectorAll('#' + groupId + ' .profile-chip').forEach(function(chip) {
+        chip.classList.toggle('selected', values.indexOf(chip.dataset.val) >= 0);
+      });
+    }
+    function profileChipToggle(btn) { btn.classList.toggle('selected'); }
+    function profileSkillSelect(btn) {
+      document.querySelectorAll('#pm-skill .profile-skill-chip').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    }
+    function saveProfile() {
+      var user = pmGetUser();
+      if (!user) return;
+      var nameVal = document.getElementById('pm-name').value.trim();
+      if (nameVal) user.name = nameVal;
+      user.budget           = parseInt(document.getElementById('pm-budget').value) || 50;
+      user.dietRestrictions = pmGetChips('pm-diet');
+      user.allergies        = pmGetChips('pm-allergy');
+      user.habitGoals       = pmGetChips('pm-goals');
+      var selSkill = document.querySelector('#pm-skill .profile-skill-chip.selected');
+      if (selSkill) user.skillLevel = selSkill.dataset.val;
+      pmSaveUser(user);
+      var cta = document.querySelector('.nav-cta');
+      if (cta && user.name) cta.textContent = 'Hi, ' + user.name + ' &#x1F44B;';
+      var msg = document.getElementById('pm-saved');
+      msg.style.display = 'block';
+      clearTimeout(saveProfile._t);
+      saveProfile._t = setTimeout(function() { msg.style.display = 'none'; }, 2500);
+    }
+    function pmGetChips(groupId) {
+      return Array.from(document.querySelectorAll('#' + groupId + ' .profile-chip.selected'))
+        .map(function(c) { return c.dataset.val; });
+    }
+    function signOutProfile() {
+      if (!confirm('Sign out?')) return;
+      localStorage.removeItem('mm_current_user');
+      closeProfile();
+      window.location.href = 'index.html';
+    }
+    function pmGetUser() {
+      try { return JSON.parse(localStorage.getItem('mm_current_user')); } catch(e) { return null; }
+    }
+    function pmSaveUser(p) {
+      try {
+        var users = JSON.parse(localStorage.getItem('mm_users') || '{}');
+        if (p.username) users[p.username] = p;
+        localStorage.setItem('mm_users', JSON.stringify(users));
+        localStorage.setItem('mm_current_user', JSON.stringify(p));
+      } catch(e) {}
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var ov = document.getElementById('profile-overlay');
+      if (ov) ov.addEventListener('click', function(e) { if (e.target === this) closeProfile(); });
+    });
+  </script>
+
 </body>
 </html>
