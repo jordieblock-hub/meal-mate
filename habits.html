@@ -94,6 +94,52 @@
     .footer-social a:hover { color: var(--accent); border-color: var(--accent); }
     .footer-bottom { max-width: 900px; margin: 14px auto 0; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
     @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; gap: 2px; } .nav-links { display: none; } .week-grid { gap: 4px; } .day-circle { width: 30px; height: 30px; } }
+
+    /* ══════════════════════════════════
+       PROFILE MODAL (shared all pages)
+    ══════════════════════════════════ */
+    .profile-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 800;
+      align-items: flex-start; justify-content: flex-end;
+      padding: 68px 16px 0 0;
+    }
+    .profile-overlay.open { display: flex; }
+    .profile-modal {
+      background: var(--cream, #f9f7f2);
+      border: 1px solid var(--border, #e0ddd8);
+      border-radius: 0; width: 360px; max-height: calc(100vh - 88px);
+      overflow-y: auto; box-shadow: -4px 4px 32px rgba(0,0,0,0.18);
+    }
+    .profile-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border, #e0ddd8); display: flex; align-items: center; justify-content: space-between; }
+    .profile-header-left { display: flex; flex-direction: column; gap: 2px; }
+    .profile-username { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 900; color: var(--black, #111); letter-spacing: -0.02em; }
+    .profile-member-since { font-size: 11px; color: var(--muted, #777); letter-spacing: 0.04em; }
+    .profile-close { background: transparent; border: 1px solid var(--border, #e0ddd8); width: 28px; height: 28px; border-radius: 2px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; color: var(--black, #111); }
+    .profile-close:hover { background: var(--border, #e0ddd8); }
+    .profile-section { padding: 16px 20px; border-bottom: 1px solid var(--border, #e0ddd8); }
+    .profile-section:last-child { border-bottom: none; }
+    .profile-section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted, #777); margin-bottom: 12px; }
+    .profile-field { margin-bottom: 10px; }
+    .profile-field-label { font-size: 11px; font-weight: 700; color: var(--black, #111); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+    .profile-input { width: 100%; padding: 8px 12px; border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text, #1a1a1a); background: #fff; outline: none; transition: border-color 0.2s; }
+    .profile-input:focus { border-color: var(--black, #111); }
+    .profile-range-row { display: flex; align-items: center; gap: 10px; }
+    .profile-budget-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--black, #111); min-width: 52px; }
+    .profile-range { flex: 1; accent-color: var(--black, #111); }
+    .profile-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .profile-chip { padding: 5px 12px; border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text, #1a1a1a); transition: all 0.15s; user-select: none; }
+    .profile-chip:hover { border-color: var(--black, #111); }
+    .profile-chip.selected { background: var(--black, #111); color: #fff; border-color: var(--black, #111); }
+    .profile-skill-chip { width: 100%; text-align: left; padding: 8px 12px; border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text, #1a1a1a); transition: all 0.15s; margin-bottom: 4px; display: block; }
+    .profile-skill-chip:hover { border-color: var(--black, #111); }
+    .profile-skill-chip.selected { background: var(--black, #111); color: #fff; border-color: var(--black, #111); }
+    .profile-actions { padding: 16px 20px; display: flex; gap: 8px; }
+    .btn-profile-save { flex: 1; padding: 10px; background: var(--black, #111); color: #fff; border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.07em; text-transform: uppercase; transition: background 0.2s; }
+    .btn-profile-save:hover { background: var(--accent, #c8724a); }
+    .btn-profile-signout { padding: 10px 16px; background: transparent; color: var(--muted, #777); border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.07em; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; }
+    .btn-profile-signout:hover { border-color: #c0392b; color: #c0392b; }
+    .profile-saved-msg { font-size: 11px; color: var(--accent, #c8724a); font-weight: 700; text-align: center; padding: 0 20px 12px; display: none; }
   </style>
 </head>
 <body>
@@ -607,7 +653,7 @@
 
       // Nav greeting
       const cta = document.querySelector('.nav-cta');
-      if (cta) { cta.textContent = 'Hi, ' + user.name + ' 👋'; cta.href = 'onboarding.html'; }
+      if (cta) { cta.textContent = 'Hi, ' + user.name + ' 👋'; cta.href = '#'; cta.onclick = function(e){ e.preventDefault(); openProfile(); }; }
 
       // Page header
       const h1 = document.querySelector('.page-header h1');
