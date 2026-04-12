@@ -117,6 +117,51 @@
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
       .footer-nav { margin: 0; flex-wrap: wrap; }
     }
+
+    /* ─── URL IMPORT ─── */
+    .import-section {
+      border-bottom: 1px solid var(--border);
+      padding: 0 0 1.5rem 0;
+      margin-bottom: 1.5rem;
+    }
+    .import-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 8px;
+    }
+    .import-row {
+      display: flex; gap: 8px;
+    }
+    .import-input {
+      flex: 1; padding: 10px 14px; border: 1.5px solid var(--border);
+      border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+      color: var(--text); background: var(--cream); outline: none;
+      transition: border-color 0.2s;
+    }
+    .import-input:focus { border-color: var(--black); }
+    .import-input::placeholder { color: var(--muted); }
+    .btn-import {
+      padding: 10px 18px; background: var(--black); color: #fff;
+      border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 0.06em;
+      text-transform: uppercase; transition: background 0.2s; white-space: nowrap;
+    }
+    .btn-import:hover { background: var(--accent); }
+    .btn-import:disabled { background: var(--muted); cursor: not-allowed; }
+    .import-status {
+      margin-top: 8px; font-size: 12px; color: var(--muted);
+      min-height: 18px; transition: color 0.2s;
+    }
+    .import-status.error { color: var(--error, #c0392b); }
+    .import-status.success { color: var(--accent); font-weight: 600; }
+    .import-status.loading { color: var(--muted); }
+    .modal-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 0 0 1.5rem 0; color: var(--muted); font-size: 11px;
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .modal-divider::before, .modal-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
   </style>
 </head>
 <body>
@@ -606,9 +651,113 @@
     }
 
     function clearForm() {
-      ['r-title','r-desc','r-emoji','r-ingredients','r-instructions'].forEach(id =>
-        document.getElementById(id).value = '');
+      ['r-title','r-desc','r-emoji','r-ingredients','r-instructions','r-url'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
       document.getElementById('r-tags').value = '';
+      const status = document.getElementById('import-status');
+      if (status) { status.textContent = ''; status.className = 'import-status'; }
+    }
+
+    // ── URL Import via Claude AI ──
+    async function importFromUrl() {
+      const url = document.getElementById('r-url').value.trim();
+      const status = document.getElementById('import-status');
+      const btn = document.getElementById('btn-import');
+
+      if (!url) {
+        status.textContent = 'Please paste a recipe URL first.';
+        status.className = 'import-status error';
+        return;
+      }
+
+      // Validate it looks like a URL
+      if (!url.startsWith('http')) {
+        status.textContent = 'Please enter a full URL starting with http:// or https://';
+        status.className = 'import-status error';
+        return;
+      }
+
+      btn.disabled = true;
+      status.textContent = 'Fetching recipe... this may take a few seconds';
+      status.className = 'import-status loading';
+
+      try {
+        const prompt = `You are a recipe extraction assistant. The user has provided this URL: ${url}
+
+Since you cannot browse the web directly, please do the following:
+1. If you recognize this as a known recipe from a major site (NYT Cooking, Serious Eats, Bon Appétit, Food Network, AllRecipes, TikTok recipes, etc.), extract it from your knowledge.
+2. If you don't recognize the specific URL, respond with an error message.
+
+Respond ONLY with a valid JSON object (no markdown, no backticks, no extra text):
+{
+  "success": true,
+  "title": "Recipe name",
+  "description": "1-2 sentence description",
+  "ingredients": ["2 cups flour", "1 tsp salt", "3 cloves garlic, minced"],
+  "instructions": ["Step one text", "Step two text"],
+  "tags": "Vegetarian",
+  "emoji": "🍝"
+}
+
+If you cannot identify the recipe, respond with:
+{"success": false, "error": "Could not identify this recipe from the URL. Please fill in the form manually."}
+
+For ingredients: always start each line with the quantity and unit (e.g. "2 cups rice", "1/2 lb shrimp", "3 tbsp olive oil").
+Tags must be one of: Vegetarian, Quick & Easy, High Protein, Budget-Friendly, or empty string.`;
+
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+
+        const data = await response.json();
+        const text = data.content.map(b => b.text || '').join('').trim();
+
+        let parsed;
+        try {
+          const clean = text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim();
+          parsed = JSON.parse(clean);
+        } catch(e) {
+          throw new Error('AI returned unexpected format. Please fill in the form manually.');
+        }
+
+        if (!parsed.success) {
+          throw new Error(parsed.error || 'Could not extract recipe. Please fill in manually.');
+        }
+
+        // Populate the form
+        document.getElementById('r-title').value = parsed.title || '';
+        document.getElementById('r-desc').value = parsed.description || '';
+        document.getElementById('r-emoji').value = parsed.emoji || '🍽️';
+        document.getElementById('r-ingredients').value = (parsed.ingredients || []).join('\n');
+        document.getElementById('r-instructions').value = (parsed.instructions || []).join('\n');
+
+        // Set tag dropdown
+        const tagEl = document.getElementById('r-tags');
+        const validTags = ['Vegetarian', 'Quick & Easy', 'High Protein', 'Budget-Friendly'];
+        if (parsed.tags && validTags.includes(parsed.tags)) {
+          tagEl.value = parsed.tags;
+        }
+
+        status.textContent = '✓ Recipe imported! Review the details below and save.';
+        status.className = 'import-status success';
+        btn.disabled = false;
+
+        // Scroll form into view
+        document.getElementById('r-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      } catch(err) {
+        status.textContent = err.message || 'Import failed. Please fill in the form manually.';
+        status.className = 'import-status error';
+        btn.disabled = false;
+      }
     }
 
     // getSavedRecipes defined above in user helpers
@@ -745,7 +894,21 @@
   <div class="modal-overlay" id="add-recipe-overlay">
     <div class="modal">
       <button class="modal-close" onclick="closeAddRecipe()">✕</button>
-      <h2 class="modal-title">Add Your Own Recipe</h2>
+      <h2 class="modal-title">Add a Recipe</h2>
+
+      <!-- URL IMPORT SECTION -->
+      <div class="import-section">
+        <label class="import-label">Import from a URL</label>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Paste a link from TikTok, NYT Cooking, Serious Eats, Bon Appétit, or any recipe site — AI will extract the recipe automatically.</p>
+        <div class="import-row">
+          <input class="import-input" type="url" id="r-url"
+            placeholder="https://www.nytcooking.com/recipes/..." />
+          <button class="btn-import" id="btn-import" onclick="importFromUrl()">Import ↓</button>
+        </div>
+        <div class="import-status" id="import-status"></div>
+      </div>
+
+      <div class="modal-divider">or fill in manually</div>
 
       <div class="form-group">
         <label class="form-label" for="r-title">Recipe name *</label>
@@ -777,15 +940,15 @@
 
       <div class="form-group">
         <label class="form-label" for="r-ingredients">Ingredients *</label>
-        <textarea class="form-textarea" id="r-ingredients" style="min-height:100px"
-          placeholder="One per line — always start with the amount, e.g.&#10;2 cups rice&#10;3/4 lb shrimp, peeled&#10;1 stick butter&#10;3 cloves garlic, minced&#10;2 tbsp soy sauce"></textarea>
-        <div class="form-hint">One per line. Start each line with the quantity and unit — the shopping list uses these to add amounts across recipes.</div>
+        <textarea class="form-textarea" id="r-ingredients" style="min-height:110px"
+          placeholder="One per line — start with the amount:&#10;2 cups rice&#10;3/4 lb shrimp, peeled&#10;1 stick butter&#10;3 cloves garlic, minced"></textarea>
+        <div class="form-hint">One per line, amount first. These will be converted to grocery store quantities on your shopping list.</div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="r-instructions">Instructions *</label>
         <textarea class="form-textarea" id="r-instructions" style="min-height:110px"
-          placeholder="One step per line, e.g.&#10;Cook rice according to package directions.&#10;Press tofu and cut into cubes.&#10;Heat oil in a pan over medium-high heat."></textarea>
+          placeholder="One step per line:&#10;Cook rice according to package directions.&#10;Heat oil in a pan over medium-high heat."></textarea>
         <div class="form-hint">One step per line.</div>
       </div>
 

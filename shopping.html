@@ -126,6 +126,68 @@
       .footer-nav { margin: 0; }
       #waste-banner .banner-text { padding-right: 30px; font-size: 0.82rem; }
     }
+
+    /* ─── STORE & LOCATION CARD ─── */
+    .store-card {
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 0; padding: 18px 24px;
+      max-width: 900px; margin: 0 auto 16px; width: calc(100% - 48px);
+    }
+    .store-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .store-card-title {
+      font-family: 'Playfair Display', serif; font-size: 1rem;
+      font-weight: 700; color: var(--black);
+    }
+    .store-form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .store-input {
+      padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text);
+      background: var(--cream); outline: none; transition: border-color 0.2s;
+    }
+    .store-input:focus { border-color: var(--black); }
+    .store-input.zip { width: 110px; }
+    .store-input.store-name { flex: 1; min-width: 180px; }
+    .btn-store-save {
+      padding: 8px 16px; background: var(--black); color: #fff;
+      border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 0.06em;
+      text-transform: uppercase; transition: background 0.2s; white-space: nowrap;
+    }
+    .btn-store-save:hover { background: var(--accent); }
+    .store-status {
+      font-size: 12px; color: var(--muted); margin-top: 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .store-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light); border: 1px solid var(--accent);
+      border-radius: 2px; padding: 3px 10px; font-size: 11px;
+      font-weight: 700; color: var(--accent);
+    }
+    .btn-prices {
+      padding: 8px 16px; background: transparent; color: var(--black);
+      border: 1.5px solid var(--black); border-radius: 2px;
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-prices:hover { background: var(--black); color: #fff; }
+    .btn-prices:disabled { opacity: 0.5; cursor: not-allowed; }
+    .price-loading {
+      font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px;
+    }
+
+    /* ─── GROCERY UNIT BADGE ─── */
+    .item-grocery-unit {
+      font-size: 0.75rem; color: var(--accent); font-weight: 600;
+      white-space: nowrap; min-width: 100px; text-align: right;
+    }
+    .item-row { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+    .item-amount { font-size: 0.82rem; color: var(--muted); min-width: 70px; text-align: right; }
+
   </style>
 </head>
 <body>
@@ -176,11 +238,28 @@
       <div class="total-actions">
         <button class="btn-outline" onclick="regenerateList()">Regenerate List</button>
         <button class="btn-primary" onclick="openRecipePicker()">🍽️ Choose Recipes</button>
+        <button class="btn-prices" id="btn-prices" onclick="fetchAIPrices()">✦ Get AI Prices</button>
       </div>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progress-bar"></div>
     </div>
+  </div>
+
+  <!-- STORE & LOCATION CARD -->
+  <div class="store-card" id="store-card">
+    <div class="store-card-top">
+      <span class="store-card-title">📍 Your Store & Location</span>
+      <div id="store-badge-wrap"></div>
+    </div>
+    <div class="store-form-row">
+      <input class="store-input zip" type="text" id="input-zip"
+        placeholder="ZIP code" maxlength="10" />
+      <input class="store-input store-name" type="text" id="input-store"
+        placeholder="Store name (e.g. Whole Foods, Kroger, HEB)" />
+      <button class="btn-store-save" onclick="saveStorePrefs()">Save</button>
+    </div>
+    <div class="store-status" id="store-status"></div>
   </div>
 
   <!-- SELECTED RECIPES CHIPS -->
@@ -512,6 +591,8 @@
         });
       }
 
+      loadStorePrefs();
+
       if (selectedRecipeIds.length > 0) {
         buildShoppingList(selectedRecipeIds);
       }
@@ -761,6 +842,11 @@
       document.getElementById('total-meta').textContent = currentItems.length + ' items remaining · 0 bought';
       document.getElementById('progress-bar').style.width = '0%';
 
+      // Pre-compute grocery units for all items
+      currentItems.forEach(function(item) {
+        item.groceryUnit = getGroceryUnit(item.name);
+      });
+
       updateSelectedChips(selected);
       attachCheckboxEvents();
     }
@@ -775,10 +861,14 @@
         ? '<li style="padding:12px 20px; font-size:0.875rem; color:var(--muted);">No items from selected recipes.</li>'
         : items.map(ing => {
             const hasPrice = (ing.cost || 0) > 0;
+            // Look up grocery store unit for this ingredient
+            const groceryUnit = ing.groceryUnit || getGroceryUnit(ing.name);
+            if (groceryUnit && !ing.groceryUnit) ing.groceryUnit = groceryUnit;
             return '<li class="item-row">' +
               '<input type="checkbox" class="item-checkbox" data-cost="' + (ing.cost || 0).toFixed(2) + '" />' +
               '<span class="item-name">' + escHtml(ing.name) + '</span>' +
-              '<span class="item-amount">' + escHtml(ing.amount || '') + '</span>' +
+              '<span class="item-amount" title="Recipe amount">' + escHtml(ing.amount || '') + '</span>' +
+              '<span class="item-grocery-unit" title="What to buy">' + escHtml(groceryUnit || '') + '</span>' +
               '<span class="item-cost">' + (hasPrice ? '$' + (ing.cost).toFixed(2) : '—') + '</span>' +
               '</li>';
           }).join('');
@@ -878,6 +968,253 @@
 
     function escHtml(str) {
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ══════════════════════════════════════════════════
+    // COOKING AMOUNT → GROCERY STORE UNIT CONVERSION
+    // ══════════════════════════════════════════════════
+    const GROCERY_UNITS = [
+      { match: /cottage cheese/i,      groceryUnit: '1 × 16oz container' },
+      { match: /ricotta/i,             groceryUnit: '1 × 15oz container' },
+      { match: /cream cheese/i,        groceryUnit: '1 × 8oz block' },
+      { match: /sour cream/i,          groceryUnit: '1 × 16oz container' },
+      { match: /greek yogurt|yogurt/i, groceryUnit: '1 × 32oz container' },
+      { match: /heavy cream/i,         groceryUnit: '1 × 1pt carton' },
+      { match: /half.and.half/i,       groceryUnit: '1 × 1pt carton' },
+      { match: /milk/i,                groceryUnit: '1 × half-gal jug' },
+      { match: /butter/i,              groceryUnit: '1 × 4-stick box' },
+      { match: /parmesan/i,            groceryUnit: '1 × 6oz wedge' },
+      { match: /mozzarella/i,          groceryUnit: '1 × 8oz ball' },
+      { match: /cheddar/i,             groceryUnit: '1 × 8oz block' },
+      { match: /feta/i,                groceryUnit: '1 × 6oz block' },
+      { match: /egg/i,                 groceryUnit: '1 × dozen' },
+      { match: /chicken breast/i,      groceryUnit: '1 × 2lb pack' },
+      { match: /chicken thigh/i,       groceryUnit: '1 × 2lb pack' },
+      { match: /ground beef|ground turkey/i, groceryUnit: '1 × 1lb pack' },
+      { match: /shrimp/i,              groceryUnit: '1 × 1lb bag (frozen)' },
+      { match: /salmon/i,              groceryUnit: '1 × 6oz fillet' },
+      { match: /tuna/i,                groceryUnit: '2 × 5oz cans' },
+      { match: /bacon/i,               groceryUnit: '1 × 12oz pack' },
+      { match: /sausage/i,             groceryUnit: '1 × 1lb pack' },
+      { match: /tofu/i,                groceryUnit: '1 × 14oz block' },
+      { match: /chickpeas|garbanzo/i,  groceryUnit: '1 × 15oz can' },
+      { match: /black beans|kidney beans|cannellini|white beans/i, groceryUnit: '1 × 15oz can' },
+      { match: /lentils/i,             groceryUnit: '1 × 16oz bag' },
+      { match: /cherry tomato/i,       groceryUnit: '1 × 1pt container' },
+      { match: /spinach/i,             groceryUnit: '1 × 5oz bag' },
+      { match: /arugula/i,             groceryUnit: '1 × 5oz bag' },
+      { match: /mixed greens|salad mix/i, groceryUnit: '1 × 5oz bag' },
+      { match: /kale/i,                groceryUnit: '1 × bunch' },
+      { match: /broccoli/i,            groceryUnit: '1 head (or 12oz bag)' },
+      { match: /cauliflower/i,         groceryUnit: '1 head' },
+      { match: /garlic/i,              groceryUnit: '1 × head' },
+      { match: /shallot/i,             groceryUnit: '1 × 8oz bag' },
+      { match: /yellow onion|white onion|red onion|onion/i, groceryUnit: '1 × 3lb bag' },
+      { match: /carrot/i,              groceryUnit: '1 × 1lb bag' },
+      { match: /celery/i,              groceryUnit: '1 × bunch' },
+      { match: /oyster mushroom/i,     groceryUnit: '1 × 3.5oz pack' },
+      { match: /shimeji mushroom/i,    groceryUnit: '1 × 3.5oz pack' },
+      { match: /mushroom/i,            groceryUnit: '1 × 8oz container' },
+      { match: /bell pepper/i,         groceryUnit: '1 × 3-pack' },
+      { match: /zucchini/i,            groceryUnit: '2 × medium' },
+      { match: /lemon/i,               groceryUnit: '2 × lemons' },
+      { match: /lime/i,                groceryUnit: '2 × limes' },
+      { match: /avocado/i,             groceryUnit: '1 × avocado' },
+      { match: /sweet potato/i,        groceryUnit: '1 × 3lb bag' },
+      { match: /potato/i,              groceryUnit: '1 × 5lb bag' },
+      { match: /ginger/i,              groceryUnit: '1 × small knob' },
+      { match: /parsley|cilantro|basil|mint|thyme|rosemary|dill/i, groceryUnit: '1 × bunch' },
+      { match: /green onion|scallion/i, groceryUnit: '1 × bunch' },
+      { match: /flour/i,               groceryUnit: '1 × 5lb bag' },
+      { match: /sugar/i,               groceryUnit: '1 × 4lb bag' },
+      { match: /brown sugar/i,         groceryUnit: '1 × 2lb bag' },
+      { match: /rice/i,                groceryUnit: '1 × 2lb bag' },
+      { match: /spaghetti|linguine|fettuccine|gemelli|penne|pasta/i, groceryUnit: '1 × 1lb box' },
+      { match: /panko|bread crumb/i,   groceryUnit: '1 × 8oz canister' },
+      { match: /crushed tomato/i,      groceryUnit: '1 × 28oz can' },
+      { match: /diced tomato/i,        groceryUnit: '1 × 14.5oz can' },
+      { match: /tomato paste/i,        groceryUnit: '1 × 6oz can' },
+      { match: /tomato sauce/i,        groceryUnit: '1 × 15oz can' },
+      { match: /coconut milk/i,        groceryUnit: '1 × 13.5oz can' },
+      { match: /chicken broth|chicken stock/i, groceryUnit: '1 × 32oz carton' },
+      { match: /beef broth|beef stock/i, groceryUnit: '1 × 32oz carton' },
+      { match: /vegetable broth/i,     groceryUnit: '1 × 32oz carton' },
+      { match: /olive oil/i,           groceryUnit: '1 × 16.9oz bottle' },
+      { match: /vegetable oil|canola oil/i, groceryUnit: '1 × 48oz bottle' },
+      { match: /sesame oil/i,          groceryUnit: '1 × 8oz bottle' },
+      { match: /soy sauce/i,           groceryUnit: '1 × 10oz bottle' },
+      { match: /fish sauce/i,          groceryUnit: '1 × 6.76oz bottle' },
+      { match: /sriracha/i,            groceryUnit: '1 × 17oz bottle' },
+      { match: /hot sauce/i,           groceryUnit: '1 × 5oz bottle' },
+      { match: /balsamic vinegar/i,    groceryUnit: '1 × 8.5oz bottle' },
+      { match: /apple cider vinegar|white vinegar|rice vinegar/i, groceryUnit: '1 × 16oz bottle' },
+      { match: /honey/i,               groceryUnit: '1 × 12oz bottle' },
+      { match: /maple syrup/i,         groceryUnit: '1 × 8oz bottle' },
+      { match: /miso/i,                groceryUnit: '1 × 17.6oz tub' },
+      { match: /tahini/i,              groceryUnit: '1 × 16oz jar' },
+      { match: /peanut butter/i,       groceryUnit: '1 × 16oz jar' },
+      { match: /white wine/i,          groceryUnit: '1 × 750ml (cooking)' },
+      { match: /red wine/i,            groceryUnit: '1 × 750ml (cooking)' },
+      { match: /dijon mustard|mustard/i, groceryUnit: '1 × 8oz jar' },
+      { match: /red pepper flake/i,    groceryUnit: '1 × 1.5oz jar' },
+      { match: /cumin/i,               groceryUnit: '1 × 2oz jar' },
+      { match: /paprika/i,             groceryUnit: '1 × 2oz jar' },
+      { match: /chili powder/i,        groceryUnit: '1 × 2.5oz jar' },
+      { match: /turmeric/i,            groceryUnit: '1 × 1.5oz jar' },
+      { match: /cinnamon/i,            groceryUnit: '1 × 2.37oz jar' },
+      { match: /oregano/i,             groceryUnit: '1 × 0.75oz jar' },
+      { match: /black pepper/i,        groceryUnit: '1 × 3oz grinder' },
+      { match: /kosher salt|sea salt|salt/i, groceryUnit: '1 × 26oz canister' },
+      { match: /baking powder/i,       groceryUnit: '1 × 8oz can' },
+      { match: /baking soda/i,         groceryUnit: '1 × 16oz box' },
+      { match: /vanilla extract/i,     groceryUnit: '1 × 2oz bottle' },
+    ];
+
+    function getGroceryUnit(ingredientName) {
+      for (const entry of GROCERY_UNITS) {
+        if (entry.match.test(ingredientName)) {
+          return entry.groceryUnit;
+        }
+      }
+      return null;
+    }
+
+    // ══════════════════════════════════════════════════
+    // STORE & ZIP CODE PREFERENCES
+    // ══════════════════════════════════════════════════
+    function saveStorePrefs() {
+      var zip = document.getElementById('input-zip').value.trim();
+      var store = document.getElementById('input-store').value.trim();
+      if (!zip) { showToast('Please enter your ZIP code'); return; }
+      var user = getUser();
+      user.zip = zip;
+      user.preferredStore = store;
+      saveUser(user);
+      updateStoreBadge(zip, store);
+      document.getElementById('store-status').innerHTML =
+        'Saved. Click <strong>Get AI Prices</strong> to estimate prices for your area.';
+      showToast('Location saved!');
+    }
+
+    function updateStoreBadge(zip, store) {
+      var wrap = document.getElementById('store-badge-wrap');
+      if (!wrap) return;
+      if (zip) {
+        wrap.innerHTML = '<span class="store-badge">Location: ' + escHtml(zip) +
+          (store ? ' &middot; ' + escHtml(store) : '') + '</span>';
+      } else {
+        wrap.innerHTML = '';
+      }
+    }
+
+    function getUser() {
+      try { return JSON.parse(localStorage.getItem('mm_current_user')) || {}; } catch(e) { return {}; }
+    }
+    function saveUser(profile) {
+      try {
+        var users = JSON.parse(localStorage.getItem('mm_users') || '{}');
+        if (profile.username) users[profile.username] = profile;
+        localStorage.setItem('mm_users', JSON.stringify(users));
+        localStorage.setItem('mm_current_user', JSON.stringify(profile));
+      } catch(e) {}
+    }
+
+    function loadStorePrefs() {
+      var user = getUser();
+      if (user.zip) {
+        document.getElementById('input-zip').value = user.zip;
+        document.getElementById('input-store').value = user.preferredStore || '';
+        updateStoreBadge(user.zip, user.preferredStore);
+      }
+    }
+
+    // ══════════════════════════════════════════════════
+    // AI PRICE ESTIMATION
+    // ══════════════════════════════════════════════════
+    async function fetchAIPrices() {
+      var user = getUser();
+      var zip = user.zip || document.getElementById('input-zip').value.trim();
+      var store = user.preferredStore || document.getElementById('input-store').value.trim();
+
+      if (!zip) {
+        showToast('Enter your ZIP code first, then save it');
+        document.getElementById('input-zip').focus();
+        return;
+      }
+      if (currentItems.length === 0) {
+        showToast('Select recipes first to generate your shopping list');
+        return;
+      }
+
+      var btn = document.getElementById('btn-prices');
+      btn.disabled = true;
+      btn.textContent = '...pricing';
+
+      var itemNames = currentItems.map(function(i) {
+        return i.name + (i.groceryUnit ? ' (' + i.groceryUnit + ')' : '');
+      }).join(', ');
+
+      var storeContext = store ? 'at ' + store : 'at major grocery stores';
+
+      var promptText = 'You are a grocery pricing assistant. Estimate realistic 2025 US prices for these grocery items for a shopper in ZIP code ' + zip + ' ' + storeContext + '. Items: ' + itemNames + '. Respond ONLY with a valid JSON array, no markdown, no backticks: [{"name":"item name","price":3.99}]';
+
+      try {
+        var response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            messages: [{ role: 'user', content: promptText }]
+          })
+        });
+
+        var data = await response.json();
+        var text = data.content.map(function(b) { return b.text || ''; }).join('').trim();
+        var clean = text.replace(/^```json\s*/,'').replace(/```\s*$/,'').trim();
+        var prices = JSON.parse(clean);
+
+        prices.forEach(function(p) {
+          var item = currentItems.find(function(i) {
+            return i.name.toLowerCase().includes(p.name.toLowerCase()) ||
+                   p.name.toLowerCase().includes(i.name.toLowerCase());
+          });
+          if (item) item.cost = parseFloat(p.price) || item.cost || 0;
+        });
+
+        var groups = { produce: [], proteins: [], pantry: [], dairy: [] };
+        currentItems.forEach(function(ing) {
+          var cat = ing.category || 'pantry';
+          if (groups[cat]) groups[cat].push(ing); else groups.pantry.push(ing);
+        });
+        renderCategory('produce',  groups.produce,  '', 'Produce',  'cat-produce');
+        renderCategory('proteins', groups.proteins, '', 'Proteins', 'cat-proteins');
+        renderCategory('pantry',   groups.pantry,   '', 'Pantry',   'cat-pantry');
+        renderCategory('dairy',    groups.dairy,    '', 'Dairy',    'cat-dairy');
+
+        var total = currentItems.reduce(function(s,i) { return s + (i.cost||0); }, 0);
+        document.getElementById('total-display').textContent = '$' + total.toFixed(2);
+        checkedCost = 0; checkedCount = 0;
+        document.getElementById('total-meta').textContent =
+          currentItems.length + ' items remaining · 0 bought';
+        document.getElementById('progress-bar').style.width = '0%';
+        attachCheckboxEvents();
+
+        btn.textContent = 'Prices Updated';
+        setTimeout(function() { btn.disabled = false; btn.textContent = 'Get AI Prices'; }, 10000);
+
+        var storeLabel = store || 'your area';
+        showToast('AI prices estimated for ' + storeLabel + ' (' + zip + ')');
+        document.getElementById('store-status').innerHTML =
+          'AI-estimated prices for ZIP ' + escHtml(zip) +
+          (store ? ' &middot; ' + escHtml(store) : '') +
+          ' &mdash; <em>approximate only, verify at store</em>';
+
+      } catch(err) {
+        btn.textContent = 'Get AI Prices';
+        btn.disabled = false;
+        showToast('Pricing failed — check your connection and try again');
+      }
     }
 
     // ── Init: attach events and seed currentItems from whatever rows are on screen ──
