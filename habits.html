@@ -6,588 +6,94 @@
   <title>Habit Tracker — Meal Mate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green: #3a7d44;
-      --green-light: #e8f5ea;
-      --cream: #faf8f3;
-      --terracotta: #c8724a;
-      --sage: #8faa82;
-      --warm-white: #fffdf7;
-      --text: #1c2b1e;
-      --muted: #6b7f6d;
-      --border: #d4e0d5;
+      --black: #111111; --off-black: #1a1a1a; --cream: #f9f7f2;
+      --warm-white: #ffffff; --border: #e0ddd8;
+      --accent: #c8724a; --accent-light: #f5ede8; --text: #1a1a1a; --muted: #777777;
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      text-decoration: none;
-    }
-    .nav-logo span {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.25rem;
-      color: var(--green);
-      letter-spacing: -0.02em;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      list-style: none;
-      margin-left: auto;
-    }
-    .nav-links a {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--green); }
-    .nav-links a.active {
-      color: var(--green);
-      border-bottom: 2px solid var(--green);
-      padding-bottom: 2px;
-    }
-    .nav-cta {
-      background: var(--green);
-      color: #fff !important;
-      padding: 8px 20px;
-      border-radius: 99px;
-      font-weight: 600 !important;
-      font-size: 0.875rem !important;
-      transition: background 0.2s !important;
-    }
-    .nav-cta:hover { background: #2e6636 !important; color: #fff !important; }
-
-    /* ── PAGE WRAPPER ── */
-    main {
-      flex: 1;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 48px 24px 64px;
-    }
-
-    /* ── PAGE HEADER ── */
-    .page-header {
-      margin-bottom: 36px;
-    }
-    .page-header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.6rem;
-      color: var(--text);
-      line-height: 1.1;
-      margin-bottom: 10px;
-    }
-    .page-header p {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 520px;
-    }
-
-    /* ── MOTIVATIONAL BANNER ── */
-    .banner {
-      background: var(--green);
-      color: #fff;
-      border-radius: 16px;
-      padding: 20px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 36px;
-    }
-    .banner-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .banner-emoji {
-      font-size: 2rem;
-      line-height: 1;
-    }
-    .banner-text {
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-    .banner-best {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.78);
-      white-space: nowrap;
-      text-align: right;
-    }
-    .banner-best strong {
-      display: block;
-      font-size: 1.4rem;
-      color: #fff;
-      font-family: 'DM Serif Display', serif;
-    }
-
-    /* ── STATS ROW ── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 36px;
-    }
-    .stat-card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 20px 22px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .stat-icon { font-size: 1.6rem; }
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 2px;
-    }
-    .stat-value {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.6rem;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    /* ── WEEKLY OVERVIEW ── */
-    .weekly-overview {
-      background: var(--green-light);
-      border: 1px solid #c3dcc6;
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-bottom: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .weekly-left h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.15rem;
-      color: var(--green);
-      margin-bottom: 4px;
-    }
-    .weekly-left .best-day {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-    .weekly-right {
-      text-align: right;
-    }
-    .weekly-big {
-      font-family: 'DM Serif Display', serif;
-      font-size: 3rem;
-      color: var(--green);
-      line-height: 1;
-    }
-    .weekly-of {
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-    .weekly-bar-wrap {
-      background: rgba(58,125,68,0.15);
-      border-radius: 99px;
-      height: 8px;
-      width: 180px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-    .weekly-bar {
-      background: var(--green);
-      height: 100%;
-      border-radius: 99px;
-      transition: width 0.5s ease;
-    }
-
-    /* ── SECTION HEADING ── */
-    .section-heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.35rem;
-      color: var(--text);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ── HABIT CARDS ── */
-    #habits-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 40px;
-    }
-    .habit-card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 22px 24px;
-      box-shadow: 0 2px 8px rgba(58,125,68,0.05);
-      transition: box-shadow 0.2s;
-    }
-    .habit-card:hover {
-      box-shadow: 0 4px 18px rgba(58,125,68,0.1);
-    }
-    .habit-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .habit-emoji { font-size: 1.3rem; }
-    .habit-name {
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text);
-      flex: 1;
-    }
-    .habit-remove {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 1.1rem;
-      line-height: 1;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .habit-remove:hover {
-      background: #fdecea;
-      color: #c0392b;
-    }
-
-    /* weekly grid */
-    .week-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-    .day-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .day-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      padding: 2px 6px;
-      border-radius: 99px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .day-label.today {
-      background: var(--green-light);
-      color: var(--green);
-    }
-    .day-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      transition: border-color 0.18s, background 0.18s, transform 0.12s;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    .day-circle:hover {
-      border-color: var(--sage);
-      transform: scale(1.08);
-    }
-    .day-circle.checked {
-      background: var(--green);
-      border-color: var(--green);
-      color: #fff;
-    }
-    .day-circle.today-col {
-      border-color: var(--sage);
-    }
-
-    /* progress bar */
-    .habit-progress {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .progress-track {
-      flex: 1;
-      background: var(--green-light);
-      border-radius: 99px;
-      height: 8px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      background: var(--green);
-      height: 100%;
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-    .progress-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 600;
-      min-width: 52px;
-      text-align: right;
-    }
-
-    /* ── ADD HABIT CARD ── */
-    .add-habit-card {
-      background: #fff;
-      border-radius: 16px;
-      border: 2px dashed var(--border);
-      padding: 26px 28px;
-      margin-bottom: 40px;
-    }
-    .add-habit-card h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.2rem;
-      color: var(--text);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .add-habit-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .add-habit-input {
-      flex: 1;
-      border: 1.5px solid var(--border);
-      border-radius: 99px;
-      padding: 10px 18px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      color: var(--text);
-      background: var(--cream);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .add-habit-input:focus { border-color: var(--green); }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 32px; }
+    .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .nav-logo span { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--black); letter-spacing: -0.02em; }
+    .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; margin-left: auto; }
+    .nav-links a { font-size: 11px; font-weight: 600; color: var(--black); text-decoration: none; transition: color 0.2s; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--black); border-bottom: 1.5px solid var(--black); padding-bottom: 2px; }
+    .nav-cta { background: var(--black); color: #fff !important; padding: 7px 18px; border-radius: 4px; font-weight: 700 !important; font-size: 11px !important; transition: background 0.2s !important; letter-spacing: 0.07em; text-transform: uppercase; }
+    .nav-cta:hover { background: var(--accent) !important; color: #fff !important; }
+    main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 48px 24px 64px; }
+    .page-header { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--black); line-height: 1.0; margin-bottom: 8px; font-weight: 900; letter-spacing: -0.02em; }
+    .page-header p { font-size: 1rem; color: var(--muted); max-width: 520px; }
+    .banner { background: var(--black); color: #fff; border-radius: 0; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+    .banner-left { display: flex; align-items: center; gap: 14px; }
+    .banner-emoji { font-size: 1.8rem; line-height: 1; }
+    .banner-text { font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+    .banner-best { font-size: 0.78rem; color: rgba(255,255,255,0.65); white-space: nowrap; text-align: right; }
+    .banner-best strong { display: block; font-size: 1.4rem; color: #fff; font-family: 'Playfair Display', serif; font-weight: 900; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 32px; }
+    .stat-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
+    .stat-icon { font-size: 1.4rem; }
+    .stat-label { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+    .stat-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--black); line-height: 1; font-weight: 900; }
+    .weekly-overview { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 20px 24px; margin-bottom: 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .weekly-big { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: var(--black); line-height: 1; }
+    .weekly-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 4px; }
+    .weekly-of { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+    .weekly-progress-wrap { flex: 1; min-width: 160px; }
+    .progress-track { height: 3px; background: var(--border); border-radius: 0; overflow: hidden; margin-bottom: 6px; }
+    .progress-fill { height: 100%; background: var(--black); border-radius: 0; transition: width 0.4s ease; }
+    .best-day-text { font-size: 0.82rem; color: var(--muted); }
+    .habit-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 20px 24px; margin-bottom: 2px; }
+    .habit-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .habit-emoji { font-size: 1.4rem; }
+    .habit-name { font-size: 1rem; font-weight: 600; color: var(--black); flex: 1; letter-spacing: -0.01em; }
+    .habit-remove { background: none; border: 1px solid var(--border); color: var(--muted); width: 26px; height: 26px; border-radius: 2px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .habit-remove:hover { background: #fee; border-color: #e00; color: #c00; }
+    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 14px; }
+    .day-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .day-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .day-label.today { color: var(--black); }
+    .day-circle { width: 36px; height: 36px; border-radius: 2px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: all 0.15s; color: var(--muted); }
+    .day-circle:hover { border-color: var(--black); color: var(--black); }
+    .day-circle.today-col { border-color: var(--black); }
+    .day-circle.checked { background: var(--black); border-color: var(--black); color: #fff; }
+    .habit-progress { display: flex; align-items: center; gap: 12px; }
+    .progress-label { font-size: 11px; color: var(--muted); white-space: nowrap; font-weight: 600; letter-spacing: 0.04em; }
+    .add-habit-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 20px 24px; margin-bottom: 2px; }
+    .add-habit-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+    .emoji-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .emoji-option { font-size: 1.25rem; padding: 6px; border: 1.5px solid var(--border); border-radius: 2px; cursor: pointer; background: transparent; transition: all 0.15s; }
+    .emoji-option:hover { border-color: var(--black); transform: scale(1.1); }
+    .emoji-option.selected { border-color: var(--black); background: var(--cream); }
+    .add-habit-row { display: flex; gap: 8px; }
+    .add-habit-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; background: var(--cream); }
+    .add-habit-input:focus { border-color: var(--black); }
     .add-habit-input::placeholder { color: var(--muted); }
-    .btn-add {
-      background: var(--green);
-      color: #fff;
-      border: none;
-      border-radius: 99px;
-      padding: 10px 22px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-    .btn-add:hover { background: #2e6636; }
-    .emoji-picker {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-    .emoji-option {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      background: var(--cream);
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.15s, background 0.15s, transform 0.12s;
-    }
-    .emoji-option:hover { border-color: var(--sage); transform: scale(1.1); }
-    .emoji-option.selected {
-      border-color: var(--green);
-      background: var(--green-light);
-    }
-
-    /* ── REMINDERS CARD ── */
-    .reminders-card {
-      background: #fff;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 24px 28px;
-      margin-bottom: 40px;
-    }
-    .reminders-card h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.2rem;
-      color: var(--text);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .reminder-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .reminder-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.93rem;
-      color: var(--text);
-    }
-    .reminder-dot {
-      width: 8px; height: 8px;
-      background: var(--sage);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .btn-update-reminders {
-      display: inline-block;
-      border: 1.5px solid var(--green);
-      color: var(--green);
-      border-radius: 99px;
-      padding: 8px 20px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn-update-reminders:hover {
-      background: var(--green);
-      color: #fff;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--text);
-      color: rgba(255,255,255,0.7);
-      padding: 48px 24px 32px;
-    }
-    .footer-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-    .footer-logo span {
-      font-family: 'DM Serif Display', serif;
-      color: #fff;
-      font-size: 1.1rem;
-    }
-    .footer-tagline {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.45);
-      margin-top: 2px;
-    }
-    .footer-nav {
-      display: flex;
-      gap: 24px;
-      list-style: none;
-    }
-    .footer-nav a {
-      color: rgba(255,255,255,0.65);
-      text-decoration: none;
-      font-size: 0.88rem;
-      transition: color 0.2s;
-    }
-    .footer-nav a:hover { color: #fff; }
-    .footer-social {
-      display: flex;
-      gap: 18px;
-    }
-    .footer-social a {
-      color: rgba(255,255,255,0.65);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 700;
-      transition: color 0.2s;
-    }
-    .footer-social a:hover { color: #fff; }
-    .footer-bottom {
-      max-width: 900px;
-      margin: 0 auto;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.35);
-      text-align: center;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      .nav-links { gap: 14px; }
-      .page-header h1 { font-size: 2rem; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .stats-row .stat-card:last-child { grid-column: span 2; }
-      .weekly-overview { flex-direction: column; align-items: flex-start; }
-      .weekly-bar-wrap { width: 100%; }
-      .banner { flex-direction: column; align-items: flex-start; }
-      .banner-best { text-align: left; }
-      .add-habit-row { flex-direction: column; }
-      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
-      .footer-nav { justify-content: center; }
-      .footer-social { justify-content: center; }
-      .day-circle { width: 30px; height: 30px; font-size: 0.75rem; }
-    }
+    .add-habit-btn { padding: 10px 20px; background: var(--black); color: #fff; border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.2s; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+    .add-habit-btn:hover { background: var(--accent); }
+    .reminders-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 20px 24px; margin-bottom: 36px; }
+    .reminders-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--black); margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .reminder-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .reminder-item { font-size: 0.875rem; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.5; }
+    .reminder-dot { position: absolute; left: 0; top: 7px; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; display: inline-block; }
+    footer { background: var(--cream); border-top: 1px solid var(--border); padding: 28px 24px; }
+    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo span { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--black); }
+    .footer-tagline { font-size: 11px; color: var(--muted); margin-left: 2px; font-style: italic; }
+    .footer-nav { display: flex; gap: 20px; list-style: none; margin: 0 auto; }
+    .footer-nav a { font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--black); }
+    .footer-social { display: flex; gap: 16px; list-style: none; }
+    .footer-social a { font-size: 14px; font-weight: 900; font-family: 'Playfair Display', serif; color: var(--black); text-decoration: none; border-bottom: 1.5px solid var(--black); padding-bottom: 1px; transition: color 0.2s, border-color 0.2s; }
+    .footer-social a:hover { color: var(--accent); border-color: var(--accent); }
+    .footer-bottom { max-width: 900px; margin: 14px auto 0; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; gap: 2px; } .nav-links { display: none; } .week-grid { gap: 4px; } .day-circle { width: 30px; height: 30px; } }
   </style>
 </head>
 <body>

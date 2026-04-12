@@ -4,73 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Meal Mate — Get Started</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --green: #3a7d44; --green-light: #e8f5ea; --green-mid: #c5e3c8;
-      --cream: #faf8f3; --text: #1c2b1e; --muted: #6b7f6d; --border: #d4e0d5;
-      --chip-bg: #fff; --chip-sel: #3a7d44; --chip-sel-text: #fff;
-      --card-bg: #ffffff; --radius: 14px; --error: #c0392b;
+      --black: #111111; --off-black: #1a1a1a; --cream: #f9f7f2;
+      --warm-white: #ffffff; --border: #e0ddd8;
+      --accent: #c8724a; --accent-light: #f5ede8; --text: #1a1a1a; --muted: #777777;
+      --radius: 2px; --error: #c0392b;
     }
-    body {
-      font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text);
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start; padding: 2rem 1rem 4rem;
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem 4rem; }
     .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
-    .brand-icon { width: 38px; height: 38px; background: var(--green); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .brand-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--green); letter-spacing: -0.3px; }
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 2rem 1.5rem; width: 100%; max-width: 520px; box-shadow: 0 2px 20px rgba(58,125,68,0.06); }
+    .brand-icon { width: 38px; height: 38px; background: var(--black); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .brand-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--black); letter-spacing: -0.3px; }
+    .card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 0; padding: 2rem 2rem 1.5rem; width: 100%; max-width: 520px; box-shadow: none; }
     .progress-wrap { margin-bottom: 1.75rem; }
-    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-    .progress-track { height: 5px; background: var(--green-mid); border-radius: 99px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s ease; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+    .progress-track { height: 3px; background: var(--border); border-radius: 0; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--black); border-radius: 0; transition: width 0.4s ease; }
     .step { display: none; }
     .step.active { display: block; }
-    .step-tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); background: var(--green-light); padding: 3px 10px; border-radius: 99px; display: inline-block; margin-bottom: 0.75rem; }
-    .step-title { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.3; color: var(--text); margin-bottom: 1.25rem; }
-    /* Account step inputs */
+    .step-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 2px; display: inline-block; margin-bottom: 0.75rem; }
+    .step-title { font-family: 'Playfair Display', serif; font-size: 22px; line-height: 1.2; color: var(--black); margin-bottom: 1.25rem; font-weight: 900; }
     .input-group { margin-bottom: 1rem; }
-    .input-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
-    .text-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: #fff; outline: none; transition: border-color 0.2s; }
-    .text-input:focus { border-color: var(--green); }
+    .input-label { font-size: 11px; font-weight: 700; color: var(--black); margin-bottom: 6px; display: block; letter-spacing: 0.07em; text-transform: uppercase; }
+    .text-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.2s; }
+    .text-input:focus { border-color: var(--black); }
     .text-input.error { border-color: var(--error); }
-    .input-hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
-    .input-error { font-size: 12px; color: var(--error); margin-top: 5px; display: none; }
+    .input-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .input-error { font-size: 11px; color: var(--error); margin-top: 5px; display: none; }
     .input-error.visible { display: block; }
-    /* Returning user */
     .returning-row { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); text-align: center; }
-    .returning-row a { color: var(--green); font-weight: 600; cursor: pointer; text-decoration: none; }
-    .returning-row a:hover { text-decoration: underline; }
-    #returning-panel { display: none; margin-top: 1.25rem; padding: 1.25rem; background: var(--green-light); border-radius: 10px; }
+    .returning-row a { color: var(--black); font-weight: 700; cursor: pointer; text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 1px; }
+    .returning-row a:hover { color: var(--accent); border-color: var(--accent); }
+    #returning-panel { display: none; margin-top: 1.25rem; padding: 1.25rem; background: var(--cream); border: 1px solid var(--border); border-radius: 0; }
     #returning-panel p { font-size: 13px; color: var(--muted); margin-bottom: 0.75rem; }
-    #returning-search { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; }
-    #returning-search:focus { border-color: var(--green); }
+    #returning-search { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; background: var(--warm-white); }
+    #returning-search:focus { border-color: var(--black); }
     #returning-result { margin-top: 0.75rem; font-size: 13px; color: var(--text); }
-    /* Chips */
     .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0.5rem; }
-    .chip { padding: 7px 16px; border-radius: 99px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; background: var(--chip-bg); color: var(--text); transition: all 0.15s ease; user-select: none; }
-    .chip:hover { border-color: var(--green); }
-    .chip.selected { background: var(--chip-sel); color: var(--chip-sel-text); border-color: var(--chip-sel); }
-    /* Budget */
-    .budget-num { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--green); margin-bottom: 0.5rem; }
-    input[type=range] { width: 100%; accent-color: var(--green); margin-bottom: 4px; }
-    .range-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 1rem; }
-    .sub-label { font-size: 13px; color: var(--muted); margin: 1rem 0 0.5rem; }
-    /* Nav buttons */
+    .chip { padding: 7px 16px; border-radius: 2px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; background: transparent; color: var(--text); transition: all 0.15s ease; user-select: none; font-weight: 500; }
+    .chip:hover { border-color: var(--black); }
+    .chip.selected { background: var(--black); color: #fff; border-color: var(--black); }
+    .budget-num { font-family: 'Playfair Display', serif; font-size: 38px; color: var(--black); margin-bottom: 0.5rem; font-weight: 900; }
+    input[type=range] { width: 100%; accent-color: var(--black); margin-bottom: 4px; }
+    .range-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.04em; }
+    .sub-label { font-size: 12px; color: var(--muted); margin: 1rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
     .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-    .btn { padding: 10px 22px; border-radius: 99px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--muted); transition: all 0.15s; }
-    .btn:hover { border-color: var(--green); color: var(--green); }
-    .btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
-    .btn.primary:hover { background: #2e6636; }
-    /* Finish */
+    .btn { padding: 10px 22px; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--muted); transition: all 0.15s; letter-spacing: 0.05em; text-transform: uppercase; }
+    .btn:hover { border-color: var(--black); color: var(--black); }
+    .btn.primary { background: var(--black); color: #fff; border-color: var(--black); }
+    .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
     .finish-screen { display: none; text-align: center; padding: 1rem 0; }
     .finish-icon { font-size: 48px; margin-bottom: 1rem; }
-    .finish-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--green); margin-bottom: 0.5rem; }
+    .finish-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--black); margin-bottom: 0.5rem; font-weight: 900; }
     .finish-sub { font-size: 15px; color: var(--muted); line-height: 1.6; }
-    .finish-btn { display: inline-block; margin-top: 1.5rem; padding: 12px 32px; background: var(--green); color: #fff; border-radius: 99px; font-size: 15px; font-weight: 500; text-decoration: none; font-family: 'DM Sans', sans-serif; }
-    .welcome-name { color: var(--green); font-style: italic; }
+    .finish-btn { display: inline-block; margin-top: 1.5rem; padding: 12px 32px; background: var(--black); color: #fff; border-radius: 2px; font-size: 12px; font-weight: 700; text-decoration: none; font-family: 'DM Sans', sans-serif; letter-spacing: 0.07em; text-transform: uppercase; transition: background 0.2s; }
+    .finish-btn:hover { background: var(--accent); }
+    .welcome-name { color: var(--accent); font-style: italic; }
   </style>
 </head>
 <body>
