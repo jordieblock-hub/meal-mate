@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Pantry — Meal Mate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111111; --off-black: #1a1a1a; --cream: #f9f7f2;
+  --warm-white: #ffffff; --gray: #888888; --border: #e0ddd8;
+  --accent: #c8724a; --accent-light: #f5ede8; --text: #1a1a1a; --muted: #777777;
+  --green: #3a7d44; --green-light: #eaf4ec;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background-color: var(--cream); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+/* ── NAV ── */
+nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--border); padding: 0 2rem; }
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; height: 60px; }
+.nav-logo { display: flex; align-items: center; gap: 0.55rem; text-decoration: none; flex-shrink: 0; }
+.nav-logo-wordmark { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--black); letter-spacing: -0.01em; }
+.nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; margin-left: 1rem; flex: 1; }
+.nav-links a { text-decoration: none; font-size: 11px; font-weight: 600; color: var(--black); transition: color 0.2s; padding-bottom: 2px; letter-spacing: 0.09em; text-transform: uppercase; }
+.nav-links a:hover { color: var(--accent); }
+.nav-links a.active { color: var(--black); border-bottom: 1.5px solid var(--black); }
+.nav-cta { margin-left: auto; background: var(--black); color: #fff !important; border-radius: 4px; padding: 8px 18px !important; font-weight: 700 !important; font-size: 11px !important; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: background 0.2s !important; white-space: nowrap; }
+.nav-cta:hover { background: var(--accent) !important; color: #fff !important; }
+
+/* ── PAGE HEADER ── */
+.page-header { max-width: 1200px; margin: 0 auto; padding: 56px 2rem 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+.page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.0; color: var(--black); letter-spacing: -0.03em; margin-bottom: 0.6rem; font-weight: 900; }
+.page-header p { font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.65; }
+
+/* ── MAIN LAYOUT ── */
+.pantry-layout { max-width: 1200px; margin: 0 auto; padding: 0 2rem 5rem; display: grid; grid-template-columns: 400px 1fr; gap: 4rem; align-items: start; }
+
+/* ── ADD FORM ── */
+.add-panel { position: sticky; top: 80px; }
+.panel-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--black); margin-bottom: 1.25rem; letter-spacing: -0.01em; }
+.add-form { border: 1.5px solid var(--border); border-radius: 2px; padding: 1.5rem; background: var(--warm-white); }
+.form-label { font-size: 11px; font-weight: 700; color: var(--black); margin-bottom: 5px; display: block; letter-spacing: 0.07em; text-transform: uppercase; }
+.input-row { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.form-input { flex: 1; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; background: var(--cream); }
+.form-input:focus { border-color: var(--black); }
+.form-input::placeholder { color: var(--muted); }
+.btn-add { padding: 10px 20px; background: var(--black); color: #fff; border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+.btn-add:hover { background: var(--accent); }
+.form-hint { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+/* ── QUICK ADD SUGGESTIONS ── */
+.suggestions-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 1.25rem 0 0.6rem; }
+.suggestion-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.suggestion-chip { padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text); transition: all 0.15s; }
+.suggestion-chip:hover { border-color: var(--black); background: var(--black); color: #fff; }
+
+/* ── PANTRY LIST ── */
+.pantry-panel {}
+.pantry-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.pantry-count { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.btn-clear-all { background: transparent; border: 1.5px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 2px; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.2s; }
+.btn-clear-all:hover { border-color: #c0392b; color: #c0392b; }
+
+/* ── CATEGORY GROUPS ── */
+.category-group { margin-bottom: 2rem; }
+.category-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem; }
+.pantry-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; }
+
+/* ── PANTRY ITEM CARD ── */
+.pantry-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 2px; background: var(--warm-white); gap: 0.5rem; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.item-emoji { font-size: 1.1rem; flex-shrink: 0; }
+.item-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-remove { background: transparent; border: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 0 2px; line-height: 1; transition: color 0.15s; flex-shrink: 0; }
+.btn-remove:hover { color: #c0392b; }
+
+/* ── EMPTY STATE ── */
+.empty-state { border: 1.5px dashed var(--border); border-radius: 2px; padding: 3rem 2rem; text-align: center; color: var(--muted); }
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+.empty-state-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--black); margin-bottom: 0.4rem; font-weight: 700; }
+.empty-state-text { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+/* ── PANTRY STATS ── */
+.pantry-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { border: 1.5px solid var(--border); border-radius: 2px; padding: 1rem; background: var(--warm-white); text-align: center; }
+.stat-number { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--black); line-height: 1; }
+.stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+/* ── CTA ── */
+.pantry-cta { margin-top: 2.5rem; padding: 1.5rem; border: 1.5px solid var(--border); border-radius: 2px; background: var(--green-light); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.cta-text { font-size: 0.9rem; color: var(--text); line-height: 1.55; }
+.cta-text strong { font-weight: 700; color: var(--green); }
+.btn-cta { padding: 10px 22px; background: var(--green); color: #fff; border: none; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; white-space: nowrap; }
+.btn-cta:hover { background: var(--black); }
+
+/* ── FOOTER ── */
+footer { background: var(--cream); border-top: 1px solid var(--border); padding: 32px 2rem; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.footer-logo span { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--black); }
+.footer-tagline { font-size: 12px; color: var(--muted); margin-left: 2px; font-style: italic; }
+.footer-nav { display: flex; gap: 20px; list-style: none; margin: 0 auto; }
+.footer-nav a { font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.07em; text-transform: uppercase; transition: color 0.2s; }
+.footer-nav a:hover { color: var(--black); }
+.footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
+
+@media (max-width: 900px) {
+  .pantry-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .add-panel { position: static; }
+  .nav-links { display: none; }
+  .pantry-stats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .pantry-stats { grid-template-columns: repeat(3, 1fr); }
+  .pantry-cta { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+        <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+        <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+        <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+        <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+      </svg>
+      <span class="nav-logo-wordmark">meal mate</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="shopping.html">Shopping List</a></li>
+      <li><a href="habits.html">Habits</a></li>
+      <li><a href="pantry.html" class="active">Pantry</a></li>
+    </ul>
+    <a href="onboarding.html" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- ─── PAGE HEADER ─── -->
+<header class="page-header">
+  <h1>My Pantry</h1>
+  <p>Log what you have on hand and the recipe page will show you what you can already make — no extra shopping needed.</p>
+</header>
+
+<!-- ─── MAIN ─── -->
+<main class="pantry-layout">
+
+  <!-- LEFT: Add panel -->
+  <aside class="add-panel">
+    <p class="panel-title">Add to your pantry</p>
+    <div class="add-form">
+      <label class="form-label" for="pantry-input">Ingredient name</label>
+      <div class="input-row">
+        <input
+          type="text"
+          id="pantry-input"
+          class="form-input"
+          placeholder="e.g. garlic, eggs, pasta…"
+          autocomplete="off"
+          maxlength="60"
+        />
+        <button class="btn-add" onclick="addItem()">+ Add</button>
+      </div>
+      <p class="form-hint">Press Enter or click Add. Items save automatically.</p>
+
+      <p class="suggestions-title">Quick add</p>
+      <div class="suggestion-chips" id="suggestion-chips">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Pantry list -->
+  <section class="pantry-panel">
+
+    <!-- Stats row -->
+    <div class="pantry-stats">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-recipes">0</div>
+        <div class="stat-label">Recipes<br>Unlocked</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-partial">0</div>
+        <div class="stat-label">Partial<br>Matches</div>
+      </div>
+    </div>
+
+    <!-- Header row -->
+    <div class="pantry-header">
+      <span class="pantry-count" id="pantry-count">0 items in pantry</span>
+      <button class="btn-clear-all" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <!-- Items list -->
+    <div id="pantry-list">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- CTA to recipes -->
+    <div class="pantry-cta" id="pantry-cta" style="display:none;">
+      <p class="cta-text">
+        <strong id="cta-match-count">0 recipes</strong> match your pantry right now.<br>
+        Head to the recipe page and filter by <em>"In My Pantry"</em> to see them.
+      </p>
+      <a href="recipes.html" class="btn-cta">View Matches →</a>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <a href="#" class="footer-logo">
+      <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+        <path d="M5 15 C5 15 5 27 17 27 C29 27 29 15 29 15 Z" fill="#3a7d44"/>
+        <rect x="4" y="13" width="26" height="5" rx="2.5" fill="#2e6636"/>
+        <line x1="17" y1="13" x2="17" y2="6" stroke="#3a7d44" stroke-width="2" stroke-linecap="round"/>
+        <path d="M17 9 C15 7 11 7.5 11 10 C11 12 15 12 17 9Z" fill="#7bc67e"/>
+        <path d="M17 9 C19 7 23 7.5 23 10 C23 12 19 12 17 9Z" fill="#5a9a5a"/>
+      </svg>
+      <span>meal mate</span>
+    </a>
+    <p class="footer-tagline">eat smart. waste less.</p>
+    <ul class="footer-nav">
+      <li><a href="recipes.html">Recipes</a></li>
+      <li><a href="shopping.html">Shopping List</a></li>
+      <li><a href="habits.html">Habits</a></li>
+      <li><a href="pantry.html">Pantry</a></li>
+      <li><a href="onboarding.html">Get Started</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">© 2025 Meal Mate. Built for college kitchens everywhere.</div>
+</footer>
+
+<script>
+// ─── STORAGE ───────────────────────────────────────────────────
+const PANTRY_KEY = 'meal-mate-pantry';
+
+function getPantry() {
+  try { return JSON.parse(localStorage.getItem(PANTRY_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function savePantry(items) {
+  localStorage.setItem(PANTRY_KEY, JSON.stringify(items));
+}
+
+// ─── EMOJI MAP ─────────────────────────────────────────────────
+const emojiMap = [
+  { pattern: /egg/i,                    emoji: '🥚' },
+  { pattern: /milk|cream|dairy/i,       emoji: '🥛' },
+  { pattern: /butter/i,                 emoji: '🧈' },
+  { pattern: /cheese|parmesan/i,        emoji: '🧀' },
+  { pattern: /garlic/i,                 emoji: '🧄' },
+  { pattern: /onion|shallot/i,          emoji: '🧅' },
+  { pattern: /tomato/i,                 emoji: '🍅' },
+  { pattern: /lemon|lime|citrus/i,      emoji: '🍋' },
+  { pattern: /pasta|spaghetti|noodle/i, emoji: '🍝' },
+  { pattern: /rice/i,                   emoji: '🍚' },
+  { pattern: /bread/i,                  emoji: '🍞' },
+  { pattern: /chicken/i,                emoji: '🍗' },
+  { pattern: /beef|steak|meat/i,        emoji: '🥩' },
+  { pattern: /fish|salmon|tuna/i,       emoji: '🐟' },
+  { pattern: /shrimp|prawn/i,           emoji: '🦐' },
+  { pattern: /mushroom/i,               emoji: '🍄' },
+  { pattern: /broccoli/i,               emoji: '🥦' },
+  { pattern: /carrot/i,                 emoji: '🥕' },
+  { pattern: /pepper|chili/i,           emoji: '🌶️' },
+  { pattern: /spinach|kale|lettuce/i,   emoji: '🥬' },
+  { pattern: /potato/i,                 emoji: '🥔' },
+  { pattern: /avocado/i,                emoji: '🥑' },
+  { pattern: /olive oil|oil/i,          emoji: '🫒' },
+  { pattern: /soy sauce|miso/i,         emoji: '🫙' },
+  { pattern: /flour/i,                  emoji: '🌾' },
+  { pattern: /sugar|honey/i,            emoji: '🍯' },
+  { pattern: /salt/i,                   emoji: '🧂' },
+  { pattern: /apple/i,                  emoji: '🍎' },
+  { pattern: /banana/i,                 emoji: '🍌' },
+  { pattern: /bean|lentil|chickpea/i,   emoji: '🫘' },
+  { pattern: /corn/i,                   emoji: '🌽' },
+  { pattern: /parsley|herb|basil/i,     emoji: '🌿' },
+  { pattern: /wine/i,                   emoji: '🍷' },
+  { pattern: /yogurt/i,                 emoji: '🥣' },
+];
+
+function getEmoji(name) {
+  for (const entry of emojiMap) {
+    if (entry.pattern.test(name)) return entry.emoji;
+  }
+  return '🥘';
+}
+
+// ─── RECIPE DATA (ingredient keywords per recipe) ──────────────
+// These match the ingredient names in recipes.html
+const RECIPE_DATA = [
+  {
+    name: 'Tomato Miso Pasta w/ Shrimp',
+    ingredients: ['cherry tomatoes', 'shrimp', 'spaghetti', 'garlic', 'shallots', 'miso', 'olive oil', 'lemon', 'butter', 'parsley']
+  },
+  {
+    name: 'Miso Mushroom Pasta',
+    ingredients: ['oyster mushrooms', 'shimeji mushrooms', 'pasta', 'garlic', 'shallot', 'miso', 'heavy cream', 'white wine', 'parmesan', 'butter', 'lemon', 'parsley']
+  },
+  {
+    name: 'Garlic Butter Rice Bowl',
+    ingredients: ['rice', 'garlic', 'butter', 'eggs', 'broccoli', 'carrots', 'soy sauce', 'green onions', 'sesame oil', 'lime']
+  }
+];
+
+function countPantryMatches(pantryItems, recipeIngredients) {
+  const pantryLower = pantryItems.map(i => i.name.toLowerCase());
+  return recipeIngredients.filter(ing => {
+    const ingLower = ing.toLowerCase();
+    return pantryLower.some(p => ingLower.includes(p) || p.includes(ingLower.split(' ')[0]));
+  }).length;
+}
+
+// ─── RENDER ────────────────────────────────────────────────────
+function render() {
+  const items = getPantry();
+  const listEl = document.getElementById('pantry-list');
+  const countEl = document.getElementById('pantry-count');
+  const ctaEl = document.getElementById('pantry-cta');
+
+  countEl.textContent = items.length + ' item' + (items.length !== 1 ? 's' : '') + ' in pantry';
+  document.getElementById('stat-total').textContent = items.length;
+
+  // Compute recipe matches for stats
+  let fullMatches = 0;
+  let partialMatches = 0;
+  RECIPE_DATA.forEach(recipe => {
+    const matches = countPantryMatches(items, recipe.ingredients);
+    const pct = matches / recipe.ingredients.length;
+    if (pct >= 0.75) fullMatches++;
+    else if (pct >= 0.4) partialMatches++;
+  });
+  document.getElementById('stat-recipes').textContent = fullMatches;
+  document.getElementById('stat-partial').textContent = partialMatches;
+
+  // Show/hide CTA
+  if (items.length > 0 && (fullMatches + partialMatches) > 0) {
+    ctaEl.style.display = 'flex';
+    document.getElementById('cta-match-count').textContent =
+      fullMatches + ' recipe' + (fullMatches !== 1 ? 's' : '');
+  } else {
+    ctaEl.style.display = 'none';
+  }
+
+  if (items.length === 0) {
+    listEl.innerHTML =
+      '<div class="empty-state">' +
+        '<span class="empty-state-icon">🛒</span>' +
+        '<p class="empty-state-title">Your pantry is empty</p>' +
+        '<p class="empty-state-text">Add ingredients you already have at home.<br>We\'ll match them to recipes so nothing goes to waste.</p>' +
+      '</div>';
+    return;
+  }
+
+  // Group by first letter for organization
+  const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name));
+  const groups = {};
+  sorted.forEach(item => {
+    const letter = item.name[0].toUpperCase();
+    if (!groups[letter]) groups[letter] = [];
+    groups[letter].push(item);
+  });
+
+  listEl.innerHTML = Object.keys(groups).sort().map(letter =>
+    '<div class="category-group">' +
+      '<div class="category-label">' + letter + '</div>' +
+      '<div class="pantry-items-grid">' +
+        groups[letter].map(item =>
+          '<div class="pantry-item" id="item-' + item.id + '">' +
+            '<span class="item-emoji">' + item.emoji + '</span>' +
+            '<span class="item-name" title="' + escHtml(item.name) + '">' + escHtml(item.name) + '</span>' +
+            '<button class="btn-remove" onclick="removeItem(' + item.id + ')" title="Remove">✕</button>' +
+          '</div>'
+        ).join('') +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ─── ADD / REMOVE ──────────────────────────────────────────────
+function addItem() {
+  const input = document.getElementById('pantry-input');
+  const name = input.value.trim();
+  if (!name) { input.focus(); return; }
+
+  const items = getPantry();
+  // Prevent exact duplicates (case-insensitive)
+  const duplicate = items.some(i => i.name.toLowerCase() === name.toLowerCase());
+  if (duplicate) {
+    input.style.borderColor = 'var(--accent)';
+    setTimeout(() => input.style.borderColor = '', 1200);
+    input.select();
+    return;
+  }
+
+  items.push({ id: Date.now(), name: capitalize(name), emoji: getEmoji(name) });
+  savePantry(items);
+  input.value = '';
+  input.focus();
+  render();
+}
+
+function removeItem(id) {
+  const items = getPantry().filter(i => i.id !== id);
+  savePantry(items);
+  render();
+}
+
+function clearAll() {
+  if (getPantry().length === 0) return;
+  if (!confirm('Remove all items from your pantry?')) return;
+  savePantry([]);
+  render();
+}
+
+// ─── QUICK-ADD SUGGESTIONS ─────────────────────────────────────
+const SUGGESTIONS = [
+  'Eggs', 'Garlic', 'Butter', 'Olive oil', 'Rice', 'Pasta',
+  'Onion', 'Lemon', 'Parmesan', 'Soy sauce', 'Milk', 'Cheese'
+];
+
+function renderSuggestions() {
+  const el = document.getElementById('suggestion-chips');
+  el.innerHTML = SUGGESTIONS.map(s =>
+    '<button class="suggestion-chip" onclick="quickAdd(\'' + s + '\')">' + s + '</button>'
+  ).join('');
+}
+
+function quickAdd(name) {
+  const items = getPantry();
+  if (items.some(i => i.name.toLowerCase() === name.toLowerCase())) return;
+  items.push({ id: Date.now(), name, emoji: getEmoji(name) });
+  savePantry(items);
+  render();
+}
+
+// ─── UTILS ─────────────────────────────────────────────────────
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ─── KEYBOARD SHORTCUT ────────────────────────────────────────
+document.getElementById('pantry-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addItem();
+});
+
+// ─── INIT ─────────────────────────────────────────────────────
+renderSuggestions();
+render();
+</script>
+</body>
+</html>
