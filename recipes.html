@@ -231,7 +231,37 @@
     .btn-profile-signout { padding: 10px 16px; background: transparent; color: var(--muted, #777); border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.07em; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; }
     .btn-profile-signout:hover { border-color: #c0392b; color: #c0392b; }
     .profile-saved-msg { font-size: 11px; color: var(--accent, #c8724a); font-weight: 700; text-align: center; padding: 0 20px 12px; display: none; }
-  </style>
+  .pantry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.pantry-badge.full-match {
+  background: #eaf4ec;
+  color: #3a7d44;
+  border: 1.5px solid #b2d9b8;
+}
+.pantry-badge.partial-match {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1.5px solid #e8c4b0;
+}
+.ingredient-item.in-pantry .ingredient-icon {
+  outline: 2px solid #3a7d44;
+  outline-offset: 2px;
+}
+.ingredient-item.in-pantry .ingredient-name {
+  color: #3a7d44;
+  font-weight: 700;
+}
+</style>
 </head>
 <body>
 
@@ -252,6 +282,7 @@
         <li><a href="recipes.html" class="active">Recipes</a></li>
         <li><a href="shopping.html">Shopping List</a></li>
         <li><a href="habits.html">Habits</a></li>
+        <li><a href="pantry.html">Pantry</a></li>
       </ul>
       <a href="onboarding.html" class="nav-cta">Get Started</a>
     </div>
@@ -272,6 +303,7 @@
       <button class="chip" data-filter="Quick & Easy">Quick &amp; Easy</button>
       <button class="chip" data-filter="High Protein">High Protein</button>
       <button class="chip" data-filter="Budget-Friendly">Budget-Friendly</button>
+      <button class="chip" data-filter="pantry">🥬 In My Pantry</button>
     </div>
   </section>
 
@@ -1337,6 +1369,71 @@
       var ov = document.getElementById('profile-overlay');
       if (ov) ov.addEventListener('click', function(e) { if (e.target === this) closeProfile(); });
     });
+  const PANTRY_KEY = 'meal-mate-pantry';
+
+function getPantryItems() {
+  try { return JSON.parse(localStorage.getItem(PANTRY_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function pantryMatchesIngredient(pantryName, ingredientName) {
+  const p = pantryName.toLowerCase().trim();
+  const i = ingredientName.toLowerCase().trim();
+  return i.includes(p) || p.includes(i) ||
+    i.split(' ').some(word => word.length > 3 && p.includes(word)) ||
+    p.split(' ').some(word => word.length > 3 && i.includes(word));
+}
+
+function applyPantryHighlights() {
+  const pantryItems = getPantryItems();
+  document.querySelectorAll('.recipe-card').forEach(card => {
+    card.querySelectorAll('.pantry-badge').forEach(b => b.remove());
+    card.querySelectorAll('.ingredient-item.in-pantry').forEach(el => {
+      el.classList.remove('in-pantry');
+    });
+    if (pantryItems.length === 0) return;
+    const ingEls = card.querySelectorAll('.ingredient-item');
+    let matchCount = 0;
+    ingEls.forEach(ingEl => {
+      const nameEl = ingEl.querySelector('.ingredient-name');
+      if (!nameEl) return;
+      const matched = pantryItems.some(p => pantryMatchesIngredient(p.name, nameEl.textContent.trim()));
+      if (matched) { matchCount++; ingEl.classList.add('in-pantry'); }
+    });
+    const total = ingEls.length;
+    if (matchCount === 0 || total === 0) return;
+    const pct = matchCount / total;
+    const badgeEl = document.createElement('div');
+    if (pct >= 0.75) {
+      badgeEl.className = 'pantry-badge full-match';
+      badgeEl.innerHTML = '✓ You have ' + matchCount + '/' + total + ' ingredients';
+    } else if (pct >= 0.3) {
+      badgeEl.className = 'pantry-badge partial-match';
+      badgeEl.innerHTML = '◐ You have ' + matchCount + '/' + total + ' ingredients';
+    } else { return; }
+    const tagsEl = card.querySelector('.card-tags');
+    if (tagsEl) tagsEl.parentNode.insertBefore(badgeEl, tagsEl);
+    card.dataset.pantryPct = pct.toFixed(2);
+  });
+}
+
+function applyFilter(filterVal) {
+  document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+  const activeChip = document.querySelector('[data-filter="' + filterVal + '"]');
+  if (activeChip) activeChip.classList.add('active');
+  document.querySelectorAll('.recipe-card').forEach(card => {
+    if (filterVal === 'all') { card.classList.remove('hidden'); return; }
+    if (filterVal === 'pantry') {
+      const pct = parseFloat(card.dataset.pantryPct || '0');
+      card.classList.toggle('hidden', pct < 0.3);
+      return;
+    }
+    const tags = (card.dataset.tags || '').split(',').map(t => t.trim());
+    card.classList.toggle('hidden', !tags.includes(filterVal));
+  });
+}
+
+applyPantryHighlights();
   </script>
 
 </body>
