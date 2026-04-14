@@ -156,6 +156,7 @@ footer { background: var(--cream); border-top: 1px solid var(--border); padding:
   <!-- LEFT: Add panel -->
   <aside class="add-panel">
     <p class="panel-title">Add to your pantry</p>
+    <p style="font-size:12px;color:var(--muted);margin:-0.75rem 0 1rem;display:flex;align-items:center;gap:0.4rem;">&#x1F517; Synced with your <a href="shopping.html" style="color:inherit;text-decoration:underline;">Shopping List</a> &mdash; items you add here will be marked as already owned there.</p>
     <div class="add-form">
       <label class="form-label" for="pantry-input">Ingredient name</label>
       <div class="input-row">
@@ -248,15 +249,76 @@ footer { background: var(--cream); border-top: 1px solid var(--border); padding:
 
 <script>
 // ─── STORAGE ───────────────────────────────────────────────────
-const PANTRY_KEY = 'meal-mate-pantry';
+// Shared storage helpers — must match shopping.html's format exactly
+// so that pantry items added here are reflected in the shopping list
+// and vice versa.
+//
+// shopping.html stores pantry as a plain string[] of item names, either
+// inside the mm_current_user profile object (logged-in) or under the
+// 'mm_pantry' key (anonymous).  pantry.html wraps each name in an
+// {id, name, emoji} object for richer display, but the shared source-of-
+// truth is always the string list used by shopping.html.
 
-function getPantry() {
-  try { return JSON.parse(localStorage.getItem(PANTRY_KEY)) || []; }
-  catch(e) { return []; }
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('mm_current_user')) || null; }
+  catch(e) { return null; }
 }
 
+function saveUser(profile) {
+  try {
+    var users = JSON.parse(localStorage.getItem('mm_users') || '{}');
+    if (profile.username) users[profile.username] = profile;
+    localStorage.setItem('mm_users', JSON.stringify(users));
+    localStorage.setItem('mm_current_user', JSON.stringify(profile));
+  } catch(e) {}
+}
+
+// Returns the shared string[] that shopping.html reads/writes.
+function getSharedPantryNames() {
+  try {
+    const user = getUser();
+    if (user && user.pantry && user.pantry.length > 0) return user.pantry;
+    // Fallback: anonymous key used by shopping.html when not logged in
+    return JSON.parse(localStorage.getItem('mm_pantry') || '[]');
+  } catch(e) { return []; }
+}
+
+// Saves a string[] back to wherever shopping.html expects it.
+function saveSharedPantryNames(names) {
+  try {
+    const user = getUser();
+    if (user) {
+      user.pantry = names;
+      saveUser(user);
+    } else {
+      localStorage.setItem('mm_pantry', JSON.stringify(names));
+    }
+  } catch(e) {}
+}
+
+// Returns the richer {id, name, emoji}[] used for pantry.html's display.
+// Derived on-the-fly from the shared string list so the two pages always agree.
+function getPantry() {
+  const names = getSharedPantryNames();
+  return names.map(name => ({
+    id: stringToId(name),
+    name: name,
+    emoji: getEmoji(name)
+  }));
+}
+
+// Saves the rich item list back as a plain string[], keeping shopping.html in sync.
 function savePantry(items) {
-  localStorage.setItem(PANTRY_KEY, JSON.stringify(items));
+  saveSharedPantryNames(items.map(i => i.name));
+}
+
+// Stable numeric ID derived from name so item keys don't change on reload.
+function stringToId(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (Math.imul(31, hash) + str.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
 }
 
 // ─── EMOJI MAP ─────────────────────────────────────────────────
@@ -411,7 +473,8 @@ function addItem() {
     return;
   }
 
-  items.push({ id: Date.now(), name: capitalize(name), emoji: getEmoji(name) });
+  const capName = capitalize(name);
+  items.push({ id: stringToId(capName), name: capName, emoji: getEmoji(capName) });
   savePantry(items);
   input.value = '';
   input.focus();
@@ -447,7 +510,7 @@ function renderSuggestions() {
 function quickAdd(name) {
   const items = getPantry();
   if (items.some(i => i.name.toLowerCase() === name.toLowerCase())) return;
-  items.push({ id: Date.now(), name, emoji: getEmoji(name) });
+  items.push({ id: stringToId(name), name, emoji: getEmoji(name) });
   savePantry(items);
   render();
 }
