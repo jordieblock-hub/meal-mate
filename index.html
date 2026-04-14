@@ -892,6 +892,7 @@
       <li><a href="recipes.html">Recipes</a></li>
       <li><a href="shopping.html">Shopping List</a></li>
       <li><a href="habits.html">Habits</a></li>
+      <li id="pantry-nav-item" style="display:none"><a href="pantry.html">Pantry</a></li>
       <li><a href="onboarding.html" class="nav-cta">Get Started</a></li>
     </ul>
 
@@ -907,6 +908,7 @@
     <a href="recipes.html">Recipes</a>
     <a href="shopping.html">Shopping List</a>
     <a href="habits.html">Habits</a>
+    <a href="pantry.html" id="pantry-mobile-item" style="display:none">Pantry</a>
     <a href="onboarding.html" class="nav-cta">Get Started</a>
   </div>
 
@@ -1347,6 +1349,21 @@
       var ov = document.getElementById('profile-overlay');
       if (ov) ov.addEventListener('click', function(e) { if (e.target === this) closeProfile(); });
     });
+  </script>
+
+  <script>
+    // Show Pantry nav link when a user is signed in
+    (function() {
+      try {
+        var user = JSON.parse(localStorage.getItem('mm_current_user'));
+        if (user) {
+          var navItem = document.getElementById('pantry-nav-item');
+          var mobileItem = document.getElementById('pantry-mobile-item');
+          if (navItem) navItem.style.display = '';
+          if (mobileItem) mobileItem.style.display = '';
+        }
+      } catch(e) {}
+    })();
   </script>
 
 </body>

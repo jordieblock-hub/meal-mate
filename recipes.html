@@ -282,7 +282,7 @@
         <li><a href="recipes.html" class="active">Recipes</a></li>
         <li><a href="shopping.html">Shopping List</a></li>
         <li><a href="habits.html">Habits</a></li>
-        <li><a href="pantry.html">Pantry</a></li>
+        <li id="pantry-nav-item" style="display:none"><a href="pantry.html">Pantry</a></li>
       </ul>
       <a href="onboarding.html" class="nav-cta">Get Started</a>
     </div>
@@ -1434,6 +1434,17 @@ function applyFilter(filterVal) {
 }
 
 applyPantryHighlights();
+
+  // Show Pantry nav link when a user is signed in
+  (function() {
+    try {
+      var user = JSON.parse(localStorage.getItem('mm_current_user'));
+      if (user) {
+        var navItem = document.getElementById('pantry-nav-item');
+        if (navItem) navItem.style.display = '';
+      }
+    } catch(e) {}
+  })();
   </script>
 
 </body>
