@@ -140,6 +140,259 @@
     .btn-profile-signout { padding: 10px 16px; background: transparent; color: var(--muted, #777); border: 1.5px solid var(--border, #e0ddd8); border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.07em; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; }
     .btn-profile-signout:hover { border-color: #c0392b; color: #c0392b; }
     .profile-saved-msg { font-size: 11px; color: var(--accent, #c8724a); font-weight: 700; text-align: center; padding: 0 20px 12px; display: none; }
+     .food-log-card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+    }
+
+    .food-log-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--black);
+      margin-bottom: 6px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .food-log-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .food-log-form {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: end;
+    }
+
+    .food-log-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .food-log-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .food-log-input,
+    .food-log-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .food-log-input:focus,
+    .food-log-select:focus {
+      border-color: var(--black);
+    }
+
+    .food-log-btn {
+      padding: 10px 18px;
+      background: var(--black);
+      color: #fff;
+      border: none;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .food-log-btn:hover {
+      background: var(--accent);
+    }
+
+    .food-log-list-wrap {
+      margin-bottom: 18px;
+    }
+
+    .food-log-list-title,
+    .nutrition-snapshot-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .food-log-empty {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 14px 0 4px;
+    }
+
+    .food-log-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .food-log-item {
+      border: 1px solid var(--border);
+      background: var(--cream);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .food-log-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .food-log-item-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .food-log-item-name {
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .food-log-item-type {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .food-log-item-meta {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .food-log-delete {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      min-width: 28px;
+      height: 28px;
+      border-radius: 2px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .food-log-delete:hover {
+      background: #fee;
+      border-color: #e00;
+      color: #c00;
+    }
+
+    .nutrition-snapshot-box {
+      border: 1px solid var(--border);
+      background: var(--accent-light);
+      padding: 16px;
+    }
+
+    .nutrition-snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .nutrition-stat {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      padding: 12px;
+    }
+
+    .nutrition-stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .nutrition-stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .nutrition-feedback {
+      font-size: 0.92rem;
+      color: var(--black);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .food-log-form {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nutrition-snapshot-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .food-log-card {
+        padding: 18px 16px;
+      }
+
+      .food-log-form {
+        grid-template-columns: 1fr;
+      }
+
+      .nutrition-snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .food-log-item {
+        flex-direction: column;
+      }
+
+      .food-log-delete {
+        align-self: flex-end;
+      }
+    }
   </style>
 </head>
 <body>
@@ -253,7 +506,88 @@
     </ul>
     <a href="onboarding.html" class="btn-update-reminders">Update Reminders</a>
   </div>
+  <!-- FOOD LOG CARD -->
+  <div class="food-log-card">
+    <h3 class="food-log-title">🍽️ Food Log &amp; Nutrition Snapshot</h3>
+    <p class="food-log-subtitle">Log what you ate today and get a simple nutrition snapshot.</p>
 
+    <div class="food-log-form">
+      <div class="food-log-field">
+        <label class="food-log-label" for="meal-name">Meal Name / Food Item</label>
+        <input class="food-log-input" id="meal-name" type="text" placeholder="e.g. Turkey sandwich" maxlength="80" />
+      </div>
+
+      <div class="food-log-field">
+        <label class="food-log-label" for="meal-type">Meal Type</label>
+        <select class="food-log-select" id="meal-type">
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Snack">Snack</option>
+        </select>
+      </div>
+
+      <div class="food-log-field">
+        <label class="food-log-label" for="meal-protein">Protein</label>
+        <select class="food-log-select" id="meal-protein">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+
+      <div class="food-log-field">
+        <label class="food-log-label" for="meal-produce">Fruits/Veggies</label>
+        <select class="food-log-select" id="meal-produce">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+
+      <div class="food-log-field">
+        <label class="food-log-label" for="meal-water">Water with Meal</label>
+        <select class="food-log-select" id="meal-water">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+
+      <button class="food-log-btn" id="add-meal-btn" type="button">Add Meal</button>
+    </div>
+
+    <div class="food-log-list-wrap">
+      <div class="food-log-list-title">Today’s Meal Log</div>
+      <div class="food-log-empty" id="food-log-empty">No meals logged yet today.</div>
+      <ul class="food-log-list" id="food-log-list"></ul>
+    </div>
+
+    <div class="nutrition-snapshot-title">Today’s Nutrition Snapshot</div>
+    <div class="nutrition-snapshot-box">
+      <div class="nutrition-snapshot-grid">
+        <div class="nutrition-stat">
+          <div class="nutrition-stat-label">Meals Logged</div>
+          <div class="nutrition-stat-value" id="snapshot-meals">0</div>
+        </div>
+        <div class="nutrition-stat">
+          <div class="nutrition-stat-label">Protein-Focused Meals</div>
+          <div class="nutrition-stat-value" id="snapshot-protein">0</div>
+        </div>
+        <div class="nutrition-stat">
+          <div class="nutrition-stat-label">Fruit/Veg Servings</div>
+          <div class="nutrition-stat-value" id="snapshot-produce">0</div>
+        </div>
+        <div class="nutrition-stat">
+          <div class="nutrition-stat-label">Water Cups</div>
+          <div class="nutrition-stat-value" id="snapshot-water">0</div>
+        </div>
+      </div>
+      <p class="nutrition-feedback" id="nutrition-feedback">Start by logging your first meal today.</p>
+    </div>
+  </div>
 </main>
 
 <!-- ── FOOTER ── -->
@@ -292,6 +626,7 @@
 
   /* ── CONSTANTS ── */
   const STORAGE_KEY = 'mealmate_habits';
+  const FOOD_LOG_STORAGE_KEY = 'mealmate_food_log';
   const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']; // Mon=0 … Sun=6
   const EMOJI_OPTIONS = ['🍳','🥗','💧','🏃','🧘','📚','🥦','😴','🛒','🥚'];
 
@@ -378,7 +713,181 @@
     saveState();
     refresh();
   }
+  function loadFoodLog() {
+    try {
+      return JSON.parse(localStorage.getItem(FOOD_LOG_STORAGE_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
 
+  function saveFoodLog(foodLog) {
+    localStorage.setItem(FOOD_LOG_STORAGE_KEY, JSON.stringify(foodLog));
+  }
+
+  function todayFoodEntries() {
+    const today = isoDate(new Date());
+    return loadFoodLog().filter(entry => entry.date === today);
+  }
+
+  function parseCountValue(value) {
+    if (value === '3+') return 3;
+    return parseInt(value, 10) || 0;
+  }
+
+  function buildNutritionFeedback(summary) {
+    const messages = [];
+
+    if (summary.proteinMeals >= 2) {
+      messages.push('Nice job getting protein in today.');
+    } else if (summary.meals > 0) {
+      messages.push('Try building your next meal around a stronger protein source.');
+    }
+
+    if (summary.produceServings === 0 && summary.meals > 0) {
+      messages.push('Try adding a fruit or vegetable to your next meal.');
+    } else if (summary.produceServings >= 3) {
+      messages.push('You are doing a great job getting fruits and veggies in today.');
+    }
+
+    if (summary.waterCups >= 3) {
+      messages.push('You’re doing a good job staying on top of hydration.');
+    } else if (summary.meals > 0) {
+      messages.push('A little more water with your meals could help today.');
+    }
+
+    if (summary.meals === 0) {
+      return 'Start by logging your first meal today.';
+    }
+
+    return messages[0] || 'Nice work staying aware of your meals today.';
+  }
+
+  function renderFoodLog() {
+    const entries = todayFoodEntries();
+    const list = document.getElementById('food-log-list');
+    const empty = document.getElementById('food-log-empty');
+
+    if (!list || !empty) return;
+
+    list.innerHTML = '';
+
+    if (entries.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+    }
+
+    entries.forEach(entry => {
+      const li = document.createElement('li');
+      li.className = 'food-log-item';
+
+      li.innerHTML = `
+        <div class="food-log-item-main">
+          <div class="food-log-item-top">
+            <span class="food-log-item-name">${escHtml(entry.name)}</span>
+            <span class="food-log-item-type">${escHtml(entry.type)}</span>
+          </div>
+          <div class="food-log-item-meta">
+            Protein: ${escHtml(entry.protein)} · Fruits/Veggies: ${escHtml(entry.produce)} · Water: ${escHtml(entry.water)} cup${parseCountValue(entry.water) === 1 ? '' : 's'}
+          </div>
+        </div>
+        <button class="food-log-delete" type="button" data-id="${entry.id}" title="Remove meal">×</button>
+      `;
+
+      list.appendChild(li);
+    });
+
+    list.querySelectorAll('.food-log-delete').forEach(btn => {
+      btn.addEventListener('click', () => removeMealEntry(btn.dataset.id));
+    });
+  }
+
+  function updateNutritionSnapshot() {
+    const entries = todayFoodEntries();
+
+    const summary = entries.reduce((acc, entry) => {
+      acc.meals += 1;
+      if (entry.protein === 'Medium' || entry.protein === 'High') acc.proteinMeals += 1;
+      acc.produceServings += parseCountValue(entry.produce);
+      acc.waterCups += parseCountValue(entry.water);
+      return acc;
+    }, {
+      meals: 0,
+      proteinMeals: 0,
+      produceServings: 0,
+      waterCups: 0
+    });
+
+    document.getElementById('snapshot-meals').textContent = summary.meals;
+    document.getElementById('snapshot-protein').textContent = summary.proteinMeals;
+    document.getElementById('snapshot-produce').textContent = summary.produceServings;
+    document.getElementById('snapshot-water').textContent = summary.waterCups;
+    document.getElementById('nutrition-feedback').textContent = buildNutritionFeedback(summary);
+  }
+
+  function addMealEntry() {
+    const nameInput = document.getElementById('meal-name');
+    const typeInput = document.getElementById('meal-type');
+    const proteinInput = document.getElementById('meal-protein');
+    const produceInput = document.getElementById('meal-produce');
+    const waterInput = document.getElementById('meal-water');
+
+    if (!nameInput) return;
+
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.focus();
+      return;
+    }
+
+    const foodLog = loadFoodLog();
+    foodLog.push({
+      id: 'meal_' + Date.now() + Math.random().toString(36).slice(2, 6),
+      date: isoDate(new Date()),
+      name: name,
+      type: typeInput.value,
+      protein: proteinInput.value,
+      produce: produceInput.value,
+      water: waterInput.value
+    });
+
+    saveFoodLog(foodLog);
+
+    nameInput.value = '';
+    typeInput.value = 'Breakfast';
+    proteinInput.value = 'Low';
+    produceInput.value = '0';
+    waterInput.value = '0';
+
+    renderFoodLog();
+    updateNutritionSnapshot();
+  }
+
+  function removeMealEntry(id) {
+    const foodLog = loadFoodLog().filter(entry => entry.id !== id);
+    saveFoodLog(foodLog);
+    renderFoodLog();
+    updateNutritionSnapshot();
+  }
+
+  function initFoodLog() {
+    const addBtn = document.getElementById('add-meal-btn');
+    const nameInput = document.getElementById('meal-name');
+
+    if (!addBtn || !nameInput) return;
+
+    addBtn.addEventListener('click', addMealEntry);
+    nameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addMealEntry();
+      }
+    });
+
+    renderFoodLog();
+    updateNutritionSnapshot();
+  }
   /* ── STREAK CALCULATION ── */
   // A day "counts" if at least one habit was checked on that day
   function dayHasCheckIn(dateStr) {
@@ -688,6 +1197,7 @@
   loadReminders();
   loadUserGreeting();
   refresh();
+  initFoodLog();
 })();
 </script>
 
