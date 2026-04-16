@@ -241,25 +241,39 @@ ${getUserContext()}
 
 Tailor every response to their budget, restrictions, and what they have on hand. Keep answers under 150 words unless a recipe requires more detail.`;
 
-    try {
-      const res = await fetch(WORKER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ system: systemPrompt, messages: history }),
-      });
+    const payload = JSON.stringify({ system: systemPrompt, messages: history });
+    const MAX_RETRIES = 3;
+    let lastErr;
 
-      const data = await res.json();
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+        });
+
+        const data = await res.json();
+        hideTyping();
+
+        const reply = data?.content?.[0]?.text
+          || "Sorry, I couldn't get a response right now — try again in a moment!";
+
+        appendMsg(reply, 'ai');
+        history.push({ role: 'assistant', content: reply });
+        lastErr = null;
+        break; // success — stop retrying
+
+      } catch (err) {
+        lastErr = err;
+        // Small delay before retrying (300ms, 600ms)
+        if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, attempt * 300));
+      }
+    }
+
+    if (lastErr) {
       hideTyping();
-
-      const reply = data?.content?.[0]?.text
-        || "Sorry, I couldn't get a response right now — try again in a moment!";
-
-      appendMsg(reply, 'ai');
-      history.push({ role: 'assistant', content: reply });
-
-    } catch (err) {
-      hideTyping();
-      appendMsg("Hmm, I'm having trouble connecting 😅 Check your internet and try again!", 'ai');
+      appendMsg("Sorry, I'm having a little trouble right now — please try again!", 'ai');
     }
 
     isLoading = false;
