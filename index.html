@@ -378,6 +378,14 @@
     .recipe-card-bg {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+    }
+    .recipe-card:hover .recipe-card-bg {
+      transform: scale(1.06);
     }
 
     .recipe-card-overlay {
@@ -954,7 +962,7 @@
 
         <!-- Card 1: Tomato Miso Pasta -->
         <a href="recipes.html" class="recipe-card">
-          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #8faa82 0%, #6d8f67 100%);"></div>
+          <img class="recipe-card-bg" src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80" alt="Tomato Miso Pasta" loading="lazy" />
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
             <div class="recipe-card-label">20 min &middot; Vegetarian</div>
@@ -966,7 +974,7 @@
 
         <!-- Card 2: Miso Mushroom Pasta -->
         <a href="recipes.html" class="recipe-card">
-          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #c8724a 0%, #a85a38 100%);"></div>
+          <img class="recipe-card-bg" src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=600&q=80" alt="Miso Mushroom Pasta" loading="lazy" />
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
             <div class="recipe-card-label">25 min &middot; Vegan</div>
@@ -978,7 +986,7 @@
 
         <!-- Card 3: Garlic Rice Bowl -->
         <a href="recipes.html" class="recipe-card">
-          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #3a7d44 0%, #2a5e32 100%);"></div>
+          <img class="recipe-card-bg" src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" alt="Garlic Rice Bowl" loading="lazy" />
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
             <div class="recipe-card-label">15 min &middot; Gluten-Free</div>
@@ -990,7 +998,7 @@
 
         <!-- Card 4: Lemon Chickpea Soup -->
         <a href="recipes.html" class="recipe-card">
-          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #d4a853 0%, #b88b38 100%);"></div>
+          <img class="recipe-card-bg" src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80" alt="Lemon Chickpea Soup" loading="lazy" />
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
             <div class="recipe-card-label">30 min &middot; Vegan</div>
@@ -1002,7 +1010,7 @@
 
         <!-- Card 5: Sheet Pan Veggies -->
         <a href="recipes.html" class="recipe-card">
-          <div class="recipe-card-bg" style="background: linear-gradient(145deg, #c49a8a 0%, #a57c6c 100%);"></div>
+          <img class="recipe-card-bg" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80" alt="Sheet Pan Veggies" loading="lazy" />
           <div class="recipe-card-overlay"></div>
           <div class="recipe-card-content">
             <div class="recipe-card-label">35 min &middot; Vegan</div>
