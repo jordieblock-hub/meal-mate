@@ -723,6 +723,12 @@
 
     // ── Save recipe ──
     function saveRecipe() {
+      // If user is still on the paste tab, auto-switch to manual so they can see the fields
+      const activePanel = document.querySelector('.tab-panel.active');
+      if (activePanel && activePanel.id === 'tab-paste') {
+        switchTab('tab-manual', document.querySelectorAll('.modal-tab')[1]);
+      }
+
       const title = document.getElementById('r-title').value.trim();
       const desc  = document.getElementById('r-desc').value.trim();
       const tags  = document.getElementById('r-tags').value;
@@ -731,23 +737,54 @@
       const stepLines = document.getElementById('r-instructions').value.trim().split('\n').filter(Boolean);
       const errEl = document.getElementById('r-error');
 
-      if (!title || !ingLines.length || !stepLines.length) {
-        errEl.textContent = 'Please fill in the recipe name, ingredients, and instructions.';
+      if (!title) {
+        errEl.textContent = 'Please add a recipe name.';
         errEl.style.display = 'block';
+        document.getElementById('r-title').focus();
+        return;
+      }
+      if (!ingLines.length) {
+        errEl.textContent = 'Please add at least one ingredient.';
+        errEl.style.display = 'block';
+        document.getElementById('r-ingredients').focus();
+        return;
+      }
+      if (!stepLines.length) {
+        errEl.textContent = 'Please add at least one instruction step.';
+        errEl.style.display = 'block';
+        document.getElementById('r-instructions').focus();
         return;
       }
       errEl.style.display = 'none';
 
-      const recipe = { id: Date.now(), title, desc, tags, emoji, ingredients: ingLines, steps: stepLines };
+      try {
+        const recipe = { id: Date.now(), title, desc, tags, emoji, ingredients: ingLines, steps: stepLines };
+        const saved = getSavedRecipes();
+        saved.push(recipe);
+        localStorage.setItem(recipesKey(), JSON.stringify(saved));
+        renderUserRecipe(recipe);
+        closeAddRecipe();
+        clearForm();
+        showRecipeToast('Recipe saved! Scroll down to see it.');
+      } catch(e) {
+        errEl.textContent = 'Something went wrong saving your recipe. Please try again.';
+        errEl.style.display = 'block';
+        console.error('saveRecipe error:', e);
+      }
+    }
 
-      // Save to this user's recipe list
-      const saved = getSavedRecipes();
-      saved.push(recipe);
-      localStorage.setItem(recipesKey(), JSON.stringify(saved));
-
-      renderUserRecipe(recipe);
-      closeAddRecipe();
-      clearForm();
+    function showRecipeToast(msg) {
+      var t = document.getElementById('recipe-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'recipe-toast';
+        t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#3a7d44;color:#fff;padding:12px 24px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:opacity 0.4s;';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      clearTimeout(showRecipeToast._t);
+      showRecipeToast._t = setTimeout(function() { t.style.opacity = '0'; }, 3000);
     }
 
     function clearForm() {
@@ -1061,26 +1098,22 @@
     // ── Per-user recipe storage key ──
     function recipesKey() {
       const user = getCurrentUser();
-      // Store under the user's username so each account has their own recipes.
-      // Fall back to the old shared key so existing saved recipes aren't lost.
-      return user ? 'mm_user_recipes_' + user.username : 'mm_user_recipes';
+      // Use username, falling back to name, then a generic key
+      const id = user && (user.username || user.name);
+      return id ? 'mm_user_recipes_' + id : 'mm_user_recipes';
     }
 
     function getSavedRecipes() {
       try {
-        // Try user-specific key first
-        const user = getCurrentUser();
-        if (user) {
-          const personal = JSON.parse(localStorage.getItem('mm_user_recipes_' + user.username) || 'null');
-          if (personal) return personal;
-          // Migrate any recipes from the old shared key on first load
-          const legacy = JSON.parse(localStorage.getItem('mm_user_recipes') || '[]');
-          if (legacy.length > 0) {
-            localStorage.setItem('mm_user_recipes_' + user.username, JSON.stringify(legacy));
-          }
-          return legacy;
+        const key = recipesKey();
+        const saved = JSON.parse(localStorage.getItem(key) || 'null');
+        if (saved) return saved;
+        // Migrate from old shared key if needed
+        const legacy = JSON.parse(localStorage.getItem('mm_user_recipes') || '[]');
+        if (legacy.length > 0) {
+          localStorage.setItem(key, JSON.stringify(legacy));
         }
-        return JSON.parse(localStorage.getItem('mm_user_recipes') || '[]');
+        return legacy;
       } catch(e) { return []; }
     }
 
@@ -1368,7 +1401,7 @@
       var ov = document.getElementById('profile-overlay');
       if (ov) ov.addEventListener('click', function(e) { if (e.target === this) closeProfile(); });
     });
-  const PANTRY_KEY = 'meal-mate-pantry';
+  const PANTRY_KEY = 'mm_pantry';
 
 function getPantryItems() {
   try { return JSON.parse(localStorage.getItem(PANTRY_KEY)) || []; }
