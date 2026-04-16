@@ -6,7 +6,7 @@
   if (window.location.pathname.includes('onboarding')) return;
 
   // ── CONFIG ──────────────────────────────────────────────────────────
-  const WORKER_URL = 'https://meal-mate-ai.workers.dev/'; // ← updated after Cloudflare deploy
+  const WORKER_URL = 'https://meal-mate-ai.banksharrison2.workers.dev';
 
   // ── USER CONTEXT ────────────────────────────────────────────────────
   function getUserContext() {
