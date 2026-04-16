@@ -63,8 +63,10 @@
     .ingredient-amount { font-size: 0.7rem; color: var(--muted); line-height: 1.3; }
     .card-divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
     .card-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-    .card-photo { border-radius: 4px; height: 260px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; background: var(--border); }
-    .card-photo-label { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-style: italic; opacity: 0.6; }
+    .card-photo { border-radius: 12px; height: 280px; overflow: hidden; position: relative; }
+    .card-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.4s ease; display: block; }
+    .card-photo:hover img { transform: scale(1.04); }
+    .card-photo-label { display: none; }
     .photo-cream, .photo-sage, .photo-terra { background: var(--border); color: var(--black); }
     .instructions-heading { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--black); margin-bottom: 1rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-style: italic; }
     .instructions-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
@@ -402,8 +404,7 @@
       <div class="card-bottom">
 
         <div class="card-photo photo-cream">
-          <span style="font-size:2.5rem;">🍝</span>
-          <span class="card-photo-label">Finished dish</span>
+          <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=85" alt="Tomato Miso Pasta with Shrimp" loading="lazy" />
         </div>
 
         <div class="card-instructions-col">
@@ -522,8 +523,7 @@
       <div class="card-bottom">
 
         <div class="card-photo photo-sage">
-          <span style="font-size:2.5rem;">🍄</span>
-          <span class="card-photo-label">Finished dish</span>
+          <img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=800&q=85" alt="Miso Mushroom Pasta" loading="lazy" />
         </div>
 
         <div class="card-instructions-col">
@@ -630,8 +630,7 @@
       <div class="card-bottom">
 
         <div class="card-photo photo-terra">
-          <span style="font-size:2.5rem;">🍳</span>
-          <span class="card-photo-label">Finished dish</span>
+          <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&q=85" alt="Garlic Butter Rice Bowl" loading="lazy" />
         </div>
 
         <div class="card-instructions-col">
