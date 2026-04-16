@@ -127,6 +127,24 @@
     #mm-chat-send:hover:not(:disabled) { background: #a84d22; }
     #mm-chat-send:disabled { background: #d4a090; cursor: not-allowed; }
 
+    .mm-recipe-card {
+      background: #fff; border: 1.5px solid #e0ddd8; border-radius: 12px;
+      overflow: hidden; margin-top: 4px; max-width: 100%;
+    }
+    .mm-recipe-card img {
+      width: 100%; height: 110px; object-fit: cover; display: block;
+    }
+    .mm-recipe-card-body { padding: 10px 12px 12px; }
+    .mm-recipe-card-title { font-weight: 700; font-size: 0.875rem; color: #1a1a1a; margin-bottom: 4px; }
+    .mm-recipe-card-desc  { font-size: 0.775rem; color: #777; line-height: 1.45; margin-bottom: 8px; }
+    .mm-recipe-card-link  {
+      display: inline-block; background: #3a7d44; color: #fff;
+      font-size: 0.75rem; font-weight: 700; padding: 6px 14px;
+      border-radius: 6px; text-decoration: none; letter-spacing: 0.04em;
+      transition: background 0.2s;
+    }
+    .mm-recipe-card-link:hover { background: #2e6636; }
+
     @media (max-width: 480px) {
       #mm-chat-window { width: calc(100vw - 24px); right: 12px; bottom: 90px; }
       #mm-chat-bubble { bottom: 20px; right: 16px; }
@@ -219,6 +237,88 @@
     if (el) el.remove();
   }
 
+  // ── RECIPE-ADD HELPERS ──────────────────────────────────────────────
+  function aiRecipePhoto(title, tags) {
+    const q = ((title || '') + ' ' + (tags || '')).toLowerCase();
+    const map = [
+      { k: ['pasta','spaghetti','linguine','penne','ramen','noodle','fettuccine','udon','rigatoni'], u: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=85' },
+      { k: ['mushroom'], u: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=800&q=85' },
+      { k: ['rice','grain','quinoa','pilaf','risotto'], u: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&q=85' },
+      { k: ['soup','stew','chili','chowder','broth','bisque','lentil','chickpea','minestrone'], u: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=85' },
+      { k: ['salad','greens','lettuce','kale','arugula','slaw','caesar'], u: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=85' },
+      { k: ['pizza','flatbread','calzone'], u: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=85' },
+      { k: ['taco','burrito','quesadilla','enchilada','fajita','tortilla'], u: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&q=85' },
+      { k: ['salmon','fish','seafood','shrimp','tuna','cod','tilapia'], u: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=85' },
+      { k: ['chicken','turkey','poultry','wing','drumstick'], u: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800&q=85' },
+      { k: ['egg','omelette','frittata','scramble','quiche'], u: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?w=800&q=85' },
+      { k: ['burger','sandwich','sub','panini','wrap'], u: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=85' },
+      { k: ['curry','tikka','masala','korma','dal'], u: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=85' },
+      { k: ['stir fry','stir-fry','wok','asian','chinese','korean','thai','teriyaki'], u: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&q=85' },
+      { k: ['beef','steak','pork','meat','ribs','meatball'], u: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=85' },
+      { k: ['cake','cupcake','cookie','brownie','dessert','chocolate','muffin','pie'], u: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&q=85' },
+      { k: ['bread','toast','bagel','biscuit','sourdough','roll'], u: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=800&q=85' },
+      { k: ['pancake','waffle','crepe','french toast','breakfast'], u: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800&q=85' },
+      { k: ['smoothie','juice','shake','blend','acai'], u: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=800&q=85' },
+      { k: ['roast','baked','sheet pan','vegetable','veggie','vegan','tofu'], u: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=85' },
+    ];
+    for (const e of map) { if (e.k.some(k => q.includes(k))) return e.u; }
+    return 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=85';
+  }
+
+  function aiRecipeEmoji(title) {
+    const t = (title || '').toLowerCase();
+    const em = [
+      { k: ['pasta','spaghetti','noodle','ramen'], e: '🍝' }, { k: ['pizza'], e: '🍕' },
+      { k: ['burger','sandwich'], e: '🍔' }, { k: ['taco','burrito'], e: '🌮' },
+      { k: ['soup','stew','chili'], e: '🍲' }, { k: ['salad'], e: '🥗' },
+      { k: ['rice','bowl'], e: '🍚' }, { k: ['chicken'], e: '🍗' },
+      { k: ['fish','salmon','shrimp','seafood'], e: '🐟' }, { k: ['steak','beef','pork','meat'], e: '🥩' },
+      { k: ['egg','omelette'], e: '🍳' }, { k: ['cake','dessert','cookie','brownie'], e: '🎂' },
+      { k: ['bread','toast'], e: '🍞' }, { k: ['pancake','waffle'], e: '🥞' },
+      { k: ['smoothie','juice'], e: '🥤' }, { k: ['curry'], e: '🍛' },
+    ];
+    for (const e of em) { if (e.k.some(k => t.includes(k))) return e.e; }
+    return '🍽️';
+  }
+
+  function saveRecipeFromAI(data) {
+    try {
+      const user = JSON.parse(localStorage.getItem('mm_current_user') || 'null');
+      const uid  = user && (user.username || user.name);
+      const key  = uid ? 'mm_user_recipes_' + uid : 'mm_user_recipes';
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      const recipe = {
+        id:          Date.now(),
+        title:       data.title       || 'AI Recipe',
+        desc:        data.desc        || '',
+        tags:        data.tags        || '',
+        emoji:       aiRecipeEmoji(data.title),
+        ingredients: Array.isArray(data.ingredients) ? data.ingredients : [],
+        steps:       Array.isArray(data.steps)       ? data.steps       : [],
+        photoUrl:    aiRecipePhoto(data.title, data.tags),
+        addedByAI:   true,
+      };
+      list.push(recipe);
+      localStorage.setItem(key, JSON.stringify(list));
+      return recipe;
+    } catch(e) { console.error('saveRecipeFromAI:', e); return null; }
+  }
+
+  function showAddedRecipeCard(recipe) {
+    const div = document.createElement('div');
+    div.className = 'mm-msg mm-msg-ai';
+    div.innerHTML = `<div class="mm-recipe-card">
+      <img src="${recipe.photoUrl}" alt="${recipe.title}" loading="lazy" />
+      <div class="mm-recipe-card-body">
+        <div class="mm-recipe-card-title">${recipe.emoji} ${recipe.title}</div>
+        ${recipe.desc ? `<div class="mm-recipe-card-desc">${recipe.desc}</div>` : ''}
+        <a class="mm-recipe-card-link" href="recipes.html">View in Recipe Library →</a>
+      </div>
+    </div>`;
+    msgList.appendChild(div);
+    msgList.scrollTop = msgList.scrollHeight;
+  }
+
   // ── SEND ────────────────────────────────────────────────────────────
   async function send() {
     const text = input.value.trim();
@@ -239,7 +339,11 @@ You help with: recipe ideas, using pantry items creatively, budget meal planning
 This user's profile:
 ${getUserContext()}
 
-Tailor every response to their budget, restrictions, and what they have on hand. Keep answers under 150 words unless a recipe requires more detail.`;
+Tailor every response to their budget, restrictions, and what they have on hand. Keep answers under 150 words unless a recipe requires more detail.
+
+ADDING RECIPES TO THE LIBRARY: When the user asks to add a recipe to their library (e.g. "add this to my library", "save that recipe", "add a recipe for X", "can you add that"), write a short friendly confirmation sentence, then append this EXACT marker at the very end with nothing after it:
+RECIPE_ADD:{"title":"Recipe Name","desc":"One sentence description.","ingredients":["2 cups ingredient","1 tbsp ingredient"],"steps":["Step one sentence.","Step two sentence."],"tags":""}
+Rules: tags must be exactly one of "Vegetarian", "Quick & Easy", "High Protein", "Budget-Friendly", or "". Format each ingredient as "amount unit ingredient-name". Each step is one action sentence. Do not wrap in code blocks.`;
 
     const payload = JSON.stringify({ system: systemPrompt, messages: history });
     const MAX_RETRIES = 3;
@@ -256,11 +360,31 @@ Tailor every response to their budget, restrictions, and what they have on hand.
         const data = await res.json();
         hideTyping();
 
-        const reply = data?.content?.[0]?.text
+        const rawReply = data?.content?.[0]?.text
           || "Sorry, I couldn't get a response right now — try again in a moment!";
 
-        appendMsg(reply, 'ai');
-        history.push({ role: 'assistant', content: reply });
+        // Check for recipe-add action
+        const MARKER = 'RECIPE_ADD:';
+        const markerIdx = rawReply.indexOf(MARKER);
+        let displayReply = rawReply;
+        let addedRecipe  = null;
+
+        if (markerIdx !== -1) {
+          try {
+            const jsonStr = rawReply.slice(markerIdx + MARKER.length).trim();
+            const recipeData = JSON.parse(jsonStr);
+            addedRecipe  = saveRecipeFromAI(recipeData);
+            displayReply = rawReply.slice(0, markerIdx).trim();
+          } catch(parseErr) {
+            console.warn('Recipe JSON parse failed:', parseErr);
+            displayReply = rawReply.replace(/RECIPE_ADD:[\s\S]*$/, '').trim() || rawReply;
+          }
+        }
+
+        if (displayReply) appendMsg(displayReply, 'ai');
+        if (addedRecipe)  showAddedRecipeCard(addedRecipe);
+
+        history.push({ role: 'assistant', content: displayReply || rawReply });
         lastErr = null;
         break; // success — stop retrying
 
